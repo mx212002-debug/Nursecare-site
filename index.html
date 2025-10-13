@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>NURSECARE - Sistema Inteligente</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#1f4068; color:#fff; transition: background 0.4s ease;}
+  header { background:#162447; text-align:center; padding:1.2rem; font-size:1.8rem; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.3); position:relative; }
+  .ai-badge { position:absolute; top:10px; right:10px; background:#27ae60; color:#fff; padding:5px 10px; border-radius:20px; font-size:0.8rem; }
+  .container { max-width:900px; margin:40px auto; background:#fff; color:#000; padding:30px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+  input, textarea, select, button { width:100%; margin:8px 0; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:1rem;}
+  button { background:#162447; color:white; font-weight:bold; cursor:pointer; transition:background 0.3s ease; border:none; }
+  button:hover { background:#1f4068; }
+  button.danger { background:#e74c3c; }
+  button.danger:hover { background:#c0392b; }
+  button.success { background:#27ae60; }
+  button.success:hover { background:#229954; }
+  button.info { background:#3498db; }
+  button.info:hover { background:#2980b9; }
+  button.ai { background:#9b59b6; }
+  button.ai:hover { background:#8e44ad; }
+  .hidden { display:none; }
+  .registro { padding:15px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px; background:#f9f9f9; color:#000; }
+  .small { font-size:12px; color:#666; margin-top:6px;}
+  .card { background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:15px; margin-bottom:15px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+  .card h4 { margin:0 0 10px 0; color:#162447; }
+  .btn-group { display:flex; gap:10px; margin-top:10px; }
+  .btn-group button { flex:1; }
+  .section { margin-bottom:30px; }
+  .section h3 { color:#162447; border-bottom:2px solid #162447; padding-bottom:8px; margin-bottom:15px; }
+  .notification { background:#fff3cd; border-left:4px solid #ffc107; padding:12px; margin-bottom:15px; border-radius:6px; color:#856404; }
+  .notification.error { background:#f8d7da; border-left-color:#dc3545; color:#721c24; }
+  .notification.success { background:#d4edda; border-left-color:#28a745; color:#155724; }
+  .notification.info { background:#d1ecf1; border-left-color:#17a2b8; color:#0c5460; }
+  .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); overflow-y:auto; }
+  .modal-content { background:#fff; margin:5% auto; padding:30px; border-radius:12px; width:90%; max-width:600px; box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+  .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+  .modal-header h3 { margin:0; color:#162447; }
+  .close { color:#aaa; font-size:28px; font-weight:bold; cursor:pointer; }
+  .close:hover { color:#000; }
+  .tabs { display:flex; gap:10px; margin-bottom:20px; border-bottom:2px solid #e0e0e0; flex-wrap:wrap; }
+  .tab { padding:12px 20px; cursor:pointer; background:#f0f0f0; border-radius:8px 8px 0 0; transition:background 0.3s ease; }
+  .tab:hover { background:#e0e0e0; }
+  .tab.active { background:#162447; color:#fff; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+  .badge { display:inline-block; padding:4px 8px; border-radius:4px; font-size:0.85rem; font-weight:bold; }
+  .badge.gestor { background:#3498db; color:#fff; }
+  .badge.enfermeiro { background:#27ae60; color:#fff; }
+  .badge.tecnico { background:#f39c12; color:#fff; }
+  table { width:100%; border-collapse:collapse; margin-top:15px; }
+  table th, table td { padding:12px; text-align:left; border-bottom:1px solid #ddd; }
+  table th { background:#162447; color:#fff; font-weight:bold; }
+  table tr:hover { background:#f5f5f5; }
+  .empty-state { text-align:center; padding:40px; color:#999; }
+  .empty-state svg { width:80px; height:80px; margin-bottom:15px; opacity:0.3; }
+  .ai-assistant { position:fixed; bottom:20px; right:20px; z-index:999; }
+  .ai-assistant-btn { width:60px; height:60px; border-radius:50%; background:#9b59b6; color:#fff; border:none; font-size:24px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3); transition:transform 0.3s ease; }
+  .ai-assistant-btn:hover { transform:scale(1.1); background:#8e44ad; }
+  .ai-chat { display:none; position:fixed; bottom:90px; right:20px; width:350px; max-height:500px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.3); overflow:hidden; z-index:999; }
+  .ai-chat-header { background:#9b59b6; color:#fff; padding:15px; font-weight:bold; display:flex; justify-content:space-between; align-items:center; }
+  .ai-chat-messages { height:350px; overflow-y:auto; padding:15px; background:#f9f9f9; }
+  .ai-chat-message { margin-bottom:10px; padding:10px; border-radius:8px; max-width:80%; }
+  .ai-chat-message.user { background:#3498db; color:#fff; margin-left:auto; text-align:right; }
+  .ai-chat-message.ai { background:#ecf0f1; color:#000; }
+  .ai-chat-input { display:flex; padding:10px; border-top:1px solid #ddd; }
+  .ai-chat-input input { flex:1; margin:0; margin-right:10px; }
+  .ai-chat-input button { width:auto; padding:10px 15px; margin:0; }
+  .ai-suggestion { background:#e8f5e9; border-left:4px solid #27ae60; padding:10px; margin-top:10px; border-radius:6px; font-size:0.9rem; }
+  .ai-suggestion strong { color:#27ae60; }
+  @media (max-width: 768px) {
+    .container { margin:20px 10px; padding:20px; }
+    .tabs { font-size:0.85rem; }
+    .tab { padding:8px 12px; }
+    .ai-chat { width:90%; right:5%; }
+  }
+</style>
+</head>
+<body>
+<header>
+  NURSECARE - Sistema Inteligente
+  <span class="ai-badge">🤖 IA Ativa</span>
+</header>
+
+<!-- Login -->
+<div class="container" id="login-container">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="E-mail">
+  <input type="password" id="password" placeholder="Senha">
+  <button onclick="login()">Entrar</button>
+  <p id="login-status"></p>
+</div>
+
+<!-- Painel Gestor/Enfermeiro -->
+<div class="container hidden" id="main-dashboard">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+    <h2 id="dashboard-title">Painel</h2>
+    <div style="display:flex; gap:10px;">
+      <button onclick="openAIAssistant()" class="ai" style="width:auto; padding:10px 20px;">🤖 Assistente IA</button>
+      <button onclick="logout()" style="width:auto; padding:10px 20px;">Sair</button>
+    </div>
+  </div>
+
+  <div id="notifications-area"></div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('funcionarios')">👥 Funcionários</div>
+    <div class="tab" onclick="switchTab('pacientes')">🏥 Pacientes</div>
+    <div class="tab" onclick="switchTab('sinais-vitais')">📊 Sinais Vitais</div>
+    <div class="tab" onclick="switchTab('farmacia')">💊 Farmácia</div>
+    <div class="tab" onclick="switchTab('pop')">📋 POPs</div>
+    <div class="tab" onclick="switchTab('almoxarifado')">📦 Almoxarifado</div>
+    <div class="tab" onclick="switchTab('relatorios')">📈 Relatórios</div>
+  </div>
+
+  <!-- Tab: Funcionários -->
+  <div id="tab-funcionarios" class="tab-content active">
+    <div class="section">
+      <h3>Gerenciar Funcionários</h3>
+      <button onclick="openAddFuncionarioModal()" class="success">➕ Adicionar Funcionário</button>
+      <div id="funcionarios-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Pacientes -->
+  <div id="tab-pacientes" class="tab-content">
+    <div class="section">
+      <h3>Gerenciar Pacientes</h3>
+      <button onclick="openAddPacienteModal()" class="success">➕ Adicionar Paciente</button>
+      <div id="pacientes-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Sinais Vitais -->
+  <div id="tab-sinais-vitais" class="tab-content">
+    <div class="section">
+      <h3>Registrar Sinais Vitais</h3>
+      <button onclick="openAddSinaisVitaisModal()" class="success">➕ Novo Registro</button>
+      <div id="sinais-vitais-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Farmácia -->
+  <div id="tab-farmacia" class="tab-content">
+    <div class="section">
+      <h3>Gerenciar Farmácia</h3>
+      <div class="btn-group">
+        <button onclick="openAddMedicamentoModal()" class="success">➕ Adicionar Medicamento</button>
+        <button onclick="openMovimentacaoModal('entrada')" class="info">📥 Registrar Entrada</button>
+        <button onclick="openMovimentacaoModal('saida')" class="info">📤 Registrar Saída</button>
+      </div>
+      <div id="farmacia-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: POPs -->
+  <div id="tab-pop" class="tab-content">
+    <div class="section">
+      <h3>Procedimentos Operacionais Padrão</h3>
+      <button onclick="openAddPOPModal()" class="success">➕ Adicionar POP</button>
+      <div id="pop-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Almoxarifado -->
+  <div id="tab-almoxarifado" class="tab-content">
+    <div class="section">
+      <h3>Gerenciar Almoxarifado</h3>
+      <div class="btn-group">
+        <button onclick="openAddMaterialModal()" class="success">➕ Adicionar Material</button>
+        <button onclick="openMovimentacaoMaterialModal('entrada')" class="info">📥 Registrar Entrada</button>
+        <button onclick="openMovimentacaoMaterialModal('saida')" class="info">📤 Registrar Saída</button>
+      </div>
+      <div id="almoxarifado-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Relatórios -->
+  <div id="tab-relatorios" class="tab-content">
+    <div class="section">
+      <h3>Relatórios e Análises</h3>
+      <div class="card">
+        <h4>Resumo Geral</h4>
+        <div id="resumo-geral"></div>
+      </div>
+      <div class="card">
+        <h4>Gráfico de Registros por Paciente</h4>
+        <canvas id="grafico-registros" width="400" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Painel Técnico -->
+<div class="container hidden" id="tecnico-dashboard">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+    <h2 id="tecnico-dashboard-title">Painel do Técnico</h2>
+    <div style="display:flex; gap:10px;">
+      <button onclick="logout()" style="width:auto; padding:10px 20px;">Sair</button>
+    </div>
+  </div>
+
+  <div id="tecnico-notifications-area"></div>
+
+  <!-- Tabs Técnico -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTabTecnico('ssvv')">📊 SSVV</div>
+    <div class="tab" onclick="switchTabTecnico('medicacao')">💊 Medicação</div>
+    <div class="tab" onclick="switchTabTecnico('almoxarifado-tecnico')">📦 Almoxarifado</div>
+    <div class="tab" onclick="switchTabTecnico('anotacoes')">📋 Anotações</div>
+  </div>
+
+  <!-- Tab: SSVV -->
+  <div id="tab-tecnico-ssvv" class="tab-content active">
+    <div class="section">
+      <h3>Registrar Sinais Vitais (SSVV)</h3>
+      <button onclick="openAddSinaisVitaisTecnicoModal()" class="success">➕ Novo Registro</button>
+      <div id="tecnico-sinais-vitais-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Medicação -->
+  <div id="tab-tecnico-medicacao" class="tab-content">
+    <div class="section">
+      <h3>Retirada de Medicação</h3>
+      <button onclick="openRetirarMedicacaoModal()" class="info">📤 Retirar Medicação</button>
+      <div id="tecnico-medicacao-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Almoxarifado Técnico -->
+  <div id="tab-tecnico-almoxarifado-tecnico" class="tab-content">
+    <div class="section">
+      <h3>Retirada de Materiais</h3>
+      <button onclick="openRetirarMaterialModal()" class="info">📤 Retirar Material</button>
+      <div id="tecnico-almoxarifado-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Anotações -->
+  <div id="tab-tecnico-anotacoes" class="tab-content">
+    <div class="section">
+      <h3>Anotações</h3>
+      <button onclick="openAddAnotacaoModal()" class="success">➕ Nova Anotação</button>
+      <div id="tecnico-anotacoes-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Assistente IA -->
+<div class="ai-assistant">
+  <button class="ai-assistant-btn" onclick="toggleAIChat()">🤖</button>
+</div>
+
+<div class="ai-chat" id="ai-chat">
+  <div class="ai-chat-header">
+    <span>🤖 Assistente IA NurseCare</span>
+    <span class="close" onclick="toggleAIChat()" style="font-size:20px;">&times;</span>
+  </div>
+  <div class="ai-chat-messages" id="ai-chat-messages">
+    <div class="ai-chat-message ai">
+      Olá! Sou seu assistente inteligente. Posso ajudá-lo com:<br>
+      • Sugestões para sinais vitais<br>
+      • Geração de evoluções automáticas<br>
+      • Alertas e notificações<br>
+      • Análise de dados<br><br>
+      Como posso ajudar?
+    </div>
+  </div>
+  <div class="ai-chat-input">
+    <input type="text" id="ai-input" placeholder="Digite sua mensagem..." onkeypress="if(event.key==='Enter') sendAIMessage()">
+    <button onclick="sendAIMessage()" class="ai">Enviar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar/Editar Funcionário -->
+<div id="modal-funcionario" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-funcionario-title">Adicionar Funcionário</h3>
+      <span class="close" onclick="closeModal('modal-funcionario')">&times;</span>
+    </div>
+    <input type="hidden" id="funcionario-id">
+    <input type="text" id="funcionario-nome" placeholder="Nome Completo">
+    <input type="email" id="funcionario-email" placeholder="E-mail">
+    <select id="funcionario-role">
+      <option value="enfermeiro">Enfermeiro</option>
+      <option value="tecnico">Técnico de Enfermagem</option>
+      <option value="gestor">Gestor</option>
+    </select>
+    <button onclick="saveFuncionario()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar/Editar Paciente -->
+<div id="modal-paciente" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-paciente-title">Adicionar Paciente</h3>
+      <span class="close" onclick="closeModal('modal-paciente')">&times;</span>
+    </div>
+    <input type="hidden" id="paciente-id">
+    <input type="text" id="paciente-nome" placeholder="Nome Completo">
+    <input type="number" id="paciente-idade" placeholder="Idade">
+    <input type="text" id="paciente-quarto" placeholder="Quarto">
+    <input type="text" id="paciente-cpf" placeholder="CPF">
+    <button onclick="savePaciente()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar Sinais Vitais -->
+<div id="modal-sinais-vitais" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Registrar Sinais Vitais</h3>
+      <span class="close" onclick="closeModal('modal-sinais-vitais')">&times;</span>
+    </div>
+    <select id="sv-paciente"></select>
+    <input type="text" id="sv-pressao" placeholder="Pressão Arterial (ex: 120/80)">
+    <input type="number" id="sv-temperatura" placeholder="Temperatura (°C)" step="0.1">
+    <input type="number" id="sv-saturacao" placeholder="Saturação O2 (%)" step="1">
+    <input type="number" id="sv-freq-cardiaca" placeholder="Frequência Cardíaca (bpm)" step="1">
+    <input type="number" id="sv-freq-respiratoria" placeholder="Frequência Respiratória (irpm)" step="1">
+    <input type="number" id="sv-glicemia" placeholder="Glicemia (mg/dL)" step="1">
+    <textarea id="sv-anotacao" placeholder="Anotações" rows="4"></textarea>
+    <div id="ai-suggestions"></div>
+    <div class="btn-group">
+      <button onclick="getAISuggestion()" class="ai">🤖 Sugestão IA</button>
+      <button onclick="saveSinaisVitais()" class="success">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Adicionar/Editar Medicamento -->
+<div id="modal-medicamento" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-medicamento-title">Adicionar Medicamento</h3>
+      <span class="close" onclick="closeModal('modal-medicamento')">&times;</span>
+    </div>
+    <input type="hidden" id="medicamento-id">
+    <input type="text" id="medicamento-nome" placeholder="Nome do Medicamento">
+    <input type="text" id="medicamento-lote" placeholder="Lote">
+    <input type="number" id="medicamento-quantidade" placeholder="Quantidade Inicial" step="1">
+    <input type="date" id="medicamento-validade" placeholder="Data de Validade">
+    <button onclick="saveMedicamento()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Movimentação de Medicamento -->
+<div id="modal-movimentacao" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-movimentacao-title">Movimentação de Medicamento</h3>
+      <span class="close" onclick="closeModal('modal-movimentacao')">&times;</span>
+    </div>
+    <input type="hidden" id="movimentacao-tipo">
+    <select id="movimentacao-medicamento"></select>
+    <input type="number" id="movimentacao-quantidade" placeholder="Quantidade" step="1">
+    <select id="movimentacao-paciente" style="display:none;"></select>
+    <textarea id="movimentacao-observacao" placeholder="Observação" rows="3"></textarea>
+    <button onclick="saveMovimentacao()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar/Editar POP -->
+<div id="modal-pop" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-pop-title">Adicionar POP</h3>
+      <span class="close" onclick="closeModal('modal-pop')">&times;</span>
+    </div>
+    <input type="hidden" id="pop-id">
+    <input type="text" id="pop-titulo" placeholder="Título do POP">
+    <textarea id="pop-descricao" placeholder="Descrição" rows="3"></textarea>
+    <textarea id="pop-passos" placeholder="Passos (um por linha)" rows="6"></textarea>
+    <input type="text" id="pop-responsavel" placeholder="Responsável">
+    <button onclick="savePOP()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Visualizar POP -->
+<div id="modal-view-pop" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="view-pop-titulo"></h3>
+      <span class="close" onclick="closeModal('modal-view-pop')">&times;</span>
+    </div>
+    <div id="view-pop-content"></div>
+  </div>
+</div>
+
+<!-- Modal: Evolução Automática -->
+<div id="modal-evolucao-auto" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Evolução Automática Gerada pela IA</h3>
+      <span class="close" onclick="closeModal('modal-evolucao-auto')">&times;</span>
+    </div>
+    <div id="evolucao-auto-content" style="white-space:pre-wrap; line-height:1.6;"></div>
+    <button onclick="closeModal('modal-evolucao-auto')" class="info">Fechar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar Material (Almoxarifado) -->
+<div id="modal-material" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-material-title">Adicionar Material</h3>
+      <span class="close" onclick="closeModal('modal-material')">&times;</span>
+    </div>
+    <input type="hidden" id="material-id">
+    <input type="text" id="material-nome" placeholder="Nome do Material">
+    <input type="text" id="material-codigo" placeholder="Código">
+    <input type="number" id="material-quantidade" placeholder="Quantidade Inicial" step="1">
+    <input type="text" id="material-unidade" placeholder="Unidade (ex: unidade, caixa, pacote)">
+    <button onclick="saveMaterial()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Movimentação de Material -->
+<div id="modal-movimentacao-material" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-movimentacao-material-title">Movimentação de Material</h3>
+      <span class="close" onclick="closeModal('modal-movimentacao-material')">&times;</span>
+    </div>
+    <input type="hidden" id="movimentacao-material-tipo">
+    <select id="movimentacao-material-select"></select>
+    <input type="number" id="movimentacao-material-quantidade" placeholder="Quantidade" step="1">
+    <select id="movimentacao-material-paciente" style="display:none;"></select>
+    <textarea id="movimentacao-material-observacao" placeholder="Observação" rows="3"></textarea>
+    <button onclick="saveMovimentacaoMaterial()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Retirar Medicação (Técnico) -->
+<div id="modal-retirar-medicacao" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Retirar Medicação</h3>
+      <span class="close" onclick="closeModal('modal-retirar-medicacao')">&times;</span>
+    </div>
+    <select id="retirar-medicacao-select"></select>
+    <input type="number" id="retirar-medicacao-quantidade" placeholder="Quantidade" step="1">
+    <select id="retirar-medicacao-paciente"></select>
+    <textarea id="retirar-medicacao-observacao" placeholder="Observação" rows="3"></textarea>
+    <button onclick="saveRetirarMedicacao()" class="success">Retirar</button>
+  </div>
+</div>
+
+<!-- Modal: Retirar Material (Técnico) -->
+<div id="modal-retirar-material" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Retirar Material</h3>
+      <span class="close" onclick="closeModal('modal-retirar-material')">&times;</span>
+    </div>
+    <select id="retirar-material-select"></select>
+    <input type="number" id="retirar-material-quantidade" placeholder="Quantidade" step="1">
+    <select id="retirar-material-paciente"></select>
+    <textarea id="retirar-material-observacao" placeholder="Observação" rows="3"></textarea>
+    <button onclick="saveRetirarMaterial()" class="success">Retirar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar Anotação (Técnico) -->
+<div id="modal-anotacao" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-anotacao-title">Nova Anotação</h3>
+      <span class="close" onclick="closeModal('modal-anotacao')">&times;</span>
+    </div>
+    <input type="hidden" id="anotacao-id">
+    <select id="anotacao-paciente"></select>
+    <textarea id="anotacao-texto" placeholder="Escreva sua anotação aqui..." rows="6"></textarea>
+    <button onclick="saveAnotacao()" class="success">Salvar</button>
+  </div>
+</div>
+
+<!-- Modal: Adicionar Sinais Vitais (Técnico) -->
+<div id="modal-sinais-vitais-tecnico" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Registrar Sinais Vitais (SSVV)</h3>
+      <span class="close" onclick="closeModal('modal-sinais-vitais-tecnico')">&times;</span>
+    </div>
+    <select id="sv-tecnico-paciente"></select>
+    <input type="text" id="sv-tecnico-pressao" placeholder="Pressão Arterial (ex: 120/80)">
+    <input type="number" id="sv-tecnico-temperatura" placeholder="Temperatura (°C)" step="0.1">
+    <input type="number" id="sv-tecnico-saturacao" placeholder="Saturação O2 (%)" step="1">
+    <input type="number" id="sv-tecnico-freq-cardiaca" placeholder="Frequência Cardíaca (bpm)" step="1">
+    <input type="number" id="sv-tecnico-freq-respiratoria" placeholder="Frequência Respiratória (irpm)" step="1">
+    <input type="number" id="sv-tecnico-glicemia" placeholder="Glicemia (mg/dL)" step="1">
+    <textarea id="sv-tecnico-anotacao" placeholder="Anotações" rows="4"></textarea>
+    <button onclick="saveSinaisVitaisTecnico()" class="success">Salvar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+/* ---------- DADOS E LOGIN ---------- */
+const loginContainer = document.getElementById("login-container");
+const mainDashboard = document.getElementById("main-dashboard");
+const tecnicoDashboard = document.getElementById("tecnico-dashboard");
+
+const usuariosTeste = {
+  "gestor@nursecare.com": { senha:"admin123", tipo:"gestor" },
+  "enfermeiro@nursecare.com": { senha:"123456", tipo:"enfermeiro" },
+  "tecnico@nursecare.com": { senha:"123456", tipo:"tecnico" }
+};
+
+function setUsuarioLogado(email,tipo){
+  localStorage.setItem('nursecare_usuario_logado', JSON.stringify({email,tipo}));
+}
+function getUsuarioLogado(){
+  const data = localStorage.getItem('nursecare_usuario_logado');
+  return data ? JSON.parse(data): null;
+}
+function limparSessao(){
+  localStorage.removeItem('nursecare_usuario_logado');
+}
+
+function login(){
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const senha = document.getElementById("password").value.trim();
+  const status = document.getElementById("login-status");
+  
+  const funcionarios = JSON.parse(localStorage.getItem('funcionarios')||'[]');
+  const func = funcionarios.find(f => f.email === email);
+  
+  if(usuariosTeste[email] && usuariosTeste[email].senha === senha){
+    const tipo = usuariosTeste[email].tipo;
+    setUsuarioLogado(email,tipo);
+    status.textContent="Login bem-sucedido!";
+    mostrarPainel(tipo);
+  } else if(func && senha === '123456'){
+    setUsuarioLogado(email, func.role);
+    status.textContent="Login bem-sucedido!";
+    mostrarPainel(func.role);
+  } else {
+    status.textContent="Usuário ou senha incorretos.";
+  }
+}
+
+function logout(){
+  limparSessao();
+  mostrarPainel("login");
+}
+
+/* ---------- MOSTRAR PAINEL ---------- */
+function mostrarPainel(tipo){
+  loginContainer.classList.add("hidden");
+  mainDashboard.classList.add("hidden");
+  tecnicoDashboard.classList.add("hidden");
+  
+  if(tipo==="gestor" || tipo==="enfermeiro"){
+    mainDashboard.classList.remove("hidden");
+    document.getElementById("dashboard-title").textContent = tipo === "gestor" ? "👨‍⚕️ Painel do Gestor" : "👩‍⚕️ Painel do Enfermeiro";
+    document.querySelector("header").innerHTML = `${tipo === "gestor" ? "👨‍⚕️ Gestor" : "👩‍⚕️ Enfermeiro"} - NURSECARE <span class="ai-badge">🤖 IA Ativa</span>`;
+    document.body.style.background = tipo === "gestor" ? "#1f4068" : "#162447";
+    renderAll();
+    checkNotifications();
+  } else if(tipo==="tecnico"){
+    tecnicoDashboard.classList.remove("hidden");
+    document.getElementById("tecnico-dashboard-title").textContent = "👷 Painel do Técnico";
+    document.querySelector("header").innerHTML = `👷 Técnico - NURSECARE <span class="ai-badge">🤖 IA Ativa</span>`;
+    document.body.style.background = "#2c3e50";
+    renderTecnicoAll();
+  } else {
+    loginContainer.classList.remove("hidden");
+    document.querySelector("header").innerHTML="NURSECARE - Sistema Inteligente";
+    document.body.style.background="#1f4068";
+  }
+}
+
+/* ---------- TABS ---------- */
+function switchTab(tabName){
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+  
+  if(tabName === 'relatorios'){
+    renderRelatorios();
+  }
+}
+
+/* ---------- LOCALSTORAGE ---------- */
+if(!localStorage.getItem('funcionarios')) localStorage.setItem('funcionarios',JSON.stringify([]));
+if(!localStorage.getItem('pacientes')) localStorage.setItem('pacientes',JSON.stringify([]));
+if(!localStorage.getItem('sinais_vitais')) localStorage.setItem('sinais_vitais',JSON.stringify([]));
+if(!localStorage.getItem('medicamentos')) localStorage.setItem('medicamentos',JSON.stringify([]));
+if(!localStorage.getItem('movimentacoes')) localStorage.setItem('movimentacoes',JSON.stringify([]));
+if(!localStorage.getItem('pops')) localStorage.setItem('pops',JSON.stringify([]));
+if(!localStorage.getItem('notificacoes')) localStorage.setItem('notificacoes',JSON.stringify([]));
+
+/* ---------- MODALS ---------- */
+function openModal(modalId){
+  document.getElementById(modalId).style.display = 'block';
+}
+function closeModal(modalId){
+  document.getElementById(modalId).style.display = 'none';
+}
+
+/* ---------- NOTIFICAÇÕES ---------- */
+function addNotificacao(mensagem, tipo = 'info'){
+  const notificacoes = JSON.parse(localStorage.getItem('notificacoes')||'[]');
+  const nova = {
+    id: Date.now(),
+    mensagem,
+    tipo,
+    lida: false,
+    criadoEm: new Date().toISOString()
+  };
+  notificacoes.unshift(nova);
+  localStorage.setItem('notificacoes', JSON.stringify(notificacoes));
+  checkNotifications();
+}
+
+function checkNotifications(){
+  const notificacoes = JSON.parse(localStorage.getItem('notificacoes')||'[]');
+  const naoLidas = notificacoes.filter(n => !n.lida);
+  const container = document.getElementById('notifications-area');
+  
+  if(naoLidas.length === 0){
+    container.innerHTML = '';
+    return;
+  }
+  
+  let html = '';
+  naoLidas.slice(0, 3).forEach(n => {
+    html += `<div class="notification ${n.tipo}">
+      ${n.mensagem}
+      <button onclick="marcarComoLida(${n.id})" style="width:auto; padding:5px 10px; margin-left:10px; font-size:0.85rem;">Marcar como lida</button>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+function marcarComoLida(id){
+  let notificacoes = JSON.parse(localStorage.getItem('notificacoes')||'[]');
+  const index = notificacoes.findIndex(n => n.id == id);
+  if(index !== -1){
+    notificacoes[index].lida = true;
+    localStorage.setItem('notificacoes', JSON.stringify(notificacoes));
+    checkNotifications();
+  }
+}
+
+/* ---------- FUNCIONÁRIOS ---------- */
+function openAddFuncionarioModal(){
+  document.getElementById('modal-funcionario-title').textContent = 'Adicionar Funcionário';
+  document.getElementById('funcionario-id').value = '';
+  document.getElementById('funcionario-nome').value = '';
+  document.getElementById('funcionario-email').value = '';
+  document.getElementById('funcionario-role').value = 'enfermeiro';
+  openModal('modal-funcionario');
+}
+
+function openEditFuncionarioModal(id){
+  const funcionarios = JSON.parse(localStorage.getItem('funcionarios')||'[]');
+  const func = funcionarios.find(f => f.id == id);
+  if(!func) return;
+  
+  document.getElementById('modal-funcionario-title').textContent = 'Editar Funcionário';
+  document.getElementById('funcionario-id').value = func.id;
+  document.getElementById('funcionario-nome').value = func.name;
+  document.getElementById('funcionario-email').value = func.email;
+  document.getElementById('funcionario-role').value = func.role;
+  openModal('modal-funcionario');
+}
+
+function saveFuncionario(){
+  const id = document.getElementById('funcionario-id').value;
+  const nome = document.getElementById('funcionario-nome').value.trim();
+  const email = document.getElementById('funcionario-email').value.trim().toLowerCase();
+  const role = document.getElementById('funcionario-role').value;
+  
+  if(!nome || !email){
+    alert('Preencha todos os campos obrigatórios');
+    return;
+  }
+  
+  let funcionarios = JSON.parse(localStorage.getItem('funcionarios')||'[]');
+  
+  if(id){
+    const index = funcionarios.findIndex(f => f.id == id);
+    if(index !== -1){
+      funcionarios[index] = {id: parseInt(id), name: nome, email, role};
+    }
+  } else {
+    if(funcionarios.some(f => f.email === email)){
+      alert('E-mail já cadastrado');
+      return;
+    }
+    const novo = {id: Date.now(), name: nome, email, role};
+    funcionarios.unshift(novo);
+    usuariosTeste[email] = {senha: '123456', tipo: role};
+  }
+  
+  localStorage.setItem('funcionarios', JSON.stringify(funcionarios));
+  closeModal('modal-funcionario');
+  renderFuncionarios();
+  alert(id ? 'Funcionário atualizado com sucesso!' : 'Funcionário adicionado com sucesso! Senha padrão: 123456');
+}
+
+function deleteFuncionario(id){
+  if(!confirm('Deseja realmente excluir este funcionário?')) return;
+  
+  let funcionarios = JSON.parse(localStorage.getItem('funcionarios')||'[]');
+  funcionarios = funcionarios.filter(f => f.id != id);
+  localStorage.setItem('funcionarios', JSON.stringify(funcionarios));
+  renderFuncionarios();
+  alert('Funcionário excluído com sucesso!');
+}
+
+function renderFuncionarios(){
+  const funcionarios = JSON.parse(localStorage.getItem('funcionarios')||'[]');
+  const container = document.getElementById('funcionarios-list');
+  
+  if(funcionarios.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhum funcionário cadastrado</p></div>';
+    return;
+  }
+  
+  let html = '<table><thead><tr><th>Nome</th><th>E-mail</th><th>Função</th><th>Ações</th></tr></thead><tbody>';
+  funcionarios.forEach(f => {
+    html += `<tr>
+      <td>${f.name}</td>
+      <td>${f.email}</td>
+      <td><span class="badge ${f.role}">${f.role}</span></td>
+      <td>
+        <button onclick="openEditFuncionarioModal(${f.id})" class="info" style="width:auto; padding:6px 12px; margin-right:5px;">✏️ Editar</button>
+        <button onclick="deleteFuncionario(${f.id})" class="danger" style="width:auto; padding:6px 12px;">🗑️ Excluir</button>
+      </td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+/* ---------- PACIENTES ---------- */
+function openAddPacienteModal(){
+  document.getElementById('modal-paciente-title').textContent = 'Adicionar Paciente';
+  document.getElementById('paciente-id').value = '';
+  document.getElementById('paciente-nome').value = '';
+  document.getElementById('paciente-idade').value = '';
+  document.getElementById('paciente-quarto').value = '';
+  document.getElementById('paciente-cpf').value = '';
+  openModal('modal-paciente');
+}
+
+function openEditPacienteModal(id){
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const pac = pacientes.find(p => p.id == id);
+  if(!pac) return;
+  
+  document.getElementById('modal-paciente-title').textContent = 'Editar Paciente';
+  document.getElementById('paciente-id').value = pac.id;
+  document.getElementById('paciente-nome').value = pac.nome;
+  document.getElementById('paciente-idade').value = pac.idade;
+  document.getElementById('paciente-quarto').value = pac.quarto || '';
+  document.getElementById('paciente-cpf').value = pac.cpf || '';
+  openModal('modal-paciente');
+}
+
+function savePaciente(){
+  const id = document.getElementById('paciente-id').value;
+  const nome = document.getElementById('paciente-nome').value.trim();
+  const idade = document.getElementById('paciente-idade').value.trim();
+  const quarto = document.getElementById('paciente-quarto').value.trim();
+  const cpf = document.getElementById('paciente-cpf').value.trim();
+  
+  if(!nome || !idade){
+    alert('Preencha nome e idade');
+    return;
+  }
+  
+  let pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  
+  if(id){
+    const index = pacientes.findIndex(p => p.id == id);
+    if(index !== -1){
+      pacientes[index] = {id: parseInt(id), nome, idade, quarto, cpf};
+    }
+  } else {
+    const novo = {id: Date.now(), nome, idade, quarto, cpf};
+    pacientes.unshift(novo);
+  }
+  
+  localStorage.setItem('pacientes', JSON.stringify(pacientes));
+  closeModal('modal-paciente');
+  renderPacientes();
+  renderPacientesSelect();
+  alert(id ? 'Paciente atualizado com sucesso!' : 'Paciente adicionado com sucesso!');
+}
+
+function deletePaciente(id){
+  if(!confirm('Deseja realmente excluir este paciente?')) return;
+  
+  let pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  pacientes = pacientes.filter(p => p.id != id);
+  localStorage.setItem('pacientes', JSON.stringify(pacientes));
+  renderPacientes();
+  renderPacientesSelect();
+  alert('Paciente excluído com sucesso!');
+}
+
+function renderPacientes(){
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const container = document.getElementById('pacientes-list');
+  
+  if(pacientes.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhum paciente cadastrado</p></div>';
+    return;
+  }
+  
+  let html = '<table><thead><tr><th>Nome</th><th>Idade</th><th>Quarto</th><th>CPF</th><th>Ações</th></tr></thead><tbody>';
+  pacientes.forEach(p => {
+    html += `<tr>
+      <td>${p.nome}</td>
+      <td>${p.idade}</td>
+      <td>${p.quarto || '-'}</td>
+      <td>${p.cpf || '-'}</td>
+      <td>
+        <button onclick="openEditPacienteModal(${p.id})" class="info" style="width:auto; padding:6px 12px; margin-right:5px;">✏️ Editar</button>
+        <button onclick="deletePaciente(${p.id})" class="danger" style="width:auto; padding:6px 12px; margin-right:5px;">🗑️ Excluir</button>
+        <button onclick="exportarEvolucao(${p.id})" class="success" style="width:auto; padding:6px 12px; margin-right:5px;">📄 Exportar</button>
+        <button onclick="gerarEvolucaoAutomatica(${p.id})" class="ai" style="width:auto; padding:6px 12px;">🤖 Evolução IA</button>
+      </td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function renderPacientesSelect(){
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const select1 = document.getElementById('sv-paciente');
+  const select2 = document.getElementById('movimentacao-paciente');
+  
+  let html = '<option value="">Selecione um paciente</option>';
+  pacientes.forEach(p => {
+    html += `<option value="${p.id}">${p.nome} - Quarto: ${p.quarto || '-'}</option>`;
+  });
+  
+  if(select1) select1.innerHTML = html;
+  if(select2) select2.innerHTML = html;
+}
+
+/* ---------- SINAIS VITAIS ---------- */
+function openAddSinaisVitaisModal(){
+  renderPacientesSelect();
+  document.getElementById('sv-paciente').value = '';
+  document.getElementById('sv-pressao').value = '';
+  document.getElementById('sv-temperatura').value = '';
+  document.getElementById('sv-saturacao').value = '';
+  document.getElementById('sv-freq-cardiaca').value = '';
+  document.getElementById('sv-freq-respiratoria').value = '';
+  document.getElementById('sv-glicemia').value = '';
+  document.getElementById('sv-anotacao').value = 'Paciente estável, sem intercorrências no momento.';
+  document.getElementById('ai-suggestions').innerHTML = '';
+  openModal('modal-sinais-vitais');
+}
+
+function getAISuggestion(){
+  const pacienteId = document.getElementById('sv-paciente').value;
+  const pressao = document.getElementById('sv-pressao').value.trim();
+  const temperatura = document.getElementById('sv-temperatura').value.trim();
+  const saturacao = document.getElementById('sv-saturacao').value.trim();
+  
+  if(!pacienteId){
+    alert('Selecione um paciente primeiro');
+    return;
+  }
+  
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  
+  let sugestao = '<div class="ai-suggestion"><strong>💡 Sugestão da IA:</strong><br>';
+  
+  if(temperatura && parseFloat(temperatura) > 37.5){
+    sugestao += '• Temperatura elevada detectada. Considere administrar antitérmico conforme prescrição médica.<br>';
+  }
+  
+  if(saturacao && parseInt(saturacao) < 90){
+    sugestao += '• Saturação baixa. Considere suplementação de O2 e notificar médico responsável.<br>';
+  }
+  
+  if(pressao){
+    const [sistolica, diastolica] = pressao.split('/').map(v => parseInt(v));
+    if(sistolica > 140 || diastolica > 90){
+      sugestao += '• Pressão arterial elevada. Avaliar necessidade de medicação anti-hipertensiva.<br>';
+    }
+  }
+  
+  sugestao += `• Anotação sugerida: "Paciente ${paciente.nome}, ${paciente.idade} anos, apresentando sinais vitais ${temperatura && parseFloat(temperatura) > 37.5 ? 'com temperatura elevada' : 'estáveis'}. Mantendo observação contínua."`;
+  sugestao += '</div>';
+  
+  document.getElementById('ai-suggestions').innerHTML = sugestao;
+}
+
+function saveSinaisVitais(){
+  const pacienteId = document.getElementById('sv-paciente').value;
+  const pressao = document.getElementById('sv-pressao').value.trim();
+  const temperatura = document.getElementById('sv-temperatura').value.trim();
+  const saturacao = document.getElementById('sv-saturacao').value.trim();
+  const freqCardiaca = document.getElementById('sv-freq-cardiaca').value.trim();
+  const freqRespiratoria = document.getElementById('sv-freq-respiratoria').value.trim();
+  const glicemia = document.getElementById('sv-glicemia').value.trim();
+  const anotacao = document.getElementById('sv-anotacao').value.trim();
+  
+  if(!pacienteId || !pressao || !temperatura){
+    alert('Preencha pelo menos Paciente, Pressão Arterial e Temperatura');
+    return;
+  }
+  
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  if(!paciente){
+    alert('Paciente não encontrado');
+    return;
+  }
+  
+  let anormalidades = [];
+  const temp = parseFloat(temperatura);
+  const sat = parseInt(saturacao);
+  const fc = parseInt(freqCardiaca);
+  const fr = parseInt(freqRespiratoria);
+  const glic = parseInt(glicemia);
+  
+  if(temp < 35 || temp > 37.5) anormalidades.push('Temperatura fora do normal');
+  if(sat && (sat < 90 || sat > 100)) anormalidades.push('Saturação fora do normal');
+  if(fc && (fc < 60 || fc > 100)) anormalidades.push('Frequência cardíaca fora do normal');
+  if(fr && (fr < 12 || fr > 20)) anormalidades.push('Frequência respiratória fora do normal');
+  if(glic && (glic < 70 || glic > 140)) anormalidades.push('Glicemia fora do normal');
+  
+  const sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const novo = {
+    id: Date.now(),
+    pacienteId: parseInt(pacienteId),
+    pacienteNome: paciente.nome,
+    pressao,
+    temperatura,
+    saturacao,
+    freqCardiaca,
+    freqRespiratoria,
+    glicemia,
+    anotacao,
+    anormalidades: anormalidades.join(', '),
+    usuario: getUsuarioLogado()?.email || 'sistema',
+    criadoEm: new Date().toISOString()
+  };
+  
+  sinaisVitais.unshift(novo);
+  localStorage.setItem('sinais_vitais', JSON.stringify(sinaisVitais));
+  
+  closeModal('modal-sinais-vitais');
+  renderSinaisVitais();
+  
+  if(anormalidades.length > 0){
+    addNotificacao(`⚠️ Paciente ${paciente.nome}: ${anormalidades.join(', ')}`, 'error');
+    alert('⚠️ ATENÇÃO: ' + anormalidades.join(', ') + '\n\nNotificação enviada ao enfermeiro/gestor.');
+  } else {
+    alert('Sinais vitais registrados com sucesso!');
+  }
+}
+
+function renderSinaisVitais(){
+  const sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const container = document.getElementById('sinais-vitais-list');
+  
+  if(sinaisVitais.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhum registro de sinais vitais</p></div>';
+    return;
+  }
+  
+  let html = '';
+  sinaisVitais.forEach(sv => {
+    html += `<div class="registro">
+      <h4>${sv.pacienteNome}</h4>
+      <p><strong>PA:</strong> ${sv.pressao} | <strong>Temp:</strong> ${sv.temperatura}°C | <strong>Sat:</strong> ${sv.saturacao || '-'}%</p>
+      <p><strong>FC:</strong> ${sv.freqCardiaca || '-'} bpm | <strong>FR:</strong> ${sv.freqRespiratoria || '-'} irpm | <strong>Glicemia:</strong> ${sv.glicemia || '-'} mg/dL</p>
+      <p><strong>Anotação:</strong> ${sv.anotacao || '-'}</p>
+      ${sv.anormalidades ? `<div class="notification error">⚠️ ${sv.anormalidades}</div>` : ''}
+      <div class="small">Por: ${sv.usuario} • ${new Date(sv.criadoEm).toLocaleString('pt-BR')}</div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+/* ---------- FARMÁCIA ---------- */
+function openAddMedicamentoModal(){
+  document.getElementById('modal-medicamento-title').textContent = 'Adicionar Medicamento';
+  document.getElementById('medicamento-id').value = '';
+  document.getElementById('medicamento-nome').value = '';
+  document.getElementById('medicamento-lote').value = '';
+  document.getElementById('medicamento-quantidade').value = '';
+  document.getElementById('medicamento-validade').value = '';
+  openModal('modal-medicamento');
+}
+
+function openEditMedicamentoModal(id){
+  const medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  const med = medicamentos.find(m => m.id == id);
+  if(!med) return;
+  
+  document.getElementById('modal-medicamento-title').textContent = 'Editar Medicamento';
+  document.getElementById('medicamento-id').value = med.id;
+  document.getElementById('medicamento-nome').value = med.nome;
+  document.getElementById('medicamento-lote').value = med.lote;
+  document.getElementById('medicamento-quantidade').value = med.quantidade;
+  document.getElementById('medicamento-validade').value = med.validade;
+  openModal('modal-medicamento');
+}
+
+function saveMedicamento(){
+  const id = document.getElementById('medicamento-id').value;
+  const nome = document.getElementById('medicamento-nome').value.trim();
+  const lote = document.getElementById('medicamento-lote').value.trim();
+  const quantidade = parseInt(document.getElementById('medicamento-quantidade').value);
+  const validade = document.getElementById('medicamento-validade').value;
+  
+  if(!nome || !lote || !quantidade){
+    alert('Preencha todos os campos obrigatórios');
+    return;
+  }
+  
+  let medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  
+  if(id){
+    const index = medicamentos.findIndex(m => m.id == id);
+    if(index !== -1){
+      medicamentos[index] = {id: parseInt(id), nome, lote, quantidade, validade};
+    }
+  } else {
+    const novo = {id: Date.now(), nome, lote, quantidade, validade};
+    medicamentos.unshift(novo);
+  }
+  
+  localStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+  closeModal('modal-medicamento');
+  renderFarmacia();
+  alert(id ? 'Medicamento atualizado com sucesso!' : 'Medicamento adicionado com sucesso!');
+}
+
+function deleteMedicamento(id){
+  if(!confirm('Deseja realmente excluir este medicamento?')) return;
+  
+  let medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  medicamentos = medicamentos.filter(m => m.id != id);
+  localStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+  renderFarmacia();
+  alert('Medicamento excluído com sucesso!');
+}
+
+function openMovimentacaoModal(tipo){
+  document.getElementById('modal-movimentacao-title').textContent = tipo === 'entrada' ? 'Registrar Entrada' : 'Registrar Saída';
+  document.getElementById('movimentacao-tipo').value = tipo;
+  document.getElementById('movimentacao-quantidade').value = '';
+  document.getElementById('movimentacao-observacao').value = '';
+  
+  const medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  let html = '<option value="">Selecione um medicamento</option>';
+  medicamentos.forEach(m => {
+    html += `<option value="${m.id}">${m.nome} (Lote: ${m.lote}) - Estoque: ${m.quantidade}</option>`;
+  });
+  document.getElementById('movimentacao-medicamento').innerHTML = html;
+  
+  if(tipo === 'saida'){
+    document.getElementById('movimentacao-paciente').style.display = 'block';
+    renderPacientesSelect();
+  } else {
+    document.getElementById('movimentacao-paciente').style.display = 'none';
+  }
+  
+  openModal('modal-movimentacao');
+}
+
+function saveMovimentacao(){
+  const tipo = document.getElementById('movimentacao-tipo').value;
+  const medicamentoId = document.getElementById('movimentacao-medicamento').value;
+  const quantidade = parseInt(document.getElementById('movimentacao-quantidade').value);
+  const pacienteId = document.getElementById('movimentacao-paciente').value;
+  const observacao = document.getElementById('movimentacao-observacao').value.trim();
+  
+  if(!medicamentoId || !quantidade){
+    alert('Preencha medicamento e quantidade');
+    return;
+  }
+  
+  let medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  const medIndex = medicamentos.findIndex(m => m.id == medicamentoId);
+  if(medIndex === -1){
+    alert('Medicamento não encontrado');
+    return;
+  }
+  
+  const medicamento = medicamentos[medIndex];
+  
+  if(tipo === 'entrada'){
+    medicamento.quantidade += quantidade;
+  } else {
+    if(medicamento.quantidade < quantidade){
+      alert('Quantidade insuficiente em estoque');
+      return;
+    }
+    medicamento.quantidade -= quantidade;
+  }
+  
+  medicamentos[medIndex] = medicamento;
+  localStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+  
+  const movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')||'[]');
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  
+  const nova = {
+    id: Date.now(),
+    tipo,
+    medicamentoId: parseInt(medicamentoId),
+    medicamentoNome: medicamento.nome,
+    quantidade,
+    pacienteId: pacienteId ? parseInt(pacienteId) : null,
+    pacienteNome: paciente ? paciente.nome : null,
+    observacao,
+    usuario: getUsuarioLogado()?.email || 'sistema',
+    criadoEm: new Date().toISOString()
+  };
+  
+  movimentacoes.unshift(nova);
+  localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
+  
+  // Verificar estoque baixo
+  if(medicamento.quantidade < 10){
+    addNotificacao(`⚠️ Estoque baixo: ${medicamento.nome} (${medicamento.quantidade} unidades)`, 'error');
+  }
+  
+  closeModal('modal-movimentacao');
+  renderFarmacia();
+  alert('Movimentação registrada com sucesso!');
+}
+
+function renderFarmacia(){
+  const medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  const movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')||'[]');
+  const container = document.getElementById('farmacia-list');
+  
+  let html = '<h4>Estoque de Medicamentos</h4>';
+  
+  if(medicamentos.length === 0){
+    html += '<div class="empty-state"><p>Nenhum medicamento cadastrado</p></div>';
+  } else {
+    html += '<table><thead><tr><th>Nome</th><th>Lote</th><th>Quantidade</th><th>Validade</th><th>Ações</th></tr></thead><tbody>';
+    medicamentos.forEach(m => {
+      const hoje = new Date();
+      const validade = new Date(m.validade);
+      const diasParaVencer = Math.ceil((validade - hoje) / (1000 * 60 * 60 * 24));
+      let alertaValidade = '';
+      
+      if(diasParaVencer < 0){
+        alertaValidade = '<span style="color:red;">⚠️ VENCIDO</span>';
+      } else if(diasParaVencer <= 30){
+        alertaValidade = '<span style="color:orange;">⚠️ Vence em ' + diasParaVencer + ' dias</span>';
+        addNotificacao(`⚠️ Medicamento ${m.nome} vence em ${diasParaVencer} dias`, 'error');
+      }
+      
+      let alertaEstoque = '';
+      if(m.quantidade < 10){
+        alertaEstoque = '<span style="color:red;">⚠️ Estoque baixo</span>';
+      }
+      
+      html += `<tr>
+        <td>${m.nome} ${alertaEstoque}</td>
+        <td>${m.lote}</td>
+        <td>${m.quantidade}</td>
+        <td>${new Date(m.validade).toLocaleDateString('pt-BR')} ${alertaValidade}</td>
+        <td>
+          <button onclick="openEditMedicamentoModal(${m.id})" class="info" style="width:auto; padding:6px 12px; margin-right:5px;">✏️ Editar</button>
+          <button onclick="deleteMedicamento(${m.id})" class="danger" style="width:auto; padding:6px 12px;">🗑️ Excluir</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+  }
+  
+  html += '<h4 style="margin-top:30px;">Histórico de Movimentações (Últimas 20)</h4>';
+  
+  if(movimentacoes.length === 0){
+    html += '<div class="empty-state"><p>Nenhuma movimentação registrada</p></div>';
+  } else {
+    movimentacoes.slice(0, 20).forEach(mov => {
+      html += `<div class="registro">
+        <p><strong>Tipo:</strong> ${mov.tipo === 'entrada' ? '📥 Entrada' : '📤 Saída'} | <strong>Medicamento:</strong> ${mov.medicamentoNome} | <strong>Quantidade:</strong> ${mov.quantidade}</p>
+        ${mov.pacienteNome ? `<p><strong>Paciente:</strong> ${mov.pacienteNome}</p>` : ''}
+        ${mov.observacao ? `<p><strong>Observação:</strong> ${mov.observacao}</p>` : ''}
+        <div class="small">Por: ${mov.usuario} • ${new Date(mov.criadoEm).toLocaleString('pt-BR')}</div>
+      </div>`;
+    });
+  }
+  
+  container.innerHTML = html;
+}
+
+/* ---------- POPs ---------- */
+function openAddPOPModal(){
+  document.getElementById('modal-pop-title').textContent = 'Adicionar POP';
+  document.getElementById('pop-id').value = '';
+  document.getElementById('pop-titulo').value = '';
+  document.getElementById('pop-descricao').value = '';
+  document.getElementById('pop-passos').value = '';
+  document.getElementById('pop-responsavel').value = '';
+  openModal('modal-pop');
+}
+
+function openEditPOPModal(id){
+  const pops = JSON.parse(localStorage.getItem('pops')||'[]');
+  const pop = pops.find(p => p.id == id);
+  if(!pop) return;
+  
+  document.getElementById('modal-pop-title').textContent = 'Editar POP';
+  document.getElementById('pop-id').value = pop.id;
+  document.getElementById('pop-titulo').value = pop.titulo;
+  document.getElementById('pop-descricao').value = pop.descricao;
+  document.getElementById('pop-passos').value = pop.passos.join('\n');
+  document.getElementById('pop-responsavel').value = pop.responsavel;
+  openModal('modal-pop');
+}
+
+function savePOP(){
+  const id = document.getElementById('pop-id').value;
+  const titulo = document.getElementById('pop-titulo').value.trim();
+  const descricao = document.getElementById('pop-descricao').value.trim();
+  const passosText = document.getElementById('pop-passos').value.trim();
+  const responsavel = document.getElementById('pop-responsavel').value.trim();
+  
+  if(!titulo || !descricao || !passosText){
+    alert('Preencha todos os campos obrigatórios');
+    return;
+  }
+  
+  const passos = passosText.split('\n').filter(p => p.trim());
+  
+  let pops = JSON.parse(localStorage.getItem('pops')||'[]');
+  
+  if(id){
+    const index = pops.findIndex(p => p.id == id);
+    if(index !== -1){
+      pops[index] = {id: parseInt(id), titulo, descricao, passos, responsavel, criadoEm: pops[index].criadoEm};
+    }
+  } else {
+    const novo = {id: Date.now(), titulo, descricao, passos, responsavel, criadoEm: new Date().toISOString()};
+    pops.unshift(novo);
+  }
+  
+  localStorage.setItem('pops', JSON.stringify(pops));
+  closeModal('modal-pop');
+  renderPOPs();
+  alert(id ? 'POP atualizado com sucesso!' : 'POP adicionado com sucesso!');
+}
+
+function deletePOP(id){
+  if(!confirm('Deseja realmente excluir este POP?')) return;
+  
+  let pops = JSON.parse(localStorage.getItem('pops')||'[]');
+  pops = pops.filter(p => p.id != id);
+  localStorage.setItem('pops', JSON.stringify(pops));
+  renderPOPs();
+  alert('POP excluído com sucesso!');
+}
+
+function viewPOP(id){
+  const pops = JSON.parse(localStorage.getItem('pops')||'[]');
+  const pop = pops.find(p => p.id == id);
+  if(!pop) return;
+  
+  document.getElementById('view-pop-titulo').textContent = pop.titulo;
+  
+  let html = `
+    <p><strong>Descrição:</strong> ${pop.descricao}</p>
+    <p><strong>Responsável:</strong> ${pop.responsavel || 'Não especificado'}</p>
+    <p><strong>Criado em:</strong> ${new Date(pop.criadoEm).toLocaleString('pt-BR')}</p>
+    <h4>Passos:</h4>
+    <ol>
+  `;
+  
+  pop.passos.forEach(passo => {
+    html += `<li>${passo}</li>`;
+  });
+  
+  html += '</ol>';
+  
+  document.getElementById('view-pop-content').innerHTML = html;
+  openModal('modal-view-pop');
+}
+
+function renderPOPs(){
+  const pops = JSON.parse(localStorage.getItem('pops')||'[]');
+  const container = document.getElementById('pop-list');
+  
+  if(pops.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhum POP cadastrado</p></div>';
+    return;
+  }
+  
+  let html = '';
+  pops.forEach(pop => {
+    html += `<div class="card">
+      <h4>${pop.titulo}</h4>
+      <p>${pop.descricao}</p>
+      <div class="btn-group">
+        <button onclick="viewPOP(${pop.id})" class="info">👁️ Visualizar</button>
+        <button onclick="openEditPOPModal(${pop.id})" class="info">✏️ Editar</button>
+        <button onclick="deletePOP(${pop.id})" class="danger">🗑️ Excluir</button>
+      </div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+/* ---------- RELATÓRIOS ---------- */
+function renderRelatorios(){
+  const funcionarios = JSON.parse(localStorage.getItem('funcionarios')||'[]');
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  const movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')||'[]');
+  const pops = JSON.parse(localStorage.getItem('pops')||'[]');
+  
+  const container = document.getElementById('resumo-geral');
+  
+  let html = `
+    <table>
+      <tr><td><strong>Total de Funcionários:</strong></td><td>${funcionarios.length}</td></tr>
+      <tr><td><strong>Total de Pacientes:</strong></td><td>${pacientes.length}</td></tr>
+      <tr><td><strong>Registros de Sinais Vitais:</strong></td><td>${sinaisVitais.length}</td></tr>
+      <tr><td><strong>Medicamentos Cadastrados:</strong></td><td>${medicamentos.length}</td></tr>
+      <tr><td><strong>Movimentações de Farmácia:</strong></td><td>${movimentacoes.length}</td></tr>
+      <tr><td><strong>POPs Cadastrados:</strong></td><td>${pops.length}</td></tr>
+    </table>
+  `;
+  
+  container.innerHTML = html;
+  
+  // Gráfico
+  const ctx = document.getElementById('grafico-registros');
+  if(!ctx) return;
+  
+  const pacientesCount = {};
+  sinaisVitais.forEach(sv => {
+    pacientesCount[sv.pacienteNome] = (pacientesCount[sv.pacienteNome] || 0) + 1;
+  });
+  
+  const labels = Object.keys(pacientesCount);
+  const data = Object.values(pacientesCount);
+  
+  if(window.graficoRegistros) window.graficoRegistros.destroy();
+  
+  window.graficoRegistros = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Registros de Sinais Vitais por Paciente',
+        data,
+        backgroundColor: '#162447',
+        borderColor: '#1f4068',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+}
+
+/* ---------- EXPORTAR EVOLUÇÃO ---------- */
+function exportarEvolucao(pacienteId){
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  if(!paciente){
+    alert('Paciente não encontrado');
+    return;
+  }
+  
+  const sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const registros = sinaisVitais.filter(sv => sv.pacienteId == pacienteId);
+  
+  if(registros.length === 0){
+    alert('Nenhum registro de sinais vitais encontrado para este paciente');
+    return;
+  }
+  
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  doc.setFontSize(18);
+  doc.text('EVOLUÇÃO DE ENFERMAGEM', 105, 20, { align: 'center'});
+  
+  doc.setFontSize(12);
+  doc.text('Enf. Matheus da Silva', 20, 35);
+  doc.text('COREN-SP: 677328', 20, 42);
+  
+  doc.setFontSize(14);
+  doc.text('Dados do Paciente:', 20, 55);
+  doc.setFontSize(11);
+  doc.text(`Nome: ${paciente.nome}`, 20, 62);
+  doc.text(`Idade: ${paciente.idade} anos`, 20, 69);
+  doc.text(`Quarto: ${paciente.quarto || 'Não informado'}`, 20, 76);
+  doc.text(`CPF: ${paciente.cpf || 'Não informado'}`, 20, 83);
+  
+  doc.setFontSize(14);
+  doc.text('Registros de Sinais Vitais:', 20, 96);
+  
+  let y = 103;
+  doc.setFontSize(10);
+  
+  registros.forEach((reg, index) => {
+    if(y > 270){
+      doc.addPage();
+      y = 20;
+    }
+    
+    doc.text(`Registro ${index + 1} - ${new Date(reg.criadoEm).toLocaleString('pt-BR')}`, 20, y);
+    y += 7;
+    doc.text(`PA: ${reg.pressao} | Temp: ${reg.temperatura}°C | Sat: ${reg.saturacao || '-'}%`, 25, y);
+    y += 7;
+    doc.text(`FC: ${reg.freqCardiaca || '-'} bpm | FR: ${reg.freqRespiratoria || '-'} irpm | Glicemia: ${reg.glicemia || '-'} mg/dL`, 25, y);
+    y += 7;
+    
+    if(reg.anotacao){
+      const linhas = doc.splitTextToSize(`Anotacao: ${reg.anotacao}`, 170);
+      doc.text(linhas, 25, y);
+      y += linhas.length * 7;
+    }
+    
+    if(reg.anormalidades){
+      doc.setTextColor(255, 0, 0);
+      doc.text(`Anormalidades: ${reg.anormalidades}`, 25, y);
+      doc.setTextColor(0, 0, 0);
+      y += 7;
+    }
+    
+    doc.text(`Responsavel: ${reg.usuario}`, 25, y);
+    y += 10;
+  });
+  
+  const pageCount = doc.internal.getNumberOfPages();
+  for(let i = 1; i <= pageCount; i++){
+    doc.setPage(i);
+    doc.setFontSize(9);
+    doc.text(`Pagina ${i} de ${pageCount}`, 105, 290, { align: 'center' });
+    doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 105, 295, { align: 'center' });
+  }
+  
+  doc.save(`Evolucao_${paciente.nome.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
+  alert('Evolução exportada com sucesso!');
+}
+
+/* ---------- IA - EVOLUÇÃO AUTOMÁTICA ---------- */
+function gerarEvolucaoAutomatica(pacienteId){
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  if(!paciente){
+    alert('Paciente não encontrado');
+    return;
+  }
+  
+  const sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const registros = sinaisVitais.filter(sv => sv.pacienteId == pacienteId);
+  
+  if(registros.length === 0){
+    alert('Nenhum registro de sinais vitais encontrado para este paciente');
+    return;
+  }
+  
+  // Análise dos últimos registros
+  const ultimosRegistros = registros.slice(0, 3);
+  
+  let evolucao = `EVOLUÇÃO DE ENFERMAGEM - ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+  evolucao += `Paciente: ${paciente.nome}\n`;
+  evolucao += `Idade: ${paciente.idade} anos\n`;
+  evolucao += `Quarto: ${paciente.quarto || 'Não informado'}\n\n`;
+  
+  evolucao += `AVALIAÇÃO:\n`;
+  
+  // Análise de tendências
+  const tempMedia = ultimosRegistros.reduce((acc, r) => acc + parseFloat(r.temperatura), 0) / ultimosRegistros.length;
+  const satMedia = ultimosRegistros.reduce((acc, r) => acc + (parseInt(r.saturacao) || 0), 0) / ultimosRegistros.length;
+  
+  if(tempMedia > 37.5){
+    evolucao += `• Paciente apresenta temperatura elevada (média: ${tempMedia.toFixed(1)}°C), sugerindo processo febril.\n`;
+  } else if(tempMedia < 35){
+    evolucao += `• Paciente apresenta hipotermia (média: ${tempMedia.toFixed(1)}°C), requer atenção.\n`;
+  } else {
+    evolucao += `• Temperatura dentro dos parâmetros normais (média: ${tempMedia.toFixed(1)}°C).\n`;
+  }
+  
+  if(satMedia < 90){
+    evolucao += `• Saturação de oxigênio baixa (média: ${satMedia.toFixed(0)}%), necessitando suplementação de O2.\n`;
+  } else {
+    evolucao += `• Saturação de oxigênio adequada (média: ${satMedia.toFixed(0)}%).\n`;
+  }
+  
+  // Verificar anormalidades
+  const temAnormalidades = ultimosRegistros.some(r => r.anormalidades);
+  if(temAnormalidades){
+    evolucao += `• Foram identificadas anormalidades nos sinais vitais que requerem monitoramento contínuo.\n`;
+  }
+  
+  evolucao += `\nCONDUTA:\n`;
+  evolucao += `• Manter monitoramento de sinais vitais a cada 4 horas.\n`;
+  
+  if(tempMedia > 37.5){
+    evolucao += `• Administrar antitérmico conforme prescrição médica.\n`;
+  }
+  
+  if(satMedia < 90){
+    evolucao += `• Manter suplementação de O2 e notificar médico responsável.\n`;
+  }
+  
+  evolucao += `• Manter hidratação adequada.\n`;
+  evolucao += `• Observar evolução do quadro clínico.\n`;
+  
+  evolucao += `\n\nEnf. Matheus da Silva - COREN-SP: 677328\n`;
+  evolucao += `Data: ${new Date().toLocaleString('pt-BR')}\n`;
+  evolucao += `\n[Evolução gerada automaticamente pela IA NurseCare]`;
+  
+  document.getElementById('evolucao-auto-content').textContent = evolucao;
+  openModal('modal-evolucao-auto');
+}
+
+/* ---------- IA - ASSISTENTE ---------- */
+function openAIAssistant(){
+  toggleAIChat();
+}
+
+function toggleAIChat(){
+  const chat = document.getElementById('ai-chat');
+  chat.style.display = chat.style.display === 'none' || chat.style.display === '' ? 'block' : 'none';
+}
+
+function sendAIMessage(){
+  const input = document.getElementById('ai-input');
+  const mensagem = input.value.trim();
+  
+  if(!mensagem) return;
+  
+  const messagesContainer = document.getElementById('ai-chat-messages');
+  
+  // Adicionar mensagem do usuário
+  const userMsg = document.createElement('div');
+  userMsg.className = 'ai-chat-message user';
+  userMsg.textContent = mensagem;
+  messagesContainer.appendChild(userMsg);
+  
+  input.value = '';
+  
+  // Simular resposta da IA
+  setTimeout(() => {
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'ai-chat-message ai';
+    
+    let resposta = '';
+    
+    const msgLower = mensagem.toLowerCase();
+    
+    if(msgLower.includes('paciente') || msgLower.includes('sinais vitais')){
+      resposta = 'Para registrar sinais vitais, acesse a aba "📊 Sinais Vitais" e clique em "➕ Novo Registro". Posso fornecer sugestões baseadas nos valores inseridos.';
+    } else if(msgLower.includes('medicamento') || msgLower.includes('farmácia')){
+      resposta = 'Na aba "💊 Farmácia" você pode gerenciar medicamentos, registrar entradas e saídas. Recebo alertas automáticos para estoque baixo e medicamentos próximos do vencimento.';
+    } else if(msgLower.includes('evolução') || msgLower.includes('relatório')){
+      resposta = 'Posso gerar evoluções automáticas! Na lista de pacientes, clique em "🤖 Evolução IA" para gerar uma evolução baseada nos registros de sinais vitais.';
+    } else if(msgLower.includes('pop') || msgLower.includes('procedimento')){
+      resposta = 'Os POPs (Procedimentos Operacionais Padrão) estão disponíveis na aba "📋 POPs". Você pode criar, visualizar e editar procedimentos.';
+    } else if(msgLower.includes('notificação') || msgLower.includes('alerta')){
+      resposta = 'Envio notificações automáticas quando: sinais vitais apresentam anormalidades, estoque de medicamentos está baixo, ou medicamentos estão próximos do vencimento.';
+    } else if(msgLower.includes('ajuda') || msgLower.includes('help')){
+      resposta = 'Posso ajudá-lo com:\n• Sugestões para registro de sinais vitais\n• Geração de evoluções automáticas\n• Alertas de estoque e validade\n• Análise de dados\n• Notificações inteligentes\n\nO que você precisa?';
+    } else {
+      resposta = 'Entendi sua pergunta. Como assistente inteligente, posso ajudá-lo com gestão de pacientes, sinais vitais, farmácia, POPs e relatórios. Seja mais específico sobre o que precisa!';
+    }
+    
+    aiMsg.textContent = resposta;
+    messagesContainer.appendChild(aiMsg);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }, 1000);
+  
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+/* ---------- RENDER ALL ---------- */
+function renderAll(){
+  renderFuncionarios();
+  renderPacientes();
+  renderSinaisVitais();
+  renderFarmacia();
+  renderPOPs();
+  renderAlmoxarifado();
+  renderPacientesSelect();
+  checkNotifications();
+}
+
+/* ---------- CARREGAR SESSÃO ---------- */
+document.addEventListener('DOMContentLoaded',()=>{
+  const user = getUsuarioLogado();
+  if(user) mostrarPainel(user.tipo);
+});
+
+/* ---------- FUNÇÕES DO TÉCNICO ---------- */
+function switchTabTecnico(tabName){
+  document.querySelectorAll('#tecnico-dashboard .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#tecnico-dashboard .tab-content').forEach(tc => tc.classList.remove('active'));
+  
+  event.target.classList.add('active');
+  document.getElementById('tab-tecnico-' + tabName).classList.add('active');
+}
+
+function renderTecnicoAll(){
+  renderTecnicoSinaisVitais();
+  renderTecnicoMedicacao();
+  renderTecnicoAlmoxarifado();
+  renderTecnicoAnotacoes();
+  renderPacientesSelectTecnico();
+}
+
+function renderPacientesSelectTecnico(){
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  let html = '<option value="">Selecione um paciente</option>';
+  pacientes.forEach(p => {
+    html += `<option value="${p.id}">${p.nome} - Quarto ${p.quarto || 'N/A'}</option>`;
+  });
+  
+  const selects = ['sv-tecnico-paciente', 'retirar-medicacao-paciente', 'retirar-material-paciente', 'anotacao-paciente'];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = html;
+  });
+}
+
+/* ---------- SSVV TÉCNICO ---------- */
+function openAddSinaisVitaisTecnicoModal(){
+  renderPacientesSelectTecnico();
+  document.getElementById('sv-tecnico-paciente').value = '';
+  document.getElementById('sv-tecnico-pressao').value = '';
+  document.getElementById('sv-tecnico-temperatura').value = '';
+  document.getElementById('sv-tecnico-saturacao').value = '';
+  document.getElementById('sv-tecnico-freq-cardiaca').value = '';
+  document.getElementById('sv-tecnico-freq-respiratoria').value = '';
+  document.getElementById('sv-tecnico-glicemia').value = '';
+  document.getElementById('sv-tecnico-anotacao').value = '';
+  openModal('modal-sinais-vitais-tecnico');
+}
+
+function saveSinaisVitaisTecnico(){
+  const pacienteId = document.getElementById('sv-tecnico-paciente').value;
+  const pressao = document.getElementById('sv-tecnico-pressao').value.trim();
+  const temperatura = document.getElementById('sv-tecnico-temperatura').value.trim();
+  const saturacao = document.getElementById('sv-tecnico-saturacao').value.trim();
+  const freqCardiaca = document.getElementById('sv-tecnico-freq-cardiaca').value.trim();
+  const freqRespiratoria = document.getElementById('sv-tecnico-freq-respiratoria').value.trim();
+  const glicemia = document.getElementById('sv-tecnico-glicemia').value.trim();
+  const anotacao = document.getElementById('sv-tecnico-anotacao').value.trim();
+  
+  if(!pacienteId || !pressao || !temperatura){
+    alert('Preencha pelo menos paciente, pressão e temperatura');
+    return;
+  }
+  
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  if(!paciente){
+    alert('Paciente não encontrado');
+    return;
+  }
+  
+  let sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const user = getUsuarioLogado();
+  
+  const novo = {
+    id: Date.now(),
+    pacienteId: parseInt(pacienteId),
+    pacienteNome: paciente.nome,
+    pressao,
+    temperatura,
+    saturacao,
+    freqCardiaca,
+    freqRespiratoria,
+    glicemia,
+    anotacao,
+    usuario: user?.email || 'técnico',
+    criadoEm: new Date().toISOString(),
+    anormalidades: ''
+  };
+  
+  // Verificar anormalidades
+  let anormalidades = [];
+  if(parseFloat(temperatura) > 37.5) anormalidades.push('Temperatura elevada');
+  if(parseFloat(temperatura) < 35) anormalidades.push('Hipotermia');
+  if(parseInt(saturacao) < 90) anormalidades.push('Saturação baixa');
+  if(parseInt(freqCardiaca) > 100) anormalidades.push('Taquicardia');
+  if(parseInt(freqCardiaca) < 60) anormalidades.push('Bradicardia');
+  
+  if(anormalidades.length > 0){
+    novo.anormalidades = anormalidades.join(', ');
+  }
+  
+  sinaisVitais.unshift(novo);
+  localStorage.setItem('sinais_vitais', JSON.stringify(sinaisVitais));
+  
+  closeModal('modal-sinais-vitais-tecnico');
+  renderTecnicoSinaisVitais();
+  
+  if(anormalidades.length > 0){
+    alert('⚠️ ATENÇÃO: ' + anormalidades.join(', ') + '\n\nRegistro salvo e notificação enviada ao gestor.');
+  } else {
+    alert('Sinais vitais registrados com sucesso!');
+  }
+}
+
+function renderTecnicoSinaisVitais(){
+  const sinaisVitais = JSON.parse(localStorage.getItem('sinais_vitais')||'[]');
+  const user = getUsuarioLogado();
+  const container = document.getElementById('tecnico-sinais-vitais-list');
+  
+  // Filtrar apenas os registros do técnico logado
+  const meusRegistros = sinaisVitais.filter(sv => sv.usuario === user?.email);
+  
+  if(meusRegistros.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhum registro de sinais vitais</p></div>';
+    return;
+  }
+  
+  let html = '';
+  meusRegistros.forEach(sv => {
+    html += `<div class="registro">
+      <h4>${sv.pacienteNome}</h4>
+      <p><strong>PA:</strong> ${sv.pressao} | <strong>Temp:</strong> ${sv.temperatura}°C | <strong>Sat:</strong> ${sv.saturacao || '-'}%</p>
+      <p><strong>FC:</strong> ${sv.freqCardiaca || '-'} bpm | <strong>FR:</strong> ${sv.freqRespiratoria || '-'} irpm | <strong>Glicemia:</strong> ${sv.glicemia || '-'} mg/dL</p>
+      <p><strong>Anotação:</strong> ${sv.anotacao || '-'}</p>
+      ${sv.anormalidades ? `<div class="notification error">⚠️ ${sv.anormalidades}</div>` : ''}
+      <div class="small">Por: ${sv.usuario} • ${new Date(sv.criadoEm).toLocaleString('pt-BR')}</div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+/* ---------- MEDICAÇÃO TÉCNICO ---------- */
+function openRetirarMedicacaoModal(){
+  renderPacientesSelectTecnico();
+  const medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  let html = '<option value="">Selecione um medicamento</option>';
+  medicamentos.forEach(m => {
+    html += `<option value="${m.id}">${m.nome} (Lote: ${m.lote}) - Estoque: ${m.quantidade}</option>`;
+  });
+  document.getElementById('retirar-medicacao-select').innerHTML = html;
+  document.getElementById('retirar-medicacao-quantidade').value = '';
+  document.getElementById('retirar-medicacao-paciente').value = '';
+  document.getElementById('retirar-medicacao-observacao').value = '';
+  openModal('modal-retirar-medicacao');
+}
+
+function saveRetirarMedicacao(){
+  const medicamentoId = document.getElementById('retirar-medicacao-select').value;
+  const quantidade = parseInt(document.getElementById('retirar-medicacao-quantidade').value);
+  const pacienteId = document.getElementById('retirar-medicacao-paciente').value;
+  const observacao = document.getElementById('retirar-medicacao-observacao').value.trim();
+  
+  if(!medicamentoId || !quantidade || !pacienteId){
+    alert('Preencha medicamento, quantidade e paciente');
+    return;
+  }
+  
+  let medicamentos = JSON.parse(localStorage.getItem('medicamentos')||'[]');
+  const medIndex = medicamentos.findIndex(m => m.id == medicamentoId);
+  if(medIndex === -1){
+    alert('Medicamento não encontrado');
+    return;
+  }
+  
+  const medicamento = medicamentos[medIndex];
+  
+  if(medicamento.quantidade < quantidade){
+    alert('Quantidade insuficiente em estoque. Disponível: ' + medicamento.quantidade);
+    return;
+  }
+  
+  medicamento.quantidade -= quantidade;
+  medicamentos[medIndex] = medicamento;
+  localStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+  
+  const movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')||'[]');
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  const user = getUsuarioLogado();
+  
+  const nova = {
+    id: Date.now(),
+    tipo: 'saida',
+    medicamentoId: parseInt(medicamentoId),
+    medicamentoNome: medicamento.nome,
+    quantidade,
+    pacienteId: parseInt(pacienteId),
+    pacienteNome: paciente ? paciente.nome : null,
+    observacao,
+    usuario: user?.email || 'técnico',
+    criadoEm: new Date().toISOString()
+  };
+  
+  movimentacoes.unshift(nova);
+  localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
+  
+  closeModal('modal-retirar-medicacao');
+  renderTecnicoMedicacao();
+  alert(`Medicação retirada com sucesso!\nEstoque atual: ${medicamento.quantidade}`);
+}
+
+function renderTecnicoMedicacao(){
+  const movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')||'[]');
+  const user = getUsuarioLogado();
+  const container = document.getElementById('tecnico-medicacao-list');
+  
+  // Filtrar apenas as retiradas do técnico logado
+  const minhasRetiradas = movimentacoes.filter(mov => mov.tipo === 'saida' && mov.usuario === user?.email);
+  
+  if(minhasRetiradas.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhuma retirada de medicação registrada</p></div>';
+    return;
+  }
+  
+  let html = '<h4>Minhas Retiradas de Medicação (Últimas 20)</h4>';
+  minhasRetiradas.slice(0, 20).forEach(mov => {
+    html += `<div class="registro">
+      <p><strong>Medicamento:</strong> ${mov.medicamentoNome} | <strong>Quantidade:</strong> ${mov.quantidade}</p>
+      <p><strong>Paciente:</strong> ${mov.pacienteNome || 'N/A'}</p>
+      ${mov.observacao ? `<p><strong>Observação:</strong> ${mov.observacao}</p>` : ''}
+      <div class="small">Por: ${mov.usuario} • ${new Date(mov.criadoEm).toLocaleString('pt-BR')}</div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+/* ---------- ALMOXARIFADO TÉCNICO ---------- */
+function openRetirarMaterialModal(){
+  renderPacientesSelectTecnico();
+  const materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  let html = '<option value="">Selecione um material</option>';
+  materiais.forEach(m => {
+    html += `<option value="${m.id}">${m.nome} (Cód: ${m.codigo}) - Estoque: ${m.quantidade} ${m.unidade}</option>`;
+  });
+  document.getElementById('retirar-material-select').innerHTML = html;
+  document.getElementById('retirar-material-quantidade').value = '';
+  document.getElementById('retirar-material-paciente').value = '';
+  document.getElementById('retirar-material-observacao').value = '';
+  openModal('modal-retirar-material');
+}
+
+function saveRetirarMaterial(){
+  const materialId = document.getElementById('retirar-material-select').value;
+  const quantidade = parseInt(document.getElementById('retirar-material-quantidade').value);
+  const pacienteId = document.getElementById('retirar-material-paciente').value;
+  const observacao = document.getElementById('retirar-material-observacao').value.trim();
+  
+  if(!materialId || !quantidade || !pacienteId){
+    alert('Preencha material, quantidade e paciente');
+    return;
+  }
+  
+  let materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  const matIndex = materiais.findIndex(m => m.id == materialId);
+  if(matIndex === -1){
+    alert('Material não encontrado');
+    return;
+  }
+  
+  const material = materiais[matIndex];
+  
+  if(material.quantidade < quantidade){
+    alert('Quantidade insuficiente em estoque. Disponível: ' + material.quantidade);
+    return;
+  }
+  
+  material.quantidade -= quantidade;
+  materiais[matIndex] = material;
+  localStorage.setItem('materiais', JSON.stringify(materiais));
+  
+  const movimentacoesMaterial = JSON.parse(localStorage.getItem('movimentacoes_material')||'[]');
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  const user = getUsuarioLogado();
+  
+  const nova = {
+    id: Date.now(),
+    tipo: 'saida',
+    materialId: parseInt(materialId),
+    materialNome: material.nome,
+    quantidade,
+    pacienteId: parseInt(pacienteId),
+    pacienteNome: paciente ? paciente.nome : null,
+    observacao,
+    usuario: user?.email || 'técnico',
+    criadoEm: new Date().toISOString()
+  };
+  
+  movimentacoesMaterial.unshift(nova);
+  localStorage.setItem('movimentacoes_material', JSON.stringify(movimentacoesMaterial));
+  
+  closeModal('modal-retirar-material');
+  renderTecnicoAlmoxarifado();
+  alert(`Material retirado com sucesso!\nEstoque atual: ${material.quantidade} ${material.unidade}`);
+}
+
+function renderTecnicoAlmoxarifado(){
+  const movimentacoesMaterial = JSON.parse(localStorage.getItem('movimentacoes_material')||'[]');
+  const user = getUsuarioLogado();
+  const container = document.getElementById('tecnico-almoxarifado-list');
+  
+  // Filtrar apenas as retiradas do técnico logado
+  const minhasRetiradas = movimentacoesMaterial.filter(mov => mov.tipo === 'saida' && mov.usuario === user?.email);
+  
+  if(minhasRetiradas.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhuma retirada de material registrada</p></div>';
+    return;
+  }
+  
+  let html = '<h4>Minhas Retiradas de Materiais (Últimas 20)</h4>';
+  minhasRetiradas.slice(0, 20).forEach(mov => {
+    html += `<div class="registro">
+      <p><strong>Material:</strong> ${mov.materialNome} | <strong>Quantidade:</strong> ${mov.quantidade}</p>
+      <p><strong>Paciente:</strong> ${mov.pacienteNome || 'N/A'}</p>
+      ${mov.observacao ? `<p><strong>Observação:</strong> ${mov.observacao}</p>` : ''}
+      <div class="small">Por: ${mov.usuario} • ${new Date(mov.criadoEm).toLocaleString('pt-BR')}</div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+/* ---------- ANOTAÇÕES TÉCNICO ---------- */
+function openAddAnotacaoModal(){
+  renderPacientesSelectTecnico();
+  document.getElementById('anotacao-id').value = '';
+  document.getElementById('anotacao-paciente').value = '';
+  document.getElementById('anotacao-texto').value = '';
+  document.getElementById('modal-anotacao-title').textContent = 'Nova Anotação';
+  openModal('modal-anotacao');
+}
+
+function saveAnotacao(){
+  const id = document.getElementById('anotacao-id').value;
+  const pacienteId = document.getElementById('anotacao-paciente').value;
+  const texto = document.getElementById('anotacao-texto').value.trim();
+  
+  if(!pacienteId || !texto){
+    alert('Preencha paciente e texto da anotação');
+    return;
+  }
+  
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  if(!paciente){
+    alert('Paciente não encontrado');
+    return;
+  }
+  
+  let anotacoes = JSON.parse(localStorage.getItem('anotacoes')||'[]');
+  const user = getUsuarioLogado();
+  
+  if(id){
+    const index = anotacoes.findIndex(a => a.id == id);
+    if(index !== -1){
+      anotacoes[index] = {id: parseInt(id), pacienteId: parseInt(pacienteId), pacienteNome: paciente.nome, texto, usuario: user?.email || 'técnico', criadoEm: anotacoes[index].criadoEm, atualizadoEm: new Date().toISOString()};
+    }
+  } else {
+    const nova = {id: Date.now(), pacienteId: parseInt(pacienteId), pacienteNome: paciente.nome, texto, usuario: user?.email || 'técnico', criadoEm: new Date().toISOString()};
+    anotacoes.unshift(nova);
+  }
+  
+  localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+  closeModal('modal-anotacao');
+  renderTecnicoAnotacoes();
+  alert(id ? 'Anotação atualizada com sucesso!' : 'Anotação adicionada com sucesso!');
+}
+
+function renderTecnicoAnotacoes(){
+  const anotacoes = JSON.parse(localStorage.getItem('anotacoes')||'[]');
+  const user = getUsuarioLogado();
+  const container = document.getElementById('tecnico-anotacoes-list');
+  
+  // Filtrar apenas as anotações do técnico logado
+  const minhasAnotacoes = anotacoes.filter(a => a.usuario === user?.email);
+  
+  if(minhasAnotacoes.length === 0){
+    container.innerHTML = '<div class="empty-state"><p>Nenhuma anotação registrada</p></div>';
+    return;
+  }
+  
+  let html = '';
+  minhasAnotacoes.forEach(a => {
+    html += `<div class="card">
+      <h4>${a.pacienteNome}</h4>
+      <p style="white-space:pre-wrap;">${a.texto}</p>
+      <div class="small">Por: ${a.usuario} • ${new Date(a.criadoEm).toLocaleString('pt-BR')}</div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+/* ---------- ALMOXARIFADO GESTOR ---------- */
+function openAddMaterialModal(){
+  document.getElementById('modal-material-title').textContent = 'Adicionar Material';
+  document.getElementById('material-id').value = '';
+  document.getElementById('material-nome').value = '';
+  document.getElementById('material-codigo').value = '';
+  document.getElementById('material-quantidade').value = '';
+  document.getElementById('material-unidade').value = '';
+  openModal('modal-material');
+}
+
+function openEditMaterialModal(id){
+  const materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  const mat = materiais.find(m => m.id == id);
+  if(!mat) return;
+  
+  document.getElementById('modal-material-title').textContent = 'Editar Material';
+  document.getElementById('material-id').value = mat.id;
+  document.getElementById('material-nome').value = mat.nome;
+  document.getElementById('material-codigo').value = mat.codigo;
+  document.getElementById('material-quantidade').value = mat.quantidade;
+  document.getElementById('material-unidade').value = mat.unidade;
+  openModal('modal-material');
+}
+
+function saveMaterial(){
+  const id = document.getElementById('material-id').value;
+  const nome = document.getElementById('material-nome').value.trim();
+  const codigo = document.getElementById('material-codigo').value.trim();
+  const quantidade = parseInt(document.getElementById('material-quantidade').value);
+  const unidade = document.getElementById('material-unidade').value.trim();
+  
+  if(!nome || !codigo || !quantidade || !unidade){
+    alert('Preencha todos os campos obrigatórios');
+    return;
+  }
+  
+  let materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  
+  if(id){
+    const index = materiais.findIndex(m => m.id == id);
+    if(index !== -1){
+      materiais[index] = {id: parseInt(id), nome, codigo, quantidade, unidade};
+    }
+  } else {
+    const novo = {id: Date.now(), nome, codigo, quantidade, unidade};
+    materiais.unshift(novo);
+  }
+  
+  localStorage.setItem('materiais', JSON.stringify(materiais));
+  closeModal('modal-material');
+  renderAlmoxarifado();
+  alert(id ? 'Material atualizado com sucesso!' : 'Material adicionado com sucesso!');
+}
+
+function deleteMaterial(id){
+  if(!confirm('Deseja realmente excluir este material?')) return;
+  
+  let materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  materiais = materiais.filter(m => m.id != id);
+  localStorage.setItem('materiais', JSON.stringify(materiais));
+  renderAlmoxarifado();
+  alert('Material excluído com sucesso!');
+}
+
+function openMovimentacaoMaterialModal(tipo){
+  document.getElementById('modal-movimentacao-material-title').textContent = tipo === 'entrada' ? 'Registrar Entrada' : 'Registrar Saída';
+  document.getElementById('movimentacao-material-tipo').value = tipo;
+  document.getElementById('movimentacao-material-quantidade').value = '';
+  document.getElementById('movimentacao-material-observacao').value = '';
+  
+  const materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  let html = '<option value="">Selecione um material</option>';
+  materiais.forEach(m => {
+    html += `<option value="${m.id}">${m.nome} (Cód: ${m.codigo}) - Estoque: ${m.quantidade} ${m.unidade}</option>`;
+  });
+  document.getElementById('movimentacao-material-select').innerHTML = html;
+  
+  if(tipo === 'saida'){
+    document.getElementById('movimentacao-material-paciente').style.display = 'block';
+    renderPacientesSelect();
+    const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+    let htmlPac = '<option value="">Selecione um paciente</option>';
+    pacientes.forEach(p => {
+      htmlPac += `<option value="${p.id}">${p.nome} - Quarto ${p.quarto || 'N/A'}</option>`;
+    });
+    document.getElementById('movimentacao-material-paciente').innerHTML = htmlPac;
+  } else {
+    document.getElementById('movimentacao-material-paciente').style.display = 'none';
+  }
+  
+  openModal('modal-movimentacao-material');
+}
+
+function saveMovimentacaoMaterial(){
+  const tipo = document.getElementById('movimentacao-material-tipo').value;
+  const materialId = document.getElementById('movimentacao-material-select').value;
+  const quantidade = parseInt(document.getElementById('movimentacao-material-quantidade').value);
+  const pacienteId = document.getElementById('movimentacao-material-paciente').value;
+  const observacao = document.getElementById('movimentacao-material-observacao').value.trim();
+  
+  if(!materialId || !quantidade){
+    alert('Preencha material e quantidade');
+    return;
+  }
+  
+  let materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  const matIndex = materiais.findIndex(m => m.id == materialId);
+  if(matIndex === -1){
+    alert('Material não encontrado');
+    return;
+  }
+  
+  const material = materiais[matIndex];
+  
+  if(tipo === 'entrada'){
+    material.quantidade += quantidade;
+  } else {
+    if(material.quantidade < quantidade){
+      alert('Quantidade insuficiente em estoque');
+      return;
+    }
+    material.quantidade -= quantidade;
+  }
+  
+  materiais[matIndex] = material;
+  localStorage.setItem('materiais', JSON.stringify(materiais));
+  
+  const movimentacoesMaterial = JSON.parse(localStorage.getItem('movimentacoes_material')||'[]');
+  const pacientes = JSON.parse(localStorage.getItem('pacientes')||'[]');
+  const paciente = pacientes.find(p => p.id == pacienteId);
+  
+  const nova = {
+    id: Date.now(),
+    tipo,
+    materialId: parseInt(materialId),
+    materialNome: material.nome,
+    quantidade,
+    pacienteId: pacienteId ? parseInt(pacienteId) : null,
+    pacienteNome: paciente ? paciente.nome : null,
+    observacao,
+    usuario: getUsuarioLogado()?.email || 'sistema',
+    criadoEm: new Date().toISOString()
+  };
+  
+  movimentacoesMaterial.unshift(nova);
+  localStorage.setItem('movimentacoes_material', JSON.stringify(movimentacoesMaterial));
+  
+  // Verificar estoque baixo
+  if(material.quantidade < 10){
+    addNotificacao(`⚠️ Estoque baixo: ${material.nome} (${material.quantidade} ${material.unidade})`, 'error');
+  }
+  
+  closeModal('modal-movimentacao-material');
+  renderAlmoxarifado();
+  alert('Movimentação registrada com sucesso!');
+}
+
+function renderAlmoxarifado(){
+  const materiais = JSON.parse(localStorage.getItem('materiais')||'[]');
+  const movimentacoesMaterial = JSON.parse(localStorage.getItem('movimentacoes_material')||'[]');
+  const container = document.getElementById('almoxarifado-list');
+  
+  let html = '<h4>Estoque de Materiais</h4>';
+  
+  if(materiais.length === 0){
+    html += '<div class="empty-state"><p>Nenhum material cadastrado</p></div>';
+  } else {
+    html += '<table><thead><tr><th>Nome</th><th>Código</th><th>Quantidade</th><th>Unidade</th><th>Ações</th></tr></thead><tbody>';
+    materiais.forEach(m => {
+      let alertaEstoque = '';
+      if(m.quantidade < 10){
+        alertaEstoque = '<span style="color:red;">⚠️ Estoque baixo</span>';
+      }
+      
+      html += `<tr>
+        <td>${m.nome} ${alertaEstoque}</td>
+        <td>${m.codigo}</td>
+        <td>${m.quantidade}</td>
+        <td>${m.unidade}</td>
+        <td>
+          <button onclick="openEditMaterialModal(${m.id})" class="info" style="width:auto; padding:6px 12px; margin-right:5px;">✏️ Editar</button>
+          <button onclick="deleteMaterial(${m.id})" class="danger" style="width:auto; padding:6px 12px;">🗑️ Excluir</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+  }
+  
+  html += '<h4 style="margin-top:30px;">Histórico de Movimentações (Últimas 20)</h4>';
+  
+  if(movimentacoesMaterial.length === 0){
+    html += '<div class="empty-state"><p>Nenhuma movimentação registrada</p></div>';
+  } else {
+    movimentacoesMaterial.slice(0, 20).forEach(mov => {
+      html += `<div class="registro">
+        <p><strong>Tipo:</strong> ${mov.tipo === 'entrada' ? '📥 Entrada' : '📤 Saída'} | <strong>Material:</strong> ${mov.materialNome} | <strong>Quantidade:</strong> ${mov.quantidade}</p>
+        ${mov.pacienteNome ? `<p><strong>Paciente:</strong> ${mov.pacienteNome}</p>` : ''}
+        ${mov.observacao ? `<p><strong>Observação:</strong> ${mov.observacao}</p>` : ''}
+        <div class="small">Por: ${mov.usuario} • ${new Date(mov.criadoEm).toLocaleString('pt-BR')}</div>
+      </div>`;
+    });
+  }
+  
+  container.innerHTML = html;
+}
+
+window.onclick = function(event) {
+  if(event.target.classList.contains('modal')) {
+    event.target.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
+
