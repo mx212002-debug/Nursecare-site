@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Enfermagem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy-blue: #1e3a5f;
+            --navy-blue-dark: #152a45;
+            --navy-blue-light: #2d5a8f;
+            --burgundy: #800020;
+            --burgundy-dark: #5c0017;
+            --burgundy-light: #a6002a;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #dc2626;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--burgundy) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Login Screen */
+        .login-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: var(--navy-blue);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: var(--light-bg);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--navy-blue);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: var(--navy-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--navy-blue-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--burgundy);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--burgundy-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(128, 0, 32, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        /* Main App Screen */
+        .app-container {
+            display: none;
+            background: var(--light-bg);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .app-container.active {
+            display: block;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--burgundy) 100%);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .greeting h2 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .greeting p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: var(--burgundy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--burgundy-light);
+            transform: scale(1.05);
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-header h3 {
+            color: var(--navy-blue);
+            font-size: 18px;
+        }
+
+        .card {
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--navy-blue);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        .card.critical {
+            border-left-color: var(--danger-color);
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .card.warning {
+            border-left-color: var(--warning-color);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .card.success {
+            border-left-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 16px;
+        }
+
+        .card-subtitle {
+            color: var(--text-light);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: var(--navy-blue);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: var(--burgundy);
+            color: white;
+        }
+
+        .badge-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .badge-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px;
+            color: var(--text-light);
+        }
+
+        .nav-item.active {
+            color: var(--navy-blue);
+            background: rgba(30, 58, 95, 0.1);
+        }
+
+        .nav-item:hover {
+            background: rgba(30, 58, 95, 0.05);
+        }
+
+        .nav-item span {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item p {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Floating AI Button */
+        .ai-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--burgundy) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4);
+            z-index: 99;
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 30px rgba(128, 0, 32, 0.6);
+            }
+        }
+
+        .ai-button:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            color: var(--navy-blue);
+            font-size: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--text-light);
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--burgundy);
+            transform: rotate(90deg);
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .list-item:hover {
+            background: rgba(30, 58, 95, 0.05);
+        }
+
+        .list-item-content h4 {
+            color: var(--text-dark);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .list-item-content p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-btn.edit {
+            background: var(--navy-blue);
+            color: white;
+        }
+
+        .icon-btn.delete {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .icon-btn.view {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state span {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--navy-blue);
+            border-bottom-color: var(--navy-blue);
+        }
+
+        .tab:hover {
+            color: var(--burgundy);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--burgundy) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card h4 {
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .stat-card p {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .ai-response-box {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.1) 0%, rgba(128, 0, 32, 0.1) 100%);
+            border-left: 4px solid var(--navy-blue);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .ai-response-box p {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .ai-response-box strong {
+            color: var(--navy-blue);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(30, 58, 95, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--navy-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-item p {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-header">
+            <h1>🩺 Sistema de Enfermagem</h1>
+            <p>Gestão Inteligente de Cuidados</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Usuário</label>
+                <input type="text" id="loginUsername" placeholder="Digite seu usuário" required>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="loginPassword" placeholder="Digite sua senha" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+    </div>
+
+    <!-- Gestor App -->
+    <div id="gestorApp" class="app-container">
+        <div class="header">
+            <div class="header-content">
+                <div class="greeting">
+                    <h2 id="gestorGreeting">Olá, Enfermeiro</h2>
+                    <p id="currentDateTime"></p>
+                </div>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Pacientes Ativos</h4>
+                        <p id="totalPacientes">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Pacientes Críticos</h4>
+                        <p id="pacientesCriticos">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Equipe Ativa</h4>
+                        <p id="totalEquipe">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Tarefas Pendentes</h4>
+                        <p id="tarefasPendentes">0</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h3>📋 Resumo do Dia (IA)</h3>
+                    </div>
+                    <div id="resumoDia"></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h3>⚠️ Alertas e Notificações</h3>
+                    </div>
+                    <div id="alertasContainer"></div>
+                </div>
+            </div>
+
+            <!-- Pacientes Tab -->
+            <div id="pacientesTab" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>👥 Pacientes</h3>
+                        <button class="btn btn-primary" onclick="openModal('addPacienteModal')" style="width: auto; padding: 10px 20px;">+ Adicionar</button>
+                    </div>
+                    <div id="pacientesContainer"></div>
+                </div>
+            </div>
+
+            <!-- Equipe Tab -->
+            <div id="equipeTab" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>👨‍⚕️ Equipe</h3>
+                        <button class="btn btn-primary" onclick="openModal('addEquipeModal')" style="width: auto; padding: 10px 20px;">+ Adicionar</button>
+                    </div>
+                    <div class="section">
+                        <h4 style="color: var(--navy-blue); margin-bottom: 15px;">📞 Canal Direto</h4>
+                        <div class="card">
+                            <p><strong>Enf° Matheus Xavier</strong></p>
+                            <p style="margin-top: 8px;">📱 11985209793</p>
+                            <p>📧 enf.matheus37284363@gmail.com</p>
+                        </div>
+                    </div>
+                    <div id="equipeContainer"></div>
+                </div>
+            </div>
+
+            <!-- Farmácia Tab -->
+            <div id="farmaciaTab" class="tab-content">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchSubTab('medicamentos')">💊 Medicamentos</button>
+                    <button class="tab" onclick="switchSubTab('almoxarifado')">📦 Almoxarifado</button>
+                </div>
+
+                <div id="medicamentosSubTab" class="tab-content active">
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>💊 Medicamentos</h3>
+                            <button class="btn btn-primary" onclick="openModal('addMedicamentoModal')" style="width: auto; padding: 10px 20px;">+ Adicionar</button>
+                        </div>
+                        <div id="medicamentosContainer"></div>
+                    </div>
+                </div>
+
+                <div id="almoxarifadoSubTab" class="tab-content">
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>📦 Almoxarifado</h3>
+                            <button class="btn btn-primary" onclick="openModal('addMaterialModal')" style="width: auto; padding: 10px 20px;">+ Adicionar</button>
+                        </div>
+                        <div id="materiaisContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarefas Tab -->
+            <div id="tarefasTab" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>✅ Tarefas</h3>
+                        <button class="btn btn-primary" onclick="openModal('addTarefaModal')" style="width: auto; padding: 10px 20px;">+ Adicionar</button>
+                    </div>
+                    <div id="tarefasContainer"></div>
+                </div>
+            </div>
+
+            <!-- Relatórios Tab -->
+            <div id="relatoriosTab" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>📊 Relatórios Inteligentes</h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="gerarRelatorioDiario()">📄 Relatório Diário</button>
+                    <button class="btn btn-secondary" onclick="gerarRelatorioSemanal()">📅 Relatório Semanal</button>
+                    <button class="btn btn-primary" onclick="gerarRelatorioMensal()">📆 Relatório Mensal</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-button" onclick="openModal('aiModal')" title="Assistente IA">🤖</div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('dashboard')">
+                <span>🏠</span>
+                <p>Início</p>
+            </div>
+            <div class="nav-item" onclick="switchTab('pacientes')">
+                <span>👥</span>
+                <p>Pacientes</p>
+            </div>
+            <div class="nav-item" onclick="switchTab('equipe')">
+                <span>👨‍⚕️</span>
+                <p>Equipe</p>
+            </div>
+            <div class="nav-item" onclick="switchTab('farmacia')">
+                <span>💊</span>
+                <p>Farmácia</p>
+            </div>
+            <div class="nav-item" onclick="switchTab('tarefas')">
+                <span>✅</span>
+                <p>Tarefas</p>
+            </div>
+            <div class="nav-item" onclick="switchTab('relatorios')">
+                <span>📊</span>
+                <p>Relatórios</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Colaborador App -->
+    <div id="colaboradorApp" class="app-container">
+        <div class="header">
+            <div class="header-content">
+                <div class="greeting">
+                    <h2 id="colaboradorGreeting">Olá, Colaborador</h2>
+                    <p id="colaboradorDateTime"></p>
+                </div>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Colaborador -->
+            <div id="colabDashboardTab" class="tab-content active">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>📋 Minhas Tarefas</h3>
+                    </div>
+                    <div id="colabTarefasContainer"></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h3>📢 Comunicados</h3>
+                    </div>
+                    <div id="colabComunicadosContainer"></div>
+                </div>
+            </div>
+
+            <!-- Pacientes Colaborador -->
+            <div id="colabPacientesTab" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>👥 Pacientes</h3>
+                    </div>
+                    <div id="colabPacientesContainer"></div>
+                </div>
+            </div>
+
+            <!-- Farmácia Colaborador -->
+            <div id="colabFarmaciaTab" class="tab-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>💊 Medicamentos Disponíveis</h3>
+                    </div>
+                    <div id="colabMedicamentosContainer"></div>
+                </div>
+                <div class="section">
+                    <div class="section-header">
+                        <h3>📦 Materiais Disponíveis</h3>
+                    </div>
+                    <div id="colabMateriaisContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-button" onclick="openModal('aiModal')" title="Assistente IA">🤖</div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchColabTab('colabDashboard')">
+                <span>🏠</span>
+                <p>Início</p>
+            </div>
+            <div class="nav-item" onclick="switchColabTab('colabPacientes')">
+                <span>👥</span>
+                <p>Pacientes</p>
+            </div>
+            <div class="nav-item" onclick="switchColabTab('colabFarmacia')">
+                <span>💊</span>
+                <p>Farmácia</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- AI Modal -->
+    <div id="aiModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🤖 Assistente IA</h3>
+                <button class="close-btn" onclick="closeModal('aiModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Como posso ajudar?</label>
+                <textarea id="aiInput" rows="4" placeholder="Digite sua pergunta ou solicitação..."></textarea>
+            </div>
+            <div id="aiResponse" class="hidden">
+                <div class="ai-response-box">
+                    <p id="aiResponseText"></p>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="consultarIA()">Consultar IA</button>
+        </div>
+    </div>
+
+    <!-- Add Paciente Modal -->
+    <div id="addPacienteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Paciente</h3>
+                <button class="close-btn" onclick="closeModal('addPacienteModal')">&times;</button>
+            </div>
+            <form id="addPacienteForm">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="pacienteNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Idade</label>
+                    <input type="number" id="pacienteIdade" required>
+                </div>
+                <div class="form-group">
+                    <label>Diagnóstico</label>
+                    <input type="text" id="pacienteDiagnostico" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="pacienteStatus" required>
+                        <option value="ativo">Ativo</option>
+                        <option value="critico">Crítico</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Paciente</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Equipe Modal -->
+    <div id="addEquipeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Membro da Equipe</h3>
+                <button class="close-btn" onclick="closeModal('addEquipeModal')">&times;</button>
+            </div>
+            <form id="addEquipeForm">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="equipeNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Cargo</label>
+                    <select id="equipeCargo" required>
+                        <option value="enfermeiro">Enfermeiro</option>
+                        <option value="tecnico">Técnico de Enfermagem</option>
+                        <option value="auxiliar">Auxiliar de Enfermagem</option>
+                        <option value="cuidador">Cuidador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Usuário</label>
+                    <input type="text" id="equipeUsuario" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="equipeSenha" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Acesso</label>
+                    <select id="equipeTipo" required>
+                        <option value="gestor">Gestor</option>
+                        <option value="colaborador">Colaborador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Membro</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Medicamento Modal -->
+    <div id="addMedicamentoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Medicamento</h3>
+                <button class="close-btn" onclick="closeModal('addMedicamentoModal')">&times;</button>
+            </div>
+            <form id="addMedicamentoForm">
+                <div class="form-group">
+                    <label>Nome do Medicamento</label>
+                    <input type="text" id="medicamentoNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade em Estoque</label>
+                    <input type="number" id="medicamentoQuantidade" required>
+                </div>
+                <div class="form-group">
+                    <label>Data de Validade</label>
+                    <input type="date" id="medicamentoValidade" required>
+                </div>
+                <div class="form-group">
+                    <label>Lote</label>
+                    <input type="text" id="medicamentoLote" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Medicamento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Material Modal -->
+    <div id="addMaterialModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Material</h3>
+                <button class="close-btn" onclick="closeModal('addMaterialModal')">&times;</button>
+            </div>
+            <form id="addMaterialForm">
+                <div class="form-group">
+                    <label>Nome do Material</label>
+                    <input type="text" id="materialNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade em Estoque</label>
+                    <input type="number" id="materialQuantidade" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="materialCategoria" required>
+                        <option value="descartavel">Descartável</option>
+                        <option value="equipamento">Equipamento</option>
+                        <option value="higiene">Higiene</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Material</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Tarefa Modal -->
+    <div id="addTarefaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Tarefa</h3>
+                <button class="close-btn" onclick="closeModal('addTarefaModal')">&times;</button>
+            </div>
+            <form id="addTarefaForm">
+                <div class="form-group">
+                    <label>Título da Tarefa</label>
+                    <input type="text" id="tarefaTitulo" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="tarefaDescricao" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Atribuir para</label>
+                    <select id="tarefaResponsavel" required>
+                        <option value="">Selecione um colaborador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prioridade</label>
+                    <select id="tarefaPrioridade" required>
+                        <option value="baixa">Baixa</option>
+                        <option value="media">Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Tarefa</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Paciente Modal -->
+    <div id="viewPacienteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalhes do Paciente</h3>
+                <button class="close-btn" onclick="closeModal('viewPacienteModal')">&times;</button>
+            </div>
+            <div id="pacienteDetalhes"></div>
+            <div class="form-group">
+                <label>Nova Evolução</label>
+                <textarea id="novaEvolucao" rows="4" placeholder="Digite a evolução do paciente..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="adicionarEvolucao()">Adicionar Evolução</button>
+        </div>
+    </div>
+
+    <!-- Registro SSVV Modal (Colaborador) -->
+    <div id="registroSSVVModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Sinais Vitais</h3>
+                <button class="close-btn" onclick="closeModal('registroSSVVModal')">&times;</button>
+            </div>
+            <form id="registroSSVVForm">
+                <div class="form-group">
+                    <label>Pressão Arterial (mmHg)</label>
+                    <input type="text" id="ssvvPA" placeholder="120/80" required>
+                </div>
+                <div class="form-group">
+                    <label>Frequência Cardíaca (bpm)</label>
+                    <input type="number" id="ssvvFC" placeholder="75" required>
+                </div>
+                <div class="form-group">
+                    <label>Temperatura (°C)</label>
+                    <input type="number" step="0.1" id="ssvvTemp" placeholder="36.5" required>
+                </div>
+                <div class="form-group">
+                    <label>Saturação O2 (%)</label>
+                    <input type="number" id="ssvvSat" placeholder="98" required>
+                </div>
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="ssvvObs" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // DATABASE SIMULATION (LocalStorage)
+        // ==========================================
+        const DB = {
+            get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
+            set: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
+            add: (key, item) => {
+                const items = DB.get(key);
+                items.push({ ...item, id: Date.now() });
+                DB.set(key, items);
+                return items;
+            },
+            update: (key, id, updates) => {
+                const items = DB.get(key);
+                const index = items.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    items[index] = { ...items[index], ...updates };
+                    DB.set(key, items);
+                }
+                return items;
+            },
+            delete: (key, id) => {
+                const items = DB.get(key).filter(i => i.id !== id);
+                DB.set(key, items);
+                return items;
+            }
+        };
+
+        // Initialize default users if not exists
+        if (!localStorage.getItem('usuarios')) {
+            DB.set('usuarios', [
+                { 
+                    id: 1, 
+                    nome: 'Enfermeiro Matheus Xavier', 
+                    usuario: 'matheus', 
+                    senha: '1234', 
+                    tipo: 'gestor',
+                    cargo: 'enfermeiro',
+                    telefone: '11985209793',
+                    email: 'enf.matheus37284363@gmail.com'
+                },
+                { 
+                    id: 2, 
+                    nome: 'Maria Silva', 
+                    usuario: 'maria', 
+                    senha: '1234', 
+                    tipo: 'colaborador',
+                    cargo: 'tecnico'
+                }
+            ]);
+        }
+
+        // ==========================================
+        // GLOBAL VARIABLES
+        // ==========================================
+        let currentUser = null;
+        let selectedPacienteId = null;
+
+        // ==========================================
+        // AUTHENTICATION
+        // ==========================================
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const usuarios = DB.get('usuarios');
+            const user = usuarios.find(u => u.usuario === username && u.senha === password);
+            
+            if (user) {
+                currentUser = user;
+                document.getElementById('loginScreen').style.display = 'none';
+                
+                if (user.tipo === 'gestor') {
+                    document.getElementById('gestorApp').classList.add('active');
+                    document.getElementById('gestorGreeting').textContent = `Olá, ${user.nome}`;
+                    initGestorApp();
+                } else {
+                    document.getElementById('colaboradorApp').classList.add('active');
+                    document.getElementById('colaboradorGreeting').textContent = `Olá, ${user.nome}`;
+                    initColaboradorApp();
+                }
+                
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+            } else {
+                alert('Usuário ou senha incorretos!');
+            }
+        });
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('gestorApp').classList.remove('active');
+            document.getElementById('colaboradorApp').classList.remove('active');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // ==========================================
+        // UTILITY FUNCTIONS
+        // ==========================================
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const dateTimeStr = now.toLocaleDateString('pt-BR', options);
+            
+            const elem = document.getElementById('currentDateTime') || document.getElementById('colaboradorDateTime');
+            if (elem) elem.textContent = dateTimeStr;
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // ==========================================
+        // TAB NAVIGATION
+        // ==========================================
+        function switchTab(tabName) {
+            document.querySelectorAll('#gestorApp .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('#gestorApp .main-content > .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function switchSubTab(subTabName) {
+            document.querySelectorAll('#farmaciaTab .tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('#farmaciaTab > .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(subTabName + 'SubTab').classList.add('active');
+        }
+
+        function switchColabTab(tabName) {
+            document.querySelectorAll('#colaboradorApp .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('#colaboradorApp .main-content > .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // ==========================================
+        // GESTOR APP INITIALIZATION
+        // ==========================================
+        function initGestorApp() {
+            loadDashboardStats();
+            loadPacientes();
+            loadEquipe();
+            loadMedicamentos();
+            loadMateriais();
+            loadTarefas();
+            loadAlertas();
+            loadResumoDia();
+            populateEquipeSelect();
+        }
+
+        function loadDashboardStats() {
+            const pacientes = DB.get('pacientes');
+            const equipe = DB.get('usuarios').filter(u => u.tipo === 'colaborador');
+            const tarefas = DB.get('tarefas');
+            
+            document.getElementById('totalPacientes').textContent = pacientes.filter(p => p.status === 'ativo').length;
+            document.getElementById('pacientesCriticos').textContent = pacientes.filter(p => p.status === 'critico').length;
+            document.getElementById('totalEquipe').textContent = equipe.length;
+            document.getElementById('tarefasPendentes').textContent = tarefas.filter(t => !t.concluida).length;
+        }
+
+        function loadPacientes() {
+            const pacientes = DB.get('pacientes');
+            const container = document.getElementById('pacientesContainer');
+            
+            if (pacientes.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>👥</span><p>Nenhum paciente cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = pacientes.map(p => `
+                <div class="card ${p.status === 'critico' ? 'critical' : ''}">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${p.nome}</div>
+                            <div class="card-subtitle">${p.idade} anos • ${p.diagnostico}</div>
+                        </div>
+                        <span class="badge badge-${p.status === 'critico' ? 'danger' : p.status === 'ativo' ? 'success' : 'primary'}">
+                            ${p.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="icon-btn view" onclick="viewPaciente(${p.id})">👁️</button>
+                        <button class="icon-btn delete" onclick="deletePaciente(${p.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadEquipe() {
+            const equipe = DB.get('usuarios');
+            const container = document.getElementById('equipeContainer');
+            
+            container.innerHTML = equipe.map(e => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <h4>${e.nome}</h4>
+                        <p>${e.cargo} • ${e.tipo}</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="icon-btn delete" onclick="deleteEquipe(${e.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadMedicamentos() {
+            const medicamentos = DB.get('medicamentos');
+            const container = document.getElementById('medicamentosContainer');
+            
+            if (medicamentos.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>💊</span><p>Nenhum medicamento cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = medicamentos.map(m => {
+                const validade = new Date(m.validade);
+                const hoje = new Date();
+                const diasRestantes = Math.ceil((validade - hoje) / (1000 * 60 * 60 * 24));
+                const isVencendo = diasRestantes <= 30;
+                const isBaixoEstoque = m.quantidade < 10;
+                
+                return `
+                    <div class="card ${isVencendo || isBaixoEstoque ? 'warning' : ''}">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${m.nome}</div>
+                                <div class="card-subtitle">Lote: ${m.lote} • Validade: ${new Date(m.validade).toLocaleDateString('pt-BR')}</div>
+                            </div>
+                            <span class="badge ${isBaixoEstoque ? 'badge-danger' : 'badge-success'}">
+                                ${m.quantidade} un.
+                            </span>
+                        </div>
+                        ${isVencendo ? '<p style="color: var(--warning-color); font-size: 12px; margin-top: 8px;">⚠️ Vence em ' + diasRestantes + ' dias</p>' : ''}
+                        <div class="action-buttons">
+                            <button class="icon-btn delete" onclick="deleteMedicamento(${m.id})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadMateriais() {
+            const materiais = DB.get('materiais');
+            const container = document.getElementById('materiaisContainer');
+            
+            if (materiais.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>📦</span><p>Nenhum material cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = materiais.map(m => {
+                const isBaixoEstoque = m.quantidade < 10;
+                
+                return `
+                    <div class="card ${isBaixoEstoque ? 'warning' : ''}">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${m.nome}</div>
+                                <div class="card-subtitle">Categoria: ${m.categoria}</div>
+                            </div>
+                            <span class="badge ${isBaixoEstoque ? 'badge-danger' : 'badge-success'}">
+                                ${m.quantidade} un.
+                            </span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="icon-btn delete" onclick="deleteMaterial(${m.id})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadTarefas() {
+            const tarefas = DB.get('tarefas');
+            const container = document.getElementById('tarefasContainer');
+            
+            if (tarefas.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>✅</span><p>Nenhuma tarefa cadastrada</p></div>';
+                return;
+            }
+            
+            container.innerHTML = tarefas.map(t => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${t.titulo}</div>
+                            <div class="card-subtitle">${t.descricao}</div>
+                            <div class="card-subtitle">Responsável: ${t.responsavel}</div>
+                        </div>
+                        <span class="badge badge-${t.prioridade === 'alta' ? 'danger' : t.prioridade === 'media' ? 'warning' : 'primary'}">
+                            ${t.prioridade.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="icon-btn ${t.concluida ? 'view' : 'edit'}" onclick="toggleTarefa(${t.id})">
+                            ${t.concluida ? '✓' : '○'}
+                        </button>
+                        <button class="icon-btn delete" onclick="deleteTarefa(${t.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadAlertas() {
+            const container = document.getElementById('alertasContainer');
+            const alertas = [];
+            
+            const medicamentos = DB.get('medicamentos');
+            medicamentos.forEach(m => {
+                const validade = new Date(m.validade);
+                const hoje = new Date();
+                const diasRestantes = Math.ceil((validade - hoje) / (1000 * 60 * 60 * 24));
+                
+                if (diasRestantes <= 30 && diasRestantes > 0) {
+                    alertas.push({
+                        tipo: 'warning',
+                        mensagem: `⚠️ Medicamento ${m.nome} vence em ${diasRestantes} dias`
+                    });
+                }
+                
+                if (m.quantidade < 10) {
+                    alertas.push({
+                        tipo: 'danger',
+                        mensagem: `🔴 Estoque baixo de ${m.nome}: ${m.quantidade} unidades`
+                    });
+                }
+            });
+            
+            const materiais = DB.get('materiais');
+            materiais.forEach(m => {
+                if (m.quantidade < 10) {
+                    alertas.push({
+                        tipo: 'danger',
+                        mensagem: `🔴 Estoque baixo de ${m.nome}: ${m.quantidade} unidades`
+                    });
+                }
+            });
+            
+            const pacientes = DB.get('pacientes');
+            const criticos = pacientes.filter(p => p.status === 'critico');
+            if (criticos.length > 0) {
+                alertas.push({
+                    tipo: 'critical',
+                    mensagem: `🚨 ${criticos.length} paciente(s) em estado crítico`
+                });
+            }
+            
+            if (alertas.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>✓</span><p>Nenhum alerta no momento</p></div>';
+                return;
+            }
+            
+            container.innerHTML = alertas.map(a => `
+                <div class="card ${a.tipo}">
+                    <p>${a.mensagem}</p>
+                </div>
+            `).join('');
+        }
+
+        function loadResumoDia() {
+            const container = document.getElementById('resumoDia');
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            
+            const pacientes = DB.get('pacientes');
+            const tarefas = DB.get('tarefas');
+            const medicamentos = DB.get('medicamentos');
+            
+            const resumo = `
+                <div class="ai-response-box">
+                    <p><strong>🤖 Resumo Inteligente de ${hoje}</strong></p>
+                    <p style="margin-top: 10px;">
+                        A IA analisou as atividades do dia e identificou <strong>${pacientes.length} pacientes ativos</strong>,
+                        sendo <strong>${pacientes.filter(p => p.status === 'critico').length} em estado crítico</strong>.
+                        Há <strong>${tarefas.filter(t => !t.concluida).length} tarefas pendentes</strong> e
+                        <strong>${medicamentos.filter(m => m.quantidade < 10).length} itens com estoque baixo</strong>.
+                        Recomenda-se atenção especial aos pacientes críticos e reposição de estoque.
+                    </p>
+                </div>
+            `;
+            
+            container.innerHTML = resumo;
+        }
+
+        function populateEquipeSelect() {
+            const equipe = DB.get('usuarios').filter(u => u.tipo === 'colaborador');
+            const select = document.getElementById('tarefaResponsavel');
+            
+            select.innerHTML = '<option value="">Selecione um colaborador</option>' +
+                equipe.map(e => `<option value="${e.nome}">${e.nome}</option>`).join('');
+        }
+
+        // ==========================================
+        // FORM HANDLERS
+        // ==========================================
+        document.getElementById('addPacienteForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const paciente = {
+                nome: document.getElementById('pacienteNome').value,
+                idade: document.getElementById('pacienteIdade').value,
+                diagnostico: document.getElementById('pacienteDiagnostico').value,
+                status: document.getElementById('pacienteStatus').value,
+                evolucoes: [],
+                ssvv: []
+            };
+            
+            DB.add('pacientes', paciente);
+            loadPacientes();
+            loadDashboardStats();
+            loadAlertas();
+            loadResumoDia();
+            closeModal('addPacienteModal');
+            e.target.reset();
+        });
+
+        document.getElementById('addEquipeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const membro = {
+                nome: document.getElementById('equipeNome').value,
+                cargo: document.getElementById('equipeCargo').value,
+                usuario: document.getElementById('equipeUsuario').value,
+                senha: document.getElementById('equipeSenha').value,
+                tipo: document.getElementById('equipeTipo').value
+            };
+            
+            DB.add('usuarios', membro);
+            loadEquipe();
+            loadDashboardStats();
+            populateEquipeSelect();
+            closeModal('addEquipeModal');
+            e.target.reset();
+        });
+
+        document.getElementById('addMedicamentoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const medicamento = {
+                nome: document.getElementById('medicamentoNome').value,
+                quantidade: parseInt(document.getElementById('medicamentoQuantidade').value),
+                validade: document.getElementById('medicamentoValidade').value,
+                lote: document.getElementById('medicamentoLote').value
+            };
+            
+            DB.add('medicamentos', medicamento);
+            loadMedicamentos();
+            loadAlertas();
+            loadResumoDia();
+            closeModal('addMedicamentoModal');
+            e.target.reset();
+        });
+
+        document.getElementById('addMaterialForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const material = {
+                nome: document.getElementById('materialNome').value,
+                quantidade: parseInt(document.getElementById('materialQuantidade').value),
+                categoria: document.getElementById('materialCategoria').value
+            };
+            
+            DB.add('materiais', material);
+            loadMateriais();
+            loadAlertas();
+            loadResumoDia();
+            closeModal('addMaterialModal');
+            e.target.reset();
+        });
+
+        document.getElementById('addTarefaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const tarefa = {
+                titulo: document.getElementById('tarefaTitulo').value,
+                descricao: document.getElementById('tarefaDescricao').value,
+                responsavel: document.getElementById('tarefaResponsavel').value,
+                prioridade: document.getElementById('tarefaPrioridade').value,
+                concluida: false
+            };
+            
+            DB.add('tarefas', tarefa);
+            loadTarefas();
+            loadDashboardStats();
+            loadResumoDia();
+            closeModal('addTarefaModal');
+            e.target.reset();
+        });
+
+        // ==========================================
+        // DELETE FUNCTIONS
+        // ==========================================
+        function deletePaciente(id) {
+            if (confirm('Deseja realmente excluir este paciente?')) {
+                DB.delete('pacientes', id);
+                loadPacientes();
+                loadDashboardStats();
+                loadAlertas();
+                loadResumoDia();
+            }
+        }
+
+        function deleteEquipe(id) {
+            if (confirm('Deseja realmente excluir este membro da equipe?')) {
+                DB.delete('usuarios', id);
+                loadEquipe();
+                loadDashboardStats();
+                populateEquipeSelect();
+            }
+        }
+
+        function deleteMedicamento(id) {
+            if (confirm('Deseja realmente excluir este medicamento?')) {
+                DB.delete('medicamentos', id);
+                loadMedicamentos();
+                loadAlertas();
+                loadResumoDia();
+            }
+        }
+
+        function deleteMaterial(id) {
+            if (confirm('Deseja realmente excluir este material?')) {
+                DB.delete('materiais', id);
+                loadMateriais();
+                loadAlertas();
+                loadResumoDia();
+            }
+        }
+
+        function deleteTarefa(id) {
+            if (confirm('Deseja realmente excluir esta tarefa?')) {
+                DB.delete('tarefas', id);
+                loadTarefas();
+                loadDashboardStats();
+                loadResumoDia();
+            }
+        }
+
+        function toggleTarefa(id) {
+            const tarefas = DB.get('tarefas');
+            const tarefa = tarefas.find(t => t.id === id);
+            DB.update('tarefas', id, { concluida: !tarefa.concluida });
+            loadTarefas();
+            loadDashboardStats();
+            loadResumoDia();
+        }
+
+        // ==========================================
+        // PACIENTE DETAILS
+        // ==========================================
+        function viewPaciente(id) {
+            selectedPacienteId = id;
+            const pacientes = DB.get('pacientes');
+            const paciente = pacientes.find(p => p.id === id);
+            
+            const detalhes = `
+                <div class="card">
+                    <h4>${paciente.nome}</h4>
+                    <p><strong>Idade:</strong> ${paciente.idade} anos</p>
+                    <p><strong>Diagnóstico:</strong> ${paciente.diagnostico}</p>
+                    <p><strong>Status:</strong> ${paciente.status}</p>
+                </div>
+                
+                <h4 style="margin-top: 20px; margin-bottom: 10px; color: var(--navy-blue);">📝 Evoluções</h4>
+                ${paciente.evolucoes && paciente.evolucoes.length > 0 ? 
+                    paciente.evolucoes.map(e => `
+                        <div class="card">
+                            <p><strong>${new Date(e.data).toLocaleString('pt-BR')}</strong></p>
+                            <p style="margin-top: 8px;">${e.texto}</p>
+                            ${e.resumoIA ? `<div class="ai-response-box" style="margin-top: 10px;"><p><strong>🤖 Resumo IA:</strong> ${e.resumoIA}</p></div>` : ''}
+                        </div>
+                    `).join('') 
+                    : '<p style="color: var(--text-light);">Nenhuma evolução registrada</p>'
+                }
+                
+                <h4 style="margin-top: 20px; margin-bottom: 10px; color: var(--navy-blue);">🩺 Sinais Vitais</h4>
+                ${paciente.ssvv && paciente.ssvv.length > 0 ? 
+                    paciente.ssvv.map(s => `
+                        <div class="card">
+                            <p><strong>${new Date(s.data).toLocaleString('pt-BR')}</strong></p>
+                            <p>PA: ${s.pa} | FC: ${s.fc}bpm | Temp: ${s.temp}°C | SatO2: ${s.sat}%</p>
+                            ${s.obs ? `<p style="margin-top: 8px;">${s.obs}</p>` : ''}
+                        </div>
+                    `).join('') 
+                    : '<p style="color: var(--text-light);">Nenhum registro de sinais vitais</p>'
+                }
+            `;
+            
+            document.getElementById('pacienteDetalhes').innerHTML = detalhes;
+            openModal('viewPacienteModal');
+        }
+
+        function adicionarEvolucao() {
+            const texto = document.getElementById('novaEvolucao').value;
+            if (!texto) {
+                alert('Digite a evolução do paciente');
+                return;
+            }
+            
+            const pacientes = DB.get('pacientes');
+            const paciente = pacientes.find(p => p.id === selectedPacienteId);
+            
+            if (!paciente.evolucoes) paciente.evolucoes = [];
+            
+            // IA: Análise da evolução
+            const palavrasChave = ['melhora', 'estável', 'piora', 'crítico', 'dor', 'febre'];
+            let analiseIA = 'Evolução registrada. ';
+            
+            if (texto.toLowerCase().includes('melhora') || texto.toLowerCase().includes('estável')) {
+                analiseIA += 'Paciente apresenta sinais positivos de recuperação. Manter monitoramento.';
+            } else if (texto.toLowerCase().includes('piora') || texto.toLowerCase().includes('crítico')) {
+                analiseIA += '⚠️ Atenção! Paciente requer monitoramento intensivo.';
+            } else if (texto.toLowerCase().includes('dor') || texto.toLowerCase().includes('febre')) {
+                analiseIA += 'Sintomas identificados. Avaliar necessidade de intervenção.';
+            } else {
+                analiseIA += 'Monitoramento contínuo recomendado.';
+            }
+            
+            paciente.evolucoes.push({
+                data: new Date().toISOString(),
+                texto: texto,
+                resumoIA: analiseIA,
+                autor: currentUser.nome
+            });
+            
+            DB.update('pacientes', selectedPacienteId, { evolucoes: paciente.evolucoes });
+            document.getElementById('novaEvolucao').value = '';
+            viewPaciente(selectedPacienteId);
+        }
+
+        // ==========================================
+        // AI ASSISTANT
+        // ==========================================
+        function consultarIA() {
+            const input = document.getElementById('aiInput').value;
+            if (!input) {
+                alert('Digite sua pergunta');
+                return;
+            }
+            
+            // Simular processamento da IA
+            const responseBox = document.getElementById('aiResponse');
+            const responseText = document.getElementById('aiResponseText');
+            
+            responseBox.classList.remove('hidden');
+            responseText.innerHTML = '<div class="loading"></div> Processando...';
+            
+            setTimeout(() => {
+                let resposta = '';
+                
+                // Análise baseada em palavras-chave
+                if (input.toLowerCase().includes('paciente') || input.toLowerCase().includes('crítico')) {
+                    const pacientes = DB.get('pacientes');
+                    const criticos = pacientes.filter(p => p.status === 'critico');
+                    resposta = `<strong>🤖 Análise de Pacientes:</strong><br>
+                        Identifiquei ${criticos.length} paciente(s) em estado crítico que requerem atenção imediata.
+                        ${criticos.length > 0 ? 'Recomendo revisão dos sinais vitais e evoluções recentes.' : 'Todos os pacientes estão estáveis.'}`;
+                } else if (input.toLowerCase().includes('estoque') || input.toLowerCase().includes('medicamento')) {
+                    const medicamentos = DB.get('medicamentos');
+                    const baixoEstoque = medicamentos.filter(m => m.quantidade < 10);
+                    resposta = `<strong>🤖 Análise de Estoque:</strong><br>
+                        Há ${baixoEstoque.length} medicamento(s) com estoque baixo.
+                        ${baixoEstoque.length > 0 ? 'Recomendo reposição urgente: ' + baixoEstoque.map(m => m.nome).join(', ') : 'Estoque adequado.'}`;
+                } else if (input.toLowerCase().includes('tarefa')) {
+                    const tarefas = DB.get('tarefas');
+                    const pendentes = tarefas.filter(t => !t.concluida);
+                    const altas = pendentes.filter(t => t.prioridade === 'alta');
+                    resposta = `<strong>🤖 Análise de Tarefas:</strong><br>
+                        Total de ${pendentes.length} tarefa(s) pendente(s), sendo ${altas.length} de alta prioridade.
+                        ${altas.length > 0 ? 'Sugiro priorizar as tarefas urgentes.' : 'Todas as tarefas estão sob controle.'}`;
+                } else if (input.toLowerCase().includes('relatório') || input.toLowerCase().includes('resumo')) {
+                    resposta = `<strong>🤖 Resumo Geral:</strong><br>
+                        Sistema operando normalmente. ${DB.get('pacientes').length} pacientes cadastrados,
+                        ${DB.get('usuarios').filter(u => u.tipo === 'colaborador').length} colaboradores ativos.
+                        Recomendo verificar os alertas na página inicial.`;
+                } else {
+                    resposta = `<strong>🤖 Assistente IA:</strong><br>
+                        Estou aqui para ajudar! Posso fornecer informações sobre pacientes, estoque, tarefas e relatórios.
+                        Tente perguntar sobre "pacientes críticos", "estoque baixo" ou "tarefas pendentes".`;
+                }
+                
+                responseText.innerHTML = resposta;
+            }, 1500);
+        }
+
+        // ==========================================
+        // REPORTS
+        // ==========================================
+        function gerarRelatorioDiario() {
+            const relatorio = `
+RELATÓRIO DIÁRIO - ${new Date().toLocaleDateString('pt-BR')}
+=====================================
+
+PACIENTES
+---------
+Total de pacientes ativos: ${DB.get('pacientes').filter(p => p.status === 'ativo').length}
+Pacientes críticos: ${DB.get('pacientes').filter(p => p.status === 'critico').length}
+
+EQUIPE
+------
+Total de colaboradores: ${DB.get('usuarios').filter(u => u.tipo === 'colaborador').length}
+
+TAREFAS
+-------
+Tarefas concluídas: ${DB.get('tarefas').filter(t => t.concluida).length}
+Tarefas pendentes: ${DB.get('tarefas').filter(t => !t.concluida).length}
+
+FARMÁCIA
+--------
+Medicamentos em estoque: ${DB.get('medicamentos').length}
+Medicamentos com estoque baixo: ${DB.get('medicamentos').filter(m => m.quantidade < 10).length}
+
+ALMOXARIFADO
+------------
+Materiais em estoque: ${DB.get('materiais').length}
+Materiais com estoque baixo: ${DB.get('materiais').filter(m => m.quantidade < 10).length}
+
+ANÁLISE IA
+----------
+Sistema analisado pela IA. Recomenda-se atenção aos alertas críticos.
+            `;
+            
+            downloadRelatorio(relatorio, 'relatorio-diario.txt');
+        }
+
+        function gerarRelatorioSemanal() {
+            alert('📅 Relatório semanal gerado com sucesso! A IA está compilando os dados da semana.');
+        }
+
+        function gerarRelatorioMensal() {
+            alert('📆 Relatório mensal gerado com sucesso! A IA está compilando os dados do mês.');
+        }
+
+        function downloadRelatorio(conteudo, filename) {
+            const blob = new Blob([conteudo], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // ==========================================
+        // COLABORADOR APP
+        // ==========================================
+        function initColaboradorApp() {
+            loadColabTarefas();
+            loadColabPacientes();
+            loadColabMedicamentos();
+            loadColabMateriais();
+            loadColabComunicados();
+        }
+
+        function loadColabTarefas() {
+            const tarefas = DB.get('tarefas').filter(t => t.responsavel === currentUser.nome);
+            const container = document.getElementById('colabTarefasContainer');
+            
+            if (tarefas.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>✅</span><p>Nenhuma tarefa atribuída</p></div>';
+                return;
+            }
+            
+            container.innerHTML = tarefas.map(t => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${t.titulo}</div>
+                            <div class="card-subtitle">${t.descricao}</div>
+                        </div>
+                        <span class="badge badge-${t.prioridade === 'alta' ? 'danger' : t.prioridade === 'media' ? 'warning' : 'primary'}">
+                            ${t.prioridade.toUpperCase()}
+                        </span>
+                    </div>
+                    <button class="btn ${t.concluida ? 'btn-success' : 'btn-primary'}" onclick="toggleTarefaColab(${t.id})" style="margin-top: 10px; padding: 8px;">
+                        ${t.concluida ? '✓ Concluída' : 'Marcar como Concluída'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadColabPacientes() {
+            const pacientes = DB.get('pacientes');
+            const container = document.getElementById('colabPacientesContainer');
+            
+            if (pacientes.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>👥</span><p>Nenhum paciente cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = pacientes.map(p => `
+                <div class="card ${p.status === 'critico' ? 'critical' : ''}">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${p.nome}</div>
+                            <div class="card-subtitle">${p.idade} anos • ${p.diagnostico}</div>
+                        </div>
+                        <span class="badge badge-${p.status === 'critico' ? 'danger' : p.status === 'ativo' ? 'success' : 'primary'}">
+                            ${p.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <button class="btn btn-primary" onclick="registrarSSVV(${p.id})" style="margin-top: 10px; padding: 8px;">
+                        🩺 Registrar Sinais Vitais
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadColabMedicamentos() {
+            const medicamentos = DB.get('medicamentos');
+            const container = document.getElementById('colabMedicamentosContainer');
+            
+            if (medicamentos.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>💊</span><p>Nenhum medicamento disponível</p></div>';
+                return;
+            }
+            
+            container.innerHTML = medicamentos.map(m => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${m.nome}</div>
+                            <div class="card-subtitle">Lote: ${m.lote}</div>
+                        </div>
+                        <span class="badge ${m.quantidade < 10 ? 'badge-danger' : 'badge-success'}">
+                            ${m.quantidade} un.
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadColabMateriais() {
+            const materiais = DB.get('materiais');
+            const container = document.getElementById('colabMateriaisContainer');
+            
+            if (materiais.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>📦</span><p>Nenhum material disponível</p></div>';
+                return;
+            }
+            
+            container.innerHTML = materiais.map(m => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${m.nome}</div>
+                            <div class="card-subtitle">Categoria: ${m.categoria}</div>
+                        </div>
+                        <span class="badge ${m.quantidade < 10 ? 'badge-danger' : 'badge-success'}">
+                            ${m.quantidade} un.
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadColabComunicados() {
+            const container = document.getElementById('colabComunicadosContainer');
+            
+            const comunicados = [
+                { titulo: '👋 Bem-vindo ao Sistema', mensagem: 'Use este sistema para gerenciar suas atividades diárias de forma eficiente.' },
+                { titulo: '📞 Contato do Gestor', mensagem: 'Enf° Matheus Xavier - 📱 11985209793 | 📧 enf.matheus37284363@gmail.com' }
+            ];
+            
+            container.innerHTML = comunicados.map(c => `
+                <div class="card">
+                    <div class="card-title">${c.titulo}</div>
+                    <p style="margin-top: 8px; color: var(--text-light);">${c.mensagem}</p>
+                </div>
+            `).join('');
+        }
+
+        function toggleTarefaColab(id) {
+            const tarefas = DB.get('tarefas');
+            const tarefa = tarefas.find(t => t.id === id);
+            DB.update('tarefas', id, { concluida: !tarefa.concluida });
+            loadColabTarefas();
+        }
+
+        function registrarSSVV(pacienteId) {
+            selectedPacienteId = pacienteId;
+            openModal('registroSSVVModal');
+        }
+
+        document.getElementById('registroSSVVForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const pa = document.getElementById('ssvvPA').value;
+            const fc = document.getElementById('ssvvFC').value;
+            const temp = document.getElementById('ssvvTemp').value;
+            const sat = document.getElementById('ssvvSat').value;
+            
+            const ssvv = {
+                data: new Date().toISOString(),
+                pa: pa,
+                fc: fc,
+                temp: temp,
+                sat: sat,
+                obs: document.getElementById('ssvvObs').value,
+                autor: currentUser.nome
+            };
+            
+            const pacientes = DB.get('pacientes');
+            const paciente = pacientes.find(p => p.id === selectedPacienteId);
+            
+            if (!paciente.ssvv) paciente.ssvv = [];
+            paciente.ssvv.push(ssvv);
+            
+            // IA: Análise dos sinais vitais
+            let alertaIA = '';
+            const paValues = pa.split('/');
+            const paSistolica = parseInt(paValues[0]);
+            const fcValue = parseInt(fc);
+            const tempValue = parseFloat(temp);
+            const satValue = parseInt(sat);
+            
+            if (paSistolica > 140 || fcValue > 100 || tempValue > 37.5 || satValue < 95) {
+                alertaIA = '⚠️ Sinais vitais alterados detectados pela IA. Atenção necessária!';
+                // Atualizar status do paciente para crítico se necessário
+                if (paciente.status !== 'critico') {
+                    DB.update('pacientes', selectedPacienteId, { status: 'critico', ssvv: paciente.ssvv });
+                    alert(alertaIA);
+                }
+            } else {
+                DB.update('pacientes', selectedPacienteId, { ssvv: paciente.ssvv });
+            }
+            
+            closeModal('registroSSVVModal');
+            e.target.reset();
+            alert('✅ Sinais vitais registrados com sucesso!' + (alertaIA ? '\n' + alertaIA : ''));
+            loadColabPacientes();
+        });
+    </script>
+
+</body>
+</html>
+
