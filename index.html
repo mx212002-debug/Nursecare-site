@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NURSECARE — Gestão em Saúde com Firebase</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <title>NURSECARE — Gestão em Saúde</title>
     <style>
         * {
             margin: 0;
@@ -16,242 +12,536 @@
         }
 
         :root {
-            --primary: #0B2340;
-            --secondary: #0E6BA8;
-            --light-bg: #F4F6F8;
+            --navy: #0B2340;
+            --navy-light: #1a3a52;
+            --blue: #0E6BA8;
             --white: #FFFFFF;
+            --light-gray: #F4F6F8;
             --text: #222222;
-            --danger: #DC3545;
-            --success: #28A745;
-            --warning: #FFC107;
-            --info: #17A2B8;
+            --border: #E0E0E0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --info: #3b82f6;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--light-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light-gray);
             color: var(--text);
-            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* LOGIN SCREEN */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(14, 107, 168, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--navy-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 35, 64, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 13px;
+            width: auto;
+            margin: 5px 5px 5px 0;
+        }
+
+        /* APP SCREEN */
+        .app-screen {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .app-screen.active {
+            display: block;
         }
 
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
             color: var(--white);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 20px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header-title {
-            font-size: 1.2rem;
-            font-weight: 700;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .greeting h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .greeting p {
+            font-size: 13px;
+            opacity: 0.9;
         }
 
         .header-actions {
             display: flex;
-            gap: 1rem;
-            align-items: center;
+            gap: 10px;
         }
 
         .header-actions button {
+            padding: 8px 16px;
             background: rgba(255,255,255,0.2);
-            border: none;
             color: var(--white);
-            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
         .header-actions button:hover {
             background: rgba(255,255,255,0.3);
         }
 
-        .container {
+        .main-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 20px;
         }
 
-        .card {
+        .section {
             background: var(--white);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--navy);
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--light-gray);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s;
+            touch-action: pan-y;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
         }
 
         .card-title {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--navy);
         }
 
-        .firebase-config {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
+        .card-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
         }
 
-        .firebase-config h3 {
-            color: #856404;
-            margin-bottom: 0.5rem;
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
         }
 
-        .firebase-config p {
-            color: #856404;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .code-block {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            margin-top: 0.5rem;
-        }
-
-        .status {
+        .badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 12px;
             font-weight: 600;
         }
 
-        .status.connected {
-            background: #d4edda;
-            color: #155724;
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
         }
 
-        .status.disconnected {
-            background: #f8d7da;
-            color: #721c24;
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
         }
 
-        .button {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s;
+            border: none;
+            background: none;
+            font-size: 12px;
+            color: #999;
+            transition: all 0.3s;
+            border-top: 3px solid transparent;
         }
 
-        .button:hover {
-            background: var(--secondary);
-        }
-
-        .button.danger {
-            background: var(--danger);
-        }
-
-        .button.danger:hover {
-            background: #c82333;
-        }
-
-        .input-group {
-            margin-bottom: 1rem;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .nav-item.active {
+            color: var(--navy);
+            border-top-color: var(--blue);
             font-weight: 600;
-            color: var(--primary);
         }
 
-        .input-group input,
-        .input-group textarea {
+        .nav-item:hover {
+            color: var(--blue);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--navy);
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        /* TEXTAREA */
+        textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
             font-family: inherit;
-            font-size: 1rem;
-        }
-
-        .input-group textarea {
+            font-size: 14px;
             resize: vertical;
             min-height: 100px;
         }
 
-        .list-item {
-            background: var(--white);
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        textarea:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(14, 107, 168, 0.1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+        /* SWIPE ACTIONS */
+        .swipe-container {
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s;
         }
 
-        .list-item.swiped {
-            transform: translateX(-100px);
+        .swipe-content {
+            transition: transform 0.3s ease;
         }
 
-        .list-item-actions {
+        .swipe-actions {
             position: absolute;
             right: 0;
             top: 0;
             height: 100%;
             display: flex;
+            gap: 5px;
             background: transparent;
         }
 
-        .list-item-action {
-            width: 50px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .swipe-action-btn {
+            padding: 15px 12px;
+            border: none;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 60px;
         }
 
-        .list-item-action.favorite {
+        .swipe-edit {
             background: var(--info);
             color: var(--white);
         }
 
-        .list-item-action.delete {
+        .swipe-delete {
             background: var(--danger);
             color: var(--white);
         }
 
+        .swipe-favorite {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid var(--info);
+        }
+
+        /* LOADING */
         .loading {
             text-align: center;
-            padding: 2rem;
-            color: var(--secondary);
+            padding: 40px 20px;
+            color: #999;
         }
 
         .spinner {
-            border: 4px solid var(--light-bg);
-            border-top: 4px solid var(--secondary);
+            border: 3px solid var(--light-gray);
+            border-top: 3px solid var(--blue);
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -259,556 +549,1421 @@
             100% { transform: rotate(360deg); }
         }
 
-        .alert {
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
+        /* FORMS */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .alert.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .form-row.full {
+            grid-template-columns: 1fr;
         }
 
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--white);
-            border-top: 1px solid #ddd;
+        .checkbox-group {
             display: flex;
-            justify-content: space-around;
-            padding: 0.5rem 0;
-            z-index: 99;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
         }
 
-        .nav-item {
-            flex: 1;
-            text-align: center;
-            padding: 0.75rem;
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
             cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th {
+            background: var(--light-gray);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: var(--light-gray);
+        }
+
+        /* FLOATING BUTTON */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: var(--white);
             border: none;
-            background: transparent;
-            color: var(--text);
-            font-size: 0.9rem;
-            transition: color 0.3s;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(14, 107, 168, 0.4);
+            z-index: 999;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .nav-item.active {
-            color: var(--primary);
-            border-top: 3px solid var(--primary);
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(14, 107, 168, 0.6);
         }
 
-        .nav-item:hover {
-            color: var(--secondary);
-        }
-
-        .content {
-            padding-bottom: 80px;
-        }
-
-        .hidden {
-            display: none;
+        .fab:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen active">
+    <div class="login-box">
+        <div class="login-header">
+            <h1>🏥 NURSECARE</h1>
+            <p>Gestão em Saúde</p>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="seu@email.com" value="enfermeiro@nursecare.com">
+        </div>
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="loginPassword" placeholder="Sua senha" value="123456">
+        </div>
+        <div class="form-group">
+            <label>Perfil</label>
+            <select id="loginProfile">
+                <option value="gestor">👨‍⚕️ Enfermeiro (Gestor)</option>
+                <option value="colaborador">👨‍💼 Colaborador (Técnico)</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="login()">Entrar</button>
+    </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="appScreen" class="app-screen">
+    <!-- HEADER -->
     <div class="header">
-        <div class="header-title">🏥 NURSECARE — Firebase</div>
-        <div class="header-actions">
-            <span id="firebaseStatus" class="status disconnected">Desconectado</span>
-            <button onclick="logout()">Sair</button>
+        <div class="header-content">
+            <div class="greeting">
+                <h2>👋 Olá, <span id="userName">Enfermeiro</span></h2>
+                <p id="currentDate"></p>
+            </div>
+            <div class="header-actions">
+                <button onclick="toggleNotifications()">🔔 Notificações</button>
+                <button onclick="logout()">Sair</button>
+            </div>
         </div>
     </div>
 
-    <div class="container content">
-        <!-- Firebase Configuration Section -->
-        <div id="configSection" class="card firebase-config hidden">
-            <h3>⚙️ Configuração do Firebase</h3>
-            <p>Para conectar ao seu Firebase, adicione suas credenciais abaixo:</p>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- DASHBOARD -->
+        <div id="dashboardSection" class="section active">
+            <div class="section-title">📊 Dashboard</div>
             
-            <div class="input-group">
-                <label>API Key</label>
-                <input type="text" id="apiKey" placeholder="Sua API Key do Firebase">
-            </div>
-
-            <div class="input-group">
-                <label>Project ID</label>
-                <input type="text" id="projectId" placeholder="Seu Project ID">
-            </div>
-
-            <div class="input-group">
-                <label>Database URL</label>
-                <input type="text" id="databaseUrl" placeholder="https://seu-projeto.firebaseio.com">
-            </div>
-
-            <button class="button" onclick="saveFirebaseConfig()">Salvar Configuração</button>
-
-            <div class="code-block">
-// Exemplo de configuração:
-{
-  "apiKey": "AIzaSyD...",
-  "projectId": "seu-projeto",
-  "databaseURL": "https://seu-projeto.firebaseio.com"
-}
-            </div>
-        </div>
-
-        <!-- Status Section -->
-        <div id="statusSection" class="card hidden">
-            <h3>📊 Status da Conexão</h3>
-            <p>Status Firebase: <span id="fbStatus">Aguardando configuração...</span></p>
-            <p>Usuário: <span id="userInfo">Não autenticado</span></p>
-            <p>Última sincronização: <span id="lastSync">Nunca</span></p>
-        </div>
-
-        <!-- Patients Section -->
-        <div id="patientsSection" class="card">
-            <h3>👥 Pacientes</h3>
-            <div class="input-group">
-                <label>Nome do Paciente</label>
-                <input type="text" id="patientName" placeholder="Nome">
-            </div>
-            <div class="input-group">
-                <label>Leito</label>
-                <input type="text" id="patientBed" placeholder="Leito/Quarto">
-            </div>
-            <button class="button" onclick="addPatient()">Adicionar Paciente</button>
-            
-            <div id="patientsList" style="margin-top: 1rem;">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Carregando pacientes...
+            <div class="alert alert-info">
+                <span>ℹ️</span>
+                <div>
+                    <strong>Resumo do Dia:</strong> 
+                    <span id="dailySummary">Carregando dados...</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Vital Signs Section -->
-        <div id="vitalSignsSection" class="card">
-            <h3>❤️ Sinais Vitais</h3>
-            <div class="input-group">
-                <label>Paciente</label>
-                <input type="text" id="vitalPatient" placeholder="Nome do paciente">
-            </div>
-            <div class="input-group">
-                <label>PA (Pressão Arterial)</label>
-                <input type="text" id="vitalPA" placeholder="Ex: 120/80">
-            </div>
-            <div class="input-group">
-                <label>FC (Frequência Cardíaca)</label>
-                <input type="number" id="vitalFC" placeholder="bpm">
-            </div>
-            <div class="input-group">
-                <label>Temperatura</label>
-                <input type="number" id="vitalTemp" placeholder="°C" step="0.1">
-            </div>
-            <button class="button" onclick="addVitalSign()">Registrar Sinais Vitais</button>
-            
-            <div id="vitalSignsList" style="margin-top: 1rem;">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Carregando sinais vitais...
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">👥 Pacientes Ativos</div>
+                    <div style="font-size: 32px; font-weight: bold; color: var(--blue); margin: 10px 0;" id="activePatients">0</div>
+                    <button class="btn btn-small btn-primary" onclick="showModal('addPatientModal')">+ Novo Paciente</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">❤️ Sinais Críticos</div>
+                    <div style="font-size: 32px; font-weight: bold; color: var(--danger); margin: 10px 0;" id="criticalVitals">0</div>
+                    <button class="btn btn-small btn-danger" onclick="showSection('alertsSection')">Ver Alertas</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">✅ Tarefas Pendentes</div>
+                    <div style="font-size: 32px; font-weight: bold; color: var(--warning); margin: 10px 0;" id="pendingTasks">0</div>
+                    <button class="btn btn-small btn-warning" onclick="showSection('tasksSection')">Ver Tarefas</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">💊 Medicamentos Baixos</div>
+                    <div style="font-size: 32px; font-weight: bold; color: var(--warning); margin: 10px 0;" id="lowMeds">0</div>
+                    <button class="btn btn-small btn-warning" onclick="showSection('pharmacySection')">Farmácia</button>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-title">🤖 Assistente IA</div>
+                <p style="margin: 10px 0; color: #666;">Clique para gerar resumo inteligente do dia</p>
+                <button class="btn btn-secondary" onclick="generateAISummary()">Gerar Resumo IA</button>
+            </div>
         </div>
 
-        <!-- Tasks Section -->
-        <div id="tasksSection" class="card">
-            <h3>✅ Tarefas</h3>
-            <div class="input-group">
-                <label>Descrição da Tarefa</label>
-                <textarea id="taskDescription" placeholder="Descreva a tarefa..."></textarea>
+        <!-- PACIENTES -->
+        <div id="patientsSection" class="section">
+            <div class="section-title">👥 Pacientes</div>
+            <button class="btn btn-primary" onclick="showModal('addPatientModal')" style="margin-bottom: 20px;">+ Novo Paciente</button>
+            <div id="patientsList"></div>
+        </div>
+
+        <!-- SINAIS VITAIS -->
+        <div id="vitalsSection" class="section">
+            <div class="section-title">❤️ Sinais Vitais</div>
+            <button class="btn btn-primary" onclick="showModal('addVitalsModal')" style="margin-bottom: 20px;">+ Registrar Sinais</button>
+            <div id="vitalsList"></div>
+        </div>
+
+        <!-- AVALIAÇÃO CLÍNICA (SOAPIE) -->
+        <div id="evaluationSection" class="section">
+            <div class="section-title">📋 Avaliação Clínica (SOAPIE)</div>
+            <button class="btn btn-primary" onclick="showModal('addEvaluationModal')" style="margin-bottom: 20px;">+ Nova Avaliação</button>
+            <div id="evaluationsList"></div>
+        </div>
+
+        <!-- FARMÁCIA -->
+        <div id="pharmacySection" class="section">
+            <div class="section-title">💊 Farmácia</div>
+            <button class="btn btn-primary" onclick="showModal('addMedicineModal')" style="margin-bottom: 20px;">+ Novo Medicamento</button>
+            <div id="medicinesList"></div>
+        </div>
+
+        <!-- ALMOXARIFADO -->
+        <div id="warehouseSection" class="section">
+            <div class="section-title">📦 Almoxarifado</div>
+            <button class="btn btn-primary" onclick="showModal('addMaterialModal')" style="margin-bottom: 20px;">+ Novo Material</button>
+            <div id="materialsList"></div>
+        </div>
+
+        <!-- TAREFAS -->
+        <div id="tasksSection" class="section">
+            <div class="section-title">✅ Tarefas</div>
+            <button class="btn btn-primary" onclick="showModal('addTaskModal')" style="margin-bottom: 20px;">+ Nova Tarefa</button>
+            <div id="tasksList"></div>
+        </div>
+
+        <!-- COLABORADORES -->
+        <div id="collaboratorsSection" class="section">
+            <div class="section-title">👥 Colaboradores</div>
+            <button class="btn btn-primary" onclick="showModal('addCollaboratorModal')" style="margin-bottom: 20px;">+ Novo Colaborador</button>
+            <div id="collaboratorsList"></div>
+        </div>
+
+        <!-- ALERTAS -->
+        <div id="alertsSection" class="section">
+            <div class="section-title">🚨 Alertas Clínicos</div>
+            <div id="alertsList"></div>
+        </div>
+
+        <!-- CHAT -->
+        <div id="chatSection" class="section">
+            <div class="section-title">💬 Fale com o Enfermeiro</div>
+            <div style="background: var(--light-gray); border-radius: 8px; padding: 15px; margin-bottom: 15px; height: 300px; overflow-y: auto;" id="chatMessages"></div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="chatInput" placeholder="Digite sua mensagem..." style="flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 8px;">
+                <button class="btn btn-primary" onclick="sendMessage()" style="width: auto;">Enviar</button>
             </div>
-            <div class="input-group">
-                <label>Prioridade</label>
-                <select id="taskPriority" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;">
-                    <option value="baixa">Baixa</option>
-                    <option value="média" selected>Média</option>
-                    <option value="alta">Alta</option>
+        </div>
+
+        <!-- POP EMERGÊNCIAS -->
+        <div id="popSection" class="section">
+            <div class="section-title">🚨 POP de Emergências</div>
+            <div class="card">
+                <div class="card-title">Cola de SSVV Normais</div>
+                <table>
+                    <tr><th>Parâmetro</th><th>Normal</th></tr>
+                    <tr><td>PA (Pressão Arterial)</td><td>120/80 mmHg</td></tr>
+                    <tr><td>FC (Frequência Cardíaca)</td><td>60-100 bpm</td></tr>
+                    <tr><td>FR (Frequência Respiratória)</td><td>12-20 irpm</td></tr>
+                    <tr><td>Temperatura</td><td>36,5-37,5°C</td></tr>
+                    <tr><td>SpO₂ (Oxigenação)</td><td>95-100%</td></tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Primeiros Socorros</div>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Queda:</strong> Imobilizar, chamar médico, verificar SSVV</li>
+                    <li><strong>Convulsão:</strong> Proteger cabeça, colocar em posição lateral, chamar emergência</li>
+                    <li><strong>Desmaio:</strong> Deitar, elevar pernas, verificar respiração, chamar emergência</li>
+                    <li><strong>Sangramento:</strong> Comprimir local, elevar membro, chamar médico</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📞 Números de Emergência</div>
+                <p><strong>SAMU:</strong> 192</p>
+                <p><strong>Bombeiros:</strong> 193</p>
+                <p><strong>Polícia:</strong> 190</p>
+                <p><strong>Enfermeiro Responsável:</strong> 📞 (11) 98520-9793</p>
+            </div>
+        </div>
+
+        <!-- RELATÓRIOS -->
+        <div id="reportsSection" class="section">
+            <div class="section-title">📊 Relatórios</div>
+            <div class="form-group">
+                <label>Tipo de Relatório</label>
+                <select id="reportType">
+                    <option value="daily">Diário</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="monthly">Mensal</option>
                 </select>
             </div>
-            <button class="button" onclick="addTask()">Adicionar Tarefa</button>
-            
-            <div id="tasksList" style="margin-top: 1rem;">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Carregando tarefas...
+            <button class="btn btn-primary" onclick="generateReport()">Gerar Relatório</button>
+            <button class="btn btn-secondary" onclick="exportReportPDF()" style="margin-top: 10px;">📥 Exportar PDF</button>
+        </div>
+
+        <!-- AUDITORIA -->
+        <div id="auditSection" class="section">
+            <div class="section-title">🔍 Auditoria e Logs</div>
+            <div id="auditList"></div>
+        </div>
+    </div>
+
+    <!-- FLOATING ACTION BUTTON -->
+    <button class="fab" onclick="showModal('aiAssistantModal')">🤖</button>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showSection('dashboardSection')">📊 Dashboard</button>
+        <button class="nav-item" onclick="showSection('patientsSection')">👥 Pacientes</button>
+        <button class="nav-item" onclick="showSection('evaluationSection')">📋 Avaliação</button>
+        <button class="nav-item" onclick="showSection('pharmacySection')">💊 Farmácia</button>
+        <button class="nav-item" onclick="showSection('tasksSection')">✅ Tarefas</button>
+        <button class="nav-item" onclick="showSection('chatSection')">💬 Chat</button>
+    </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- ADD PATIENT MODAL -->
+<div id="addPatientModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Novo Paciente</h2>
+            <button class="modal-close" onclick="closeModal('addPatientModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" id="patientName" placeholder="Nome do paciente">
+        </div>
+        <div class="form-group">
+            <label>Leito/Quarto</label>
+            <input type="text" id="patientBed" placeholder="Ex: 305">
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select id="patientStatus">
+                <option value="ativo">Ativo</option>
+                <option value="critico">Crítico</option>
+                <option value="observacao">Observação</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="addPatient()">Salvar</button>
+    </div>
+</div>
+
+<!-- ADD VITALS MODAL -->
+<div id="addVitalsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Registrar Sinais Vitais</h2>
+            <button class="modal-close" onclick="closeModal('addVitalsModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Paciente</label>
+            <select id="vitalsPatient" onchange="loadPatientData()"></select>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>PA (mmHg)</label>
+                <input type="text" id="vitalPA" placeholder="Ex: 120/80">
+            </div>
+            <div class="form-group">
+                <label>FC (bpm)</label>
+                <input type="number" id="vitalFC" placeholder="Ex: 72">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>FR (irpm)</label>
+                <input type="number" id="vitalFR" placeholder="Ex: 16">
+            </div>
+            <div class="form-group">
+                <label>Temperatura (°C)</label>
+                <input type="number" id="vitalTemp" placeholder="Ex: 36.5" step="0.1">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>SpO₂ (%)</label>
+            <input type="number" id="vitalSpO2" placeholder="Ex: 98" min="0" max="100">
+        </div>
+        <button class="btn btn-primary" onclick="addVitals()">Registrar</button>
+    </div>
+</div>
+
+<!-- ADD EVALUATION MODAL -->
+<div id="addEvaluationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Avaliação Clínica (SOAPIE)</h2>
+            <button class="modal-close" onclick="closeModal('addEvaluationModal')">✕</button>
+        </div>
+        
+        <div class="form-group">
+            <label>Paciente</label>
+            <select id="evalPatient"></select>
+        </div>
+
+        <div class="form-group">
+            <label>Data e Hora</label>
+            <input type="datetime-local" id="evalDateTime">
+        </div>
+
+        <div class="form-group">
+            <label><strong>S - Subjetivo:</strong> Queixas/Relatos</label>
+            <textarea id="evalSubjective" placeholder="Descreva as queixas do paciente..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label><strong>O - Objetivo:</strong> Sinais Vitais e Observações</label>
+            <textarea id="evalObjective" placeholder="PA, FC, FR, Temp, SpO₂, estado geral..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label><strong>A - Análise:</strong> Interpretação Clínica</label>
+            <textarea id="evalAnalysis" placeholder="Interpretação do quadro geral..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label><strong>P - Plano:</strong> Condutas e Intervenções</label>
+            <textarea id="evalPlan" placeholder="Cuidados, medicamentos, orientações..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label><strong>E - Evolução:</strong> Resposta aos Cuidados</label>
+            <textarea id="evalEvolution" placeholder="Melhoras, pioras, manutenção..."></textarea>
+        </div>
+
+        <button class="btn btn-secondary" onclick="generateAutoEvolution()" style="margin-bottom: 10px;">🤖 Gerar Evolução Automática</button>
+        <button class="btn btn-primary" onclick="addEvaluation()">Salvar Avaliação</button>
+    </div>
+</div>
+
+<!-- ADD MEDICINE MODAL -->
+<div id="addMedicineModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Novo Medicamento</h2>
+            <button class="modal-close" onclick="closeModal('addMedicineModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nome do Medicamento</label>
+            <input type="text" id="medicineName" placeholder="Ex: Dipirona 500mg">
+        </div>
+        <div class="form-group">
+            <label>Quantidade em Estoque</label>
+            <input type="number" id="medicineQty" placeholder="Ex: 100">
+        </div>
+        <div class="form-group">
+            <label>Data de Validade</label>
+            <input type="date" id="medicineExpiry">
+        </div>
+        <div class="form-group">
+            <label>Quantidade Mínima para Alerta</label>
+            <input type="number" id="medicineMinQty" placeholder="Ex: 20">
+        </div>
+        <button class="btn btn-primary" onclick="addMedicine()">Salvar</button>
+    </div>
+</div>
+
+<!-- ADD MATERIAL MODAL -->
+<div id="addMaterialModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Novo Material</h2>
+            <button class="modal-close" onclick="closeModal('addMaterialModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nome do Material</label>
+            <input type="text" id="materialName" placeholder="Ex: Gaze estéril">
+        </div>
+        <div class="form-group">
+            <label>Quantidade</label>
+            <input type="number" id="materialQty" placeholder="Ex: 500">
+        </div>
+        <div class="form-group">
+            <label>Setor</label>
+            <select id="materialSector">
+                <option value="enfermagem">Enfermagem</option>
+                <option value="farmacia">Farmácia</option>
+                <option value="coordenacao">Coordenação</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="addMaterial()">Salvar</button>
+    </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div id="addTaskModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Nova Tarefa</h2>
+            <button class="modal-close" onclick="closeModal('addTaskModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="taskDesc" placeholder="Descreva a tarefa..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Prioridade</label>
+            <select id="taskPriority">
+                <option value="baixa">Baixa</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Atribuir a</label>
+            <select id="taskAssignee"></select>
+        </div>
+        <button class="btn btn-primary" onclick="addTask()">Criar Tarefa</button>
+    </div>
+</div>
+
+<!-- ADD COLLABORATOR MODAL -->
+<div id="addCollaboratorModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Novo Colaborador</h2>
+            <button class="modal-close" onclick="closeModal('addCollaboratorModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nome</label>
+            <input type="text" id="collabName" placeholder="Nome completo">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="collabEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+            <label>Função</label>
+            <select id="collabRole">
+                <option value="tecnico">Técnico de Enfermagem</option>
+                <option value="auxiliar">Auxiliar de Enfermagem</option>
+                <option value="cuidador">Cuidador</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="addCollaborator()">Salvar</button>
+    </div>
+</div>
+
+<!-- AI ASSISTANT MODAL -->
+<div id="aiAssistantModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🤖 Assistente IA</h2>
+            <button class="modal-close" onclick="closeModal('aiAssistantModal')">✕</button>
+        </div>
+        <div id="aiContent" style="background: var(--light-gray); padding: 15px; border-radius: 8px; margin: 15px 0; min-height: 200px; max-height: 400px; overflow-y: auto;"></div>
+        <button class="btn btn-primary" onclick="generateAISummary()">Gerar Resumo do Dia</button>
+        <button class="btn btn-secondary" onclick="generateAIRisks()">Analisar Riscos</button>
+    </div>
+</div>
+
+<script>
+// ===== DATA STORAGE =====
+let app = {
+    currentUser: null,
+    patients: [],
+    vitals: [],
+    evaluations: [],
+    medicines: [],
+    materials: [],
+    tasks: [],
+    collaborators: [],
+    alerts: [],
+    messages: [],
+    auditLog: []
+};
+
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+    apiKey: "AIzaSyDEwFkZvAUzKQvBMlpvVBhkFUqfDYzVHYE",
+    authDomain: "nursecare-web.firebaseapp.com",
+    databaseURL: "https://nursecare-web-default-rtdb.firebaseio.com",
+    projectId: "nursecare-web",
+    storageBucket: "nursecare-web.appspot.com",
+    messagingSenderId: "1066854916491",
+    appId: "1:1066854916491:web:4e8c4a8b8c5e5e5e5e5e5e"
+};
+
+// ===== AUTHENTICATION =====
+function login() {
+    const email = document.getElementById('loginEmail').value;
+    const profile = document.getElementById('loginProfile').value;
+
+    if (!email) {
+        alert('Por favor, preencha o email');
+        return;
+    }
+
+    app.currentUser = {
+        email: email,
+        name: profile === 'gestor' ? 'Matheus da Silva' : 'João Técnico',
+        profile: profile,
+        coren: '677328'
+    };
+
+    document.getElementById('loginScreen').classList.remove('active');
+    document.getElementById('appScreen').classList.add('active');
+    document.getElementById('userName').textContent = app.currentUser.name;
+    
+    updateDateTime();
+    loadAllData();
+    logAction(`Login - Perfil: ${profile}`);
+}
+
+function logout() {
+    if (confirm('Deseja realmente sair?')) {
+        app.currentUser = null;
+        document.getElementById('loginScreen').classList.add('active');
+        document.getElementById('appScreen').classList.remove('active');
+    }
+}
+
+// ===== NAVIGATION =====
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (sectionId === 'patientsSection') loadPatients();
+    if (sectionId === 'vitalsSection') loadVitals();
+    if (sectionId === 'evaluationSection') loadEvaluations();
+    if (sectionId === 'pharmacySection') loadMedicines();
+    if (sectionId === 'warehouseSection') loadMaterials();
+    if (sectionId === 'tasksSection') loadTasks();
+    if (sectionId === 'collaboratorsSection') loadCollaborators();
+    if (sectionId === 'alertsSection') loadAlerts();
+    if (sectionId === 'auditSection') loadAuditLog();
+}
+
+// ===== MODALS =====
+function showModal(modalId) {
+    document.getElementById(modalId).classList.add('active');
+    if (modalId === 'addVitalsModal') populatePatientSelects();
+    if (modalId === 'addEvaluationModal') populatePatientSelects();
+    if (modalId === 'addTaskModal') populateCollaboratorSelects();
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+// ===== PATIENTS =====
+function addPatient() {
+    const name = document.getElementById('patientName').value;
+    const bed = document.getElementById('patientBed').value;
+    const status = document.getElementById('patientStatus').value;
+
+    if (!name || !bed) {
+        alert('Preencha todos os campos');
+        return;
+    }
+
+    const patient = {
+        id: Date.now(),
+        name: name,
+        bed: bed,
+        status: status,
+        createdAt: new Date().toLocaleString('pt-BR')
+    };
+
+    app.patients.push(patient);
+    saveToLocalStorage();
+    loadPatients();
+    closeModal('addPatientModal');
+    logAction(`Paciente adicionado: ${name}`);
+    
+    document.getElementById('patientName').value = '';
+    document.getElementById('patientBed').value = '';
+}
+
+function loadPatients() {
+    const list = document.getElementById('patientsList');
+    list.innerHTML = '';
+
+    if (app.patients.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum paciente cadastrado</p>';
+        return;
+    }
+
+    app.patients.forEach(patient => {
+        const statusClass = patient.status === 'critico' ? 'badge-danger' : 
+                           patient.status === 'observacao' ? 'badge-warning' : 'badge-success';
+        
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${patient.name}</div>
+                        <div class="card-subtitle">Leito: ${patient.bed}</div>
+                    </div>
+                    <span class="badge ${statusClass}">${patient.status.toUpperCase()}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-small btn-primary" onclick="editPatient(${patient.id})">Editar</button>
+                    <button class="btn btn-small btn-danger" onclick="deletePatient(${patient.id})">Deletar</button>
                 </div>
             </div>
-        </div>
+        `;
+    });
 
-        <!-- Alerts Section -->
-        <div id="alertsSection" class="card">
-            <h3>🔔 Alertas</h3>
-            <div id="alertsList">
-                <p style="color: #999;">Nenhum alerta no momento</p>
-            </div>
-        </div>
-    </div>
+    document.getElementById('activePatients').textContent = app.patients.length;
+}
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <button class="nav-item active" onclick="showSection('patientsSection')">👥 Pacientes</button>
-        <button class="nav-item" onclick="showSection('vitalSignsSection')">❤️ Sinais Vitais</button>
-        <button class="nav-item" onclick="showSection('tasksSection')">✅ Tarefas</button>
-        <button class="nav-item" onclick="showSection('alertsSection')">🔔 Alertas</button>
-        <button class="nav-item" onclick="showSection('configSection')">⚙️ Config</button>
-    </div>
+function deletePatient(id) {
+    if (confirm('Deseja deletar este paciente?')) {
+        app.patients = app.patients.filter(p => p.id !== id);
+        saveToLocalStorage();
+        loadPatients();
+        logAction('Paciente deletado');
+    }
+}
 
-    <script>
-        // Firebase Configuration
-        let firebaseConfig = {
-            apiKey: "AIzaSyDEwFkZvAUzKQvBMlpvVBhkFUqfDYzVHYE",
-            projectId: "nursecare-web",
-            databaseURL: "https://nursecare-web-default-rtdb.firebaseio.com"
-        };
+function editPatient(id) {
+    alert('Funcionalidade de edição em desenvolvimento');
+}
 
-        let db = null;
-        let auth = null;
+// ===== VITALS =====
+function addVitals() {
+    const patientId = parseInt(document.getElementById('vitalsPatient').value);
+    const pa = document.getElementById('vitalPA').value;
+    const fc = parseInt(document.getElementById('vitalFC').value);
+    const fr = parseInt(document.getElementById('vitalFR').value);
+    const temp = parseFloat(document.getElementById('vitalTemp').value);
+    const spo2 = parseInt(document.getElementById('vitalSpO2').value);
 
-        // Initialize Firebase
-        function initializeFirebase() {
-            try {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                auth = firebase.auth();
-                updateFirebaseStatus(true);
-                loadAllData();
-                console.log('✅ Firebase inicializado com sucesso!');
-            } catch (error) {
-                console.error('❌ Erro ao inicializar Firebase:', error);
-                updateFirebaseStatus(false);
-            }
-        }
+    if (!patientId || !pa || !fc || !fr || !temp || !spo2) {
+        alert('Preencha todos os campos');
+        return;
+    }
 
-        // Update Firebase Status
-        function updateFirebaseStatus(connected) {
-            const statusElement = document.getElementById('firebaseStatus');
-            if (connected) {
-                statusElement.textContent = '🟢 Conectado';
-                statusElement.className = 'status connected';
-            } else {
-                statusElement.textContent = '🔴 Desconectado';
-                statusElement.className = 'status disconnected';
-            }
-        }
+    const patient = app.patients.find(p => p.id === patientId);
+    const vital = {
+        id: Date.now(),
+        patientId: patientId,
+        patientName: patient.name,
+        pa: pa,
+        fc: fc,
+        fr: fr,
+        temp: temp,
+        spo2: spo2,
+        timestamp: new Date().toLocaleString('pt-BR'),
+        isAbnormal: fc < 60 || fc > 100 || temp < 36 || temp > 37.5 || spo2 < 95
+    };
 
-        // Add Patient
-        function addPatient() {
-            const name = document.getElementById('patientName').value;
-            const bed = document.getElementById('patientBed').value;
-
-            if (!name || !bed) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            if (!db) {
-                alert('Firebase não está conectado!');
-                return;
-            }
-
-            const patientId = Date.now();
-            db.ref('pacientes/' + patientId).set({
-                id: patientId,
-                name: name,
-                bed: bed,
-                status: 'Ativo',
-                createdAt: new Date().toISOString(),
-                favorite: false
-            }).then(() => {
-                alert('✅ Paciente adicionado com sucesso!');
-                document.getElementById('patientName').value = '';
-                document.getElementById('patientBed').value = '';
-                loadPatients();
-            }).catch(error => {
-                alert('❌ Erro ao adicionar paciente: ' + error.message);
-            });
-        }
-
-        // Load Patients
-        function loadPatients() {
-            if (!db) return;
-
-            db.ref('pacientes').on('value', (snapshot) => {
-                const patientsList = document.getElementById('patientsList');
-                patientsList.innerHTML = '';
-
-                if (snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        const patient = child.val();
-                        const item = document.createElement('div');
-                        item.className = 'list-item';
-                        item.innerHTML = `
-                            <div>
-                                <strong>${patient.name}</strong><br>
-                                <small>Leito: ${patient.bed} | Status: ${patient.status}</small>
-                            </div>
-                            <div class="list-item-actions">
-                                <div class="list-item-action favorite" onclick="toggleFavorite('pacientes', '${patient.id}')">❤️</div>
-                                <div class="list-item-action delete" onclick="deletePatient('${patient.id}')">🗑️</div>
-                            </div>
-                        `;
-                        patientsList.appendChild(item);
-                    });
-                } else {
-                    patientsList.innerHTML = '<p style="color: #999;">Nenhum paciente cadastrado</p>';
-                }
-            });
-        }
-
-        // Add Vital Sign
-        function addVitalSign() {
-            const patient = document.getElementById('vitalPatient').value;
-            const pa = document.getElementById('vitalPA').value;
-            const fc = document.getElementById('vitalFC').value;
-            const temp = document.getElementById('vitalTemp').value;
-
-            if (!patient || !pa || !fc || !temp) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            if (!db) {
-                alert('Firebase não está conectado!');
-                return;
-            }
-
-            const signId = Date.now();
-            db.ref('sinais_vitais/' + signId).set({
-                id: signId,
-                patient: patient,
-                pa: pa,
-                fc: parseInt(fc),
-                temperature: parseFloat(temp),
-                createdAt: new Date().toISOString()
-            }).then(() => {
-                alert('✅ Sinais vitais registrados!');
-                document.getElementById('vitalPatient').value = '';
-                document.getElementById('vitalPA').value = '';
-                document.getElementById('vitalFC').value = '';
-                document.getElementById('vitalTemp').value = '';
-                loadVitalSigns();
-            }).catch(error => {
-                alert('❌ Erro: ' + error.message);
-            });
-        }
-
-        // Load Vital Signs
-        function loadVitalSigns() {
-            if (!db) return;
-
-            db.ref('sinais_vitais').limitToLast(10).on('value', (snapshot) => {
-                const list = document.getElementById('vitalSignsList');
-                list.innerHTML = '';
-
-                if (snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        const sign = child.val();
-                        const item = document.createElement('div');
-                        item.className = 'list-item';
-                        item.innerHTML = `
-                            <div>
-                                <strong>${sign.patient}</strong><br>
-                                <small>PA: ${sign.pa} | FC: ${sign.fc} bpm | T: ${sign.temperature}°C</small>
-                            </div>
-                            <div class="list-item-actions">
-                                <div class="list-item-action delete" onclick="deleteVitalSign('${sign.id}')">🗑️</div>
-                            </div>
-                        `;
-                        list.appendChild(item);
-                    });
-                } else {
-                    list.innerHTML = '<p style="color: #999;">Nenhum registro de sinais vitais</p>';
-                }
-            });
-        }
-
-        // Add Task
-        function addTask() {
-            const description = document.getElementById('taskDescription').value;
-            const priority = document.getElementById('taskPriority').value;
-
-            if (!description) {
-                alert('Descreva a tarefa!');
-                return;
-            }
-
-            if (!db) {
-                alert('Firebase não está conectado!');
-                return;
-            }
-
-            const taskId = Date.now();
-            db.ref('tasks/' + taskId).set({
-                id: taskId,
-                description: description,
-                priority: priority,
-                completed: false,
-                createdAt: new Date().toISOString()
-            }).then(() => {
-                alert('✅ Tarefa adicionada!');
-                document.getElementById('taskDescription').value = '';
-                loadTasks();
-            }).catch(error => {
-                alert('❌ Erro: ' + error.message);
-            });
-        }
-
-        // Load Tasks
-        function loadTasks() {
-            if (!db) return;
-
-            db.ref('tasks').on('value', (snapshot) => {
-                const list = document.getElementById('tasksList');
-                list.innerHTML = '';
-
-                if (snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        const task = child.val();
-                        const item = document.createElement('div');
-                        item.className = 'list-item';
-                        item.innerHTML = `
-                            <div>
-                                <strong>${task.description}</strong><br>
-                                <small>Prioridade: ${task.priority} | Status: ${task.completed ? '✅ Concluída' : '⏳ Pendente'}</small>
-                            </div>
-                            <div class="list-item-actions">
-                                <div class="list-item-action favorite" onclick="toggleTaskComplete('${task.id}')">✓</div>
-                                <div class="list-item-action delete" onclick="deleteTask('${task.id}')">🗑️</div>
-                            </div>
-                        `;
-                        list.appendChild(item);
-                    });
-                } else {
-                    list.innerHTML = '<p style="color: #999;">Nenhuma tarefa cadastrada</p>';
-                }
-            });
-        }
-
-        // Delete Functions
-        function deletePatient(id) {
-            if (confirm('Tem certeza que deseja deletar este paciente?')) {
-                db.ref('pacientes/' + id).remove().then(() => {
-                    alert('✅ Paciente deletado!');
-                    loadPatients();
-                });
-            }
-        }
-
-        function deleteVitalSign(id) {
-            if (confirm('Tem certeza?')) {
-                db.ref('sinais_vitais/' + id).remove().then(() => {
-                    loadVitalSigns();
-                });
-            }
-        }
-
-        function deleteTask(id) {
-            if (confirm('Tem certeza?')) {
-                db.ref('tasks/' + id).remove().then(() => {
-                    loadTasks();
-                });
-            }
-        }
-
-        // Toggle Functions
-        function toggleFavorite(collection, id) {
-            db.ref(collection + '/' + id).once('value').then((snapshot) => {
-                const data = snapshot.val();
-                db.ref(collection + '/' + id).update({
-                    favorite: !data.favorite
-                });
-            });
-        }
-
-        function toggleTaskComplete(id) {
-            db.ref('tasks/' + id).once('value').then((snapshot) => {
-                const data = snapshot.val();
-                db.ref('tasks/' + id).update({
-                    completed: !data.completed
-                });
-            });
-        }
-
-        // Load All Data
-        function loadAllData() {
-            loadPatients();
-            loadVitalSigns();
-            loadTasks();
-        }
-
-        // Show Section
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.card').forEach(card => {
-                card.classList.add('hidden');
-            });
-
-            // Show selected section
-            document.getElementById(sectionId).classList.remove('hidden');
-
-            // Update nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Deseja sair?')) {
-                alert('Saindo...');
-                location.reload();
-            }
-        }
-
-        // Save Firebase Config
-        function saveFirebaseConfig() {
-            const apiKey = document.getElementById('apiKey').value;
-            const projectId = document.getElementById('projectId').value;
-            const databaseUrl = document.getElementById('databaseUrl').value;
-
-            if (!apiKey || !projectId || !databaseUrl) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            firebaseConfig = {
-                apiKey: apiKey,
-                projectId: projectId,
-                databaseURL: databaseUrl
-            };
-
-            localStorage.setItem('firebaseConfig', JSON.stringify(firebaseConfig));
-            alert('✅ Configuração salva! Recarregando...');
-            location.reload();
-        }
-
-        // Initialize on page load
-        window.addEventListener('load', () => {
-            // Check for saved config
-            const savedConfig = localStorage.getItem('firebaseConfig');
-            if (savedConfig) {
-                firebaseConfig = JSON.parse(savedConfig);
-            }
-
-            initializeFirebase();
+    app.vitals.push(vital);
+    
+    if (vital.isAbnormal) {
+        app.alerts.push({
+            id: Date.now(),
+            type: 'vital',
+            message: `⚠️ Sinais vitais alterados para ${patient.name}`,
+            timestamp: new Date().toLocaleString('pt-BR')
         });
-    </script>
+    }
+
+    saveToLocalStorage();
+    loadVitals();
+    closeModal('addVitalsModal');
+    logAction(`Sinais vitais registrados para ${patient.name}`);
+    
+    document.getElementById('vitalPA').value = '';
+    document.getElementById('vitalFC').value = '';
+    document.getElementById('vitalFR').value = '';
+    document.getElementById('vitalTemp').value = '';
+    document.getElementById('vitalSpO2').value = '';
+}
+
+function loadVitals() {
+    const list = document.getElementById('vitalsList');
+    list.innerHTML = '';
+
+    if (app.vitals.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum registro de sinais vitais</p>';
+        return;
+    }
+
+    app.vitals.slice().reverse().forEach(vital => {
+        const alertClass = vital.isAbnormal ? 'alert-danger' : 'alert-success';
+        list.innerHTML += `
+            <div class="alert ${alertClass}">
+                <span>${vital.isAbnormal ? '⚠️' : '✅'}</span>
+                <div>
+                    <strong>${vital.patientName}</strong><br>
+                    PA: ${vital.pa} | FC: ${vital.fc} | FR: ${vital.fr} | T: ${vital.temp}°C | SpO₂: ${vital.spo2}%<br>
+                    <small>${vital.timestamp}</small>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('criticalVitals').textContent = app.vitals.filter(v => v.isAbnormal).length;
+}
+
+// ===== EVALUATIONS =====
+function addEvaluation() {
+    const patientId = parseInt(document.getElementById('evalPatient').value);
+    const patient = app.patients.find(p => p.id === patientId);
+
+    const evaluation = {
+        id: Date.now(),
+        patientId: patientId,
+        patientName: patient.name,
+        dateTime: document.getElementById('evalDateTime').value,
+        subjetivo: document.getElementById('evalSubjective').value,
+        objetivo: document.getElementById('evalObjective').value,
+        analise: document.getElementById('evalAnalysis').value,
+        plano: document.getElementById('evalPlan').value,
+        evolucao: document.getElementById('evalEvolution').value,
+        author: app.currentUser.name,
+        coren: app.currentUser.coren,
+        timestamp: new Date().toLocaleString('pt-BR')
+    };
+
+    app.evaluations.push(evaluation);
+    saveToLocalStorage();
+    loadEvaluations();
+    closeModal('addEvaluationModal');
+    logAction(`Avaliação clínica registrada para ${patient.name}`);
+    
+    document.getElementById('evalSubjective').value = '';
+    document.getElementById('evalObjective').value = '';
+    document.getElementById('evalAnalysis').value = '';
+    document.getElementById('evalPlan').value = '';
+    document.getElementById('evalEvolution').value = '';
+}
+
+function loadEvaluations() {
+    const list = document.getElementById('evaluationsList');
+    list.innerHTML = '';
+
+    if (app.evaluations.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhuma avaliação registrada</p>';
+        return;
+    }
+
+    app.evaluations.slice().reverse().forEach(eval => {
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-title">${eval.patientName}</div>
+                <div class="card-subtitle">${eval.dateTime}</div>
+                <p><strong>S (Subjetivo):</strong> ${eval.subjetivo.substring(0, 50)}...</p>
+                <p><strong>O (Objetivo):</strong> ${eval.objetivo.substring(0, 50)}...</p>
+                <div class="card-actions">
+                    <button class="btn btn-small btn-info" onclick="viewEvaluation(${eval.id})">Ver Completo</button>
+                    <button class="btn btn-small btn-secondary" onclick="exportEvaluation(${eval.id})">📥 Exportar</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function generateAutoEvolution() {
+    const subj = document.getElementById('evalSubjective').value;
+    const obj = document.getElementById('evalObjective').value;
+    
+    const autoEvolution = `Paciente apresenta evolução ${subj.includes('melhor') ? 'favorável' : 'estável'}, mantendo-se clinicamente ${obj.includes('normal') ? 'estável' : 'sob observação'} sem intercorrências durante o atendimento.`;
+    
+    document.getElementById('evalEvolution').value = autoEvolution;
+    alert('✅ Evolução gerada automaticamente!');
+}
+
+function viewEvaluation(id) {
+    const eval = app.evaluations.find(e => e.id === id);
+    alert(`📋 AVALIAÇÃO COMPLETA\n\nPaciente: ${eval.patientName}\nData: ${eval.dateTime}\n\nS: ${eval.subjetivo}\n\nO: ${eval.objetivo}\n\nA: ${eval.analise}\n\nP: ${eval.plano}\n\nE: ${eval.evolucao}\n\nAutor: ${eval.author} - COREN ${eval.coren}`);
+}
+
+function exportEvaluation(id) {
+    const eval = app.evaluations.find(e => e.id === id);
+    const content = `AVALIAÇÃO CLÍNICA (SOAPIE)\n\nData: ${eval.dateTime}\nPaciente: ${eval.patientName}\n\nS - SUBJETIVO:\n${eval.subjetivo}\n\nO - OBJETIVO:\n${eval.objetivo}\n\nA - ANÁLISE:\n${eval.analise}\n\nP - PLANO:\n${eval.plano}\n\nE - EVOLUÇÃO:\n${eval.evolucao}\n\nAutor: ${eval.author}\nCOREN: ${eval.coren}\nData de Registro: ${eval.timestamp}`;
+    
+    downloadFile(content, `avaliacao_${eval.patientName}_${eval.dateTime}.txt`);
+}
+
+// ===== PHARMACY =====
+function addMedicine() {
+    const name = document.getElementById('medicineName').value;
+    const qty = parseInt(document.getElementById('medicineQty').value);
+    const expiry = document.getElementById('medicineExpiry').value;
+    const minQty = parseInt(document.getElementById('medicineMinQty').value);
+
+    if (!name || !qty || !expiry || !minQty) {
+        alert('Preencha todos os campos');
+        return;
+    }
+
+    const medicine = {
+        id: Date.now(),
+        name: name,
+        quantity: qty,
+        expiry: expiry,
+        minQuantity: minQty,
+        withdrawals: [],
+        createdAt: new Date().toLocaleString('pt-BR')
+    };
+
+    app.medicines.push(medicine);
+    saveToLocalStorage();
+    loadMedicines();
+    closeModal('addMedicineModal');
+    logAction(`Medicamento adicionado: ${name}`);
+    
+    document.getElementById('medicineName').value = '';
+    document.getElementById('medicineQty').value = '';
+    document.getElementById('medicineExpiry').value = '';
+    document.getElementById('medicineMinQty').value = '';
+}
+
+function loadMedicines() {
+    const list = document.getElementById('medicinesList');
+    list.innerHTML = '';
+
+    if (app.medicines.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum medicamento cadastrado</p>';
+        return;
+    }
+
+    app.medicines.forEach(med => {
+        const isLow = med.quantity <= med.minQuantity;
+        const isExpired = new Date(med.expiry) < new Date();
+        const statusClass = isExpired ? 'badge-danger' : isLow ? 'badge-warning' : 'badge-success';
+        
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${med.name}</div>
+                        <div class="card-subtitle">Estoque: ${med.quantity} | Validade: ${med.expiry}</div>
+                    </div>
+                    <span class="badge ${statusClass}">${isExpired ? 'VENCIDO' : isLow ? 'BAIXO' : 'OK'}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-small btn-warning" onclick="withdrawMedicine(${med.id})">Retirar</button>
+                    <button class="btn btn-small btn-danger" onclick="deleteMedicine(${med.id})">Deletar</button>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('lowMeds').textContent = app.medicines.filter(m => m.quantity <= m.minQuantity).length;
+}
+
+function withdrawMedicine(id) {
+    const qty = prompt('Quantidade a retirar:');
+    if (qty) {
+        const med = app.medicines.find(m => m.id === id);
+        med.quantity -= parseInt(qty);
+        med.withdrawals.push({
+            date: new Date().toLocaleString('pt-BR'),
+            quantity: parseInt(qty),
+            by: app.currentUser.name
+        });
+        saveToLocalStorage();
+        loadMedicines();
+        logAction(`Medicamento retirado: ${med.name} - Qtd: ${qty}`);
+    }
+}
+
+function deleteMedicine(id) {
+    if (confirm('Deseja deletar este medicamento?')) {
+        app.medicines = app.medicines.filter(m => m.id !== id);
+        saveToLocalStorage();
+        loadMedicines();
+        logAction('Medicamento deletado');
+    }
+}
+
+// ===== WAREHOUSE =====
+function addMaterial() {
+    const name = document.getElementById('materialName').value;
+    const qty = parseInt(document.getElementById('materialQty').value);
+    const sector = document.getElementById('materialSector').value;
+
+    if (!name || !qty || !sector) {
+        alert('Preencha todos os campos');
+        return;
+    }
+
+    const material = {
+        id: Date.now(),
+        name: name,
+        quantity: qty,
+        sector: sector,
+        movements: [],
+        createdAt: new Date().toLocaleString('pt-BR')
+    };
+
+    app.materials.push(material);
+    saveToLocalStorage();
+    loadMaterials();
+    closeModal('addMaterialModal');
+    logAction(`Material adicionado: ${name}`);
+    
+    document.getElementById('materialName').value = '';
+    document.getElementById('materialQty').value = '';
+}
+
+function loadMaterials() {
+    const list = document.getElementById('materialsList');
+    list.innerHTML = '';
+
+    if (app.materials.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum material cadastrado</p>';
+        return;
+    }
+
+    app.materials.forEach(mat => {
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${mat.name}</div>
+                        <div class="card-subtitle">Setor: ${mat.sector} | Qtd: ${mat.quantity}</div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-small btn-primary" onclick="requestMaterial(${mat.id})">Solicitar Reposição</button>
+                    <button class="btn btn-small btn-danger" onclick="deleteMaterial(${mat.id})">Deletar</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function requestMaterial(id) {
+    const mat = app.materials.find(m => m.id === id);
+    alert(`✅ Solicitação de reposição criada para ${mat.name}`);
+    logAction(`Reposição solicitada: ${mat.name}`);
+}
+
+function deleteMaterial(id) {
+    if (confirm('Deseja deletar este material?')) {
+        app.materials = app.materials.filter(m => m.id !== id);
+        saveToLocalStorage();
+        loadMaterials();
+        logAction('Material deletado');
+    }
+}
+
+// ===== TASKS =====
+function addTask() {
+    const desc = document.getElementById('taskDesc').value;
+    const priority = document.getElementById('taskPriority').value;
+    const assigneeId = parseInt(document.getElementById('taskAssignee').value);
+
+    if (!desc || !assigneeId) {
+        alert('Preencha todos os campos');
+        return;
+    }
+
+    const assignee = app.collaborators.find(c => c.id === assigneeId);
+    const task = {
+        id: Date.now(),
+        description: desc,
+        priority: priority,
+        assigneeId: assigneeId,
+        assigneeName: assignee.name,
+        status: 'pendente',
+        createdAt: new Date().toLocaleString('pt-BR'),
+        createdBy: app.currentUser.name
+    };
+
+    app.tasks.push(task);
+    saveToLocalStorage();
+    loadTasks();
+    closeModal('addTaskModal');
+    logAction(`Tarefa criada: ${desc}`);
+    
+    document.getElementById('taskDesc').value = '';
+}
+
+function loadTasks() {
+    const list = document.getElementById('tasksList');
+    list.innerHTML = '';
+
+    if (app.tasks.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhuma tarefa</p>';
+        return;
+    }
+
+    app.tasks.forEach(task => {
+        const priorityClass = task.priority === 'alta' ? 'badge-danger' : 
+                             task.priority === 'media' ? 'badge-warning' : 'badge-success';
+        const statusClass = task.status === 'concluida' ? 'badge-success' : 'badge-warning';
+        
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${task.description}</div>
+                        <div class="card-subtitle">Atribuído a: ${task.assigneeName}</div>
+                    </div>
+                    <div>
+                        <span class="badge ${priorityClass}">${task.priority.toUpperCase()}</span>
+                        <span class="badge ${statusClass}">${task.status.toUpperCase()}</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-small btn-success" onclick="completeTask(${task.id})">✓ Concluir</button>
+                    <button class="btn btn-small btn-danger" onclick="deleteTask(${task.id})">Deletar</button>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('pendingTasks').textContent = app.tasks.filter(t => t.status === 'pendente').length;
+}
+
+function completeTask(id) {
+    const task = app.tasks.find(t => t.id === id);
+    task.status = 'concluida';
+    saveToLocalStorage();
+    loadTasks();
+    logAction(`Tarefa concluída: ${task.description}`);
+}
+
+function deleteTask(id) {
+    if (confirm('Deseja deletar esta tarefa?')) {
+        app.tasks = app.tasks.filter(t => t.id !== id);
+        saveToLocalStorage();
+        loadTasks();
+        logAction('Tarefa deletada');
+    }
+}
+
+// ===== COLLABORATORS =====
+function addCollaborator() {
+    const name = document.getElementById('collabName').value;
+    const email = document.getElementById('collabEmail').value;
+    const role = document.getElementById('collabRole').value;
+
+    if (!name || !email || !role) {
+        alert('Preencha todos os campos');
+        return;
+    }
+
+    const collaborator = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        role: role,
+        status: 'ativo',
+        createdAt: new Date().toLocaleString('pt-BR')
+    };
+
+    app.collaborators.push(collaborator);
+    saveToLocalStorage();
+    loadCollaborators();
+    closeModal('addCollaboratorModal');
+    logAction(`Colaborador adicionado: ${name}`);
+    
+    document.getElementById('collabName').value = '';
+    document.getElementById('collabEmail').value = '';
+}
+
+function loadCollaborators() {
+    const list = document.getElementById('collaboratorsList');
+    list.innerHTML = '';
+
+    if (app.collaborators.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum colaborador cadastrado</p>';
+        return;
+    }
+
+    app.collaborators.forEach(collab => {
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${collab.name}</div>
+                        <div class="card-subtitle">${collab.role} | ${collab.email}</div>
+                    </div>
+                    <span class="badge badge-success">${collab.status.toUpperCase()}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-small btn-primary" onclick="editCollaborator(${collab.id})">Editar</button>
+                    <button class="btn btn-small btn-danger" onclick="deleteCollaborator(${collab.id})">Deletar</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function deleteCollaborator(id) {
+    if (confirm('Deseja deletar este colaborador?')) {
+        app.collaborators = app.collaborators.filter(c => c.id !== id);
+        saveToLocalStorage();
+        loadCollaborators();
+        logAction('Colaborador deletado');
+    }
+}
+
+function editCollaborator(id) {
+    alert('Funcionalidade de edição em desenvolvimento');
+}
+
+// ===== ALERTS =====
+function loadAlerts() {
+    const list = document.getElementById('alertsList');
+    list.innerHTML = '';
+
+    if (app.alerts.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum alerta</p>';
+        return;
+    }
+
+    app.alerts.slice().reverse().forEach(alert => {
+        list.innerHTML += `
+            <div class="alert alert-danger">
+                <span>🚨</span>
+                <div>
+                    <strong>${alert.message}</strong><br>
+                    <small>${alert.timestamp}</small>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// ===== CHAT =====
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value;
+
+    if (!message) return;
+
+    const msg = {
+        id: Date.now(),
+        author: app.currentUser.name,
+        text: message,
+        timestamp: new Date().toLocaleString('pt-BR')
+    };
+
+    app.messages.push(msg);
+    input.value = '';
+    loadChat();
+    logAction(`Mensagem enviada: ${message.substring(0, 30)}`);
+}
+
+function loadChat() {
+    const chat = document.getElementById('chatMessages');
+    chat.innerHTML = '';
+
+    app.messages.forEach(msg => {
+        chat.innerHTML += `
+            <div style="margin-bottom: 10px; padding: 10px; background: var(--light-gray); border-radius: 8px;">
+                <strong>${msg.author}</strong> <small>${msg.timestamp}</small><br>
+                ${msg.text}
+            </div>
+        `;
+    });
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+// ===== AUDIT LOG =====
+function logAction(action) {
+    app.auditLog.push({
+        id: Date.now(),
+        user: app.currentUser.name,
+        action: action,
+        timestamp: new Date().toLocaleString('pt-BR')
+    });
+    saveToLocalStorage();
+}
+
+function loadAuditLog() {
+    const list = document.getElementById('auditList');
+    list.innerHTML = '';
+
+    if (app.auditLog.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum log</p>';
+        return;
+    }
+
+    list.innerHTML = '<table><tr><th>Usuário</th><th>Ação</th><th>Data/Hora</th></tr>';
+    app.auditLog.slice().reverse().forEach(log => {
+        list.innerHTML += `<tr><td>${log.user}</td><td>${log.action}</td><td>${log.timestamp}</td></tr>`;
+    });
+    list.innerHTML += '</table>';
+}
+
+// ===== HELPERS =====
+function populatePatientSelects() {
+    const selects = ['vitalsPatient', 'evalPatient'];
+    selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '';
+        app.patients.forEach(patient => {
+            select.innerHTML += `<option value="${patient.id}">${patient.name}</option>`;
+        });
+    });
+}
+
+function populateCollaboratorSelects() {
+    const select = document.getElementById('taskAssignee');
+    select.innerHTML = '';
+    app.collaborators.forEach(collab => {
+        select.innerHTML += `<option value="${collab.id}">${collab.name}</option>`;
+    });
+}
+
+function updateDateTime() {
+    const now = new Date();
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+
+function generateAISummary() {
+    const summary = `📊 RESUMO DO DIA\n\n✅ Pacientes Ativos: ${app.patients.length}\n⚠️ Sinais Críticos: ${app.vitals.filter(v => v.isAbnormal).length}\n📋 Avaliações: ${app.evaluations.length}\n✅ Tarefas Concluídas: ${app.tasks.filter(t => t.status === 'concluida').length}\n⏳ Tarefas Pendentes: ${app.tasks.filter(t => t.status === 'pendente').length}\n💊 Medicamentos com Estoque Baixo: ${app.medicines.filter(m => m.quantity <= m.minQuantity).length}`;
+    
+    document.getElementById('aiContent').textContent = summary;
+    document.getElementById('dailySummary').textContent = `${app.patients.length} pacientes · ${app.evaluations.length} avaliações · ${app.alerts.length} alertas`;
+}
+
+function generateAIRisks() {
+    let risks = '🚨 ANÁLISE DE RISCOS\n\n';
+    
+    app.vitals.filter(v => v.isAbnormal).forEach(v => {
+        risks += `⚠️ ${v.patientName}: Sinais alterados\n`;
+    });
+    
+    app.medicines.filter(m => m.quantity <= m.minQuantity).forEach(m => {
+        risks += `💊 ${m.name}: Estoque baixo (${m.quantity})\n`;
+    });
+    
+    if (risks === '🚨 ANÁLISE DE RISCOS\n\n') {
+        risks += '✅ Nenhum risco identificado no momento';
+    }
+    
+    document.getElementById('aiContent').textContent = risks;
+}
+
+function generateReport() {
+    const type = document.getElementById('reportType').value;
+    const report = `📊 RELATÓRIO ${type.toUpperCase()}\n\nData: ${new Date().toLocaleString('pt-BR')}\nGestor: ${app.currentUser.name}\n\nPACIENTES: ${app.patients.length}\nAVALIAÇÕES: ${app.evaluations.length}\nTAREFAS CONCLUÍDAS: ${app.tasks.filter(t => t.status === 'concluida').length}\nALERTAS: ${app.alerts.length}`;
+    
+    alert(report);
+}
+
+function exportReportPDF() {
+    const content = `RELATÓRIO - ${new Date().toLocaleString('pt-BR')}\n\nPacientes: ${app.patients.length}\nAvaliações: ${app.evaluations.length}\nTarefas: ${app.tasks.length}\nAlertas: ${app.alerts.length}`;
+    downloadFile(content, 'relatorio.txt');
+}
+
+function downloadFile(content, filename) {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+function toggleNotifications() {
+    alert(`🔔 Você tem ${app.alerts.length} notificações`);
+}
+
+function saveToLocalStorage() {
+    localStorage.setItem('nursecare_app', JSON.stringify(app));
+}
+
+function loadFromLocalStorage() {
+    const data = localStorage.getItem('nursecare_app');
+    if (data) {
+        const loaded = JSON.parse(data);
+        app.patients = loaded.patients || [];
+        app.vitals = loaded.vitals || [];
+        app.evaluations = loaded.evaluations || [];
+        app.medicines = loaded.medicines || [];
+        app.materials = loaded.materials || [];
+        app.tasks = loaded.tasks || [];
+        app.collaborators = loaded.collaborators || [];
+        app.alerts = loaded.alerts || [];
+        app.messages = loaded.messages || [];
+        app.auditLog = loaded.auditLog || [];
+    }
+}
+
+function loadAllData() {
+    loadFromLocalStorage();
+    loadPatients();
+    loadVitals();
+    loadEvaluations();
+    loadMedicines();
+    loadMaterials();
+    loadTasks();
+    loadCollaborators();
+    loadAlerts();
+    loadChat();
+    generateAISummary();
+}
+
+// Initialize
+window.addEventListener('load', () => {
+    loadFromLocalStorage();
+    // Add some demo data
+    if (app.collaborators.length === 0) {
+        app.collaborators = [
+            { id: 1, name: 'João Técnico', email: 'joao@nursecare.com', role: 'tecnico', status: 'ativo', createdAt: new Date().toLocaleString('pt-BR') },
+            { id: 2, name: 'Maria Auxiliar', email: 'maria@nursecare.com', role: 'auxiliar', status: 'ativo', createdAt: new Date().toLocaleString('pt-BR') }
+        ];
+        saveToLocalStorage();
+    }
+});
+</script>
+
 </body>
 </html>
