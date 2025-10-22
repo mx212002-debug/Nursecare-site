@@ -11,71 +11,153 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --navy: #0B2340;
-            --blue: #0E6BA8;
-            --white: #FFFFFF;
-            --light-gray: #F4F6F8;
-            --text: #222222;
-            --border: #E0E0E0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #dc2626;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--light-gray);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
         }
 
-        .screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .container {
             display: none;
             flex-direction: column;
-            background: var(--white);
-            z-index: 1;
+            height: 100vh;
+            background: white;
         }
 
-        .screen.active {
+        .container.active {
             display: flex;
         }
 
-        /* ===== LOGIN ===== */
-        #loginScreen {
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #0B2340 0%, #1a3a52 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-left h1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .header-left p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .header-right button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        /* BOTTOM NAVIGATION - SCROLLÁVEL */
+        .bottom-nav {
+            background: white;
+            border-top: 2px solid #ddd;
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            gap: 5px;
+            padding: 10px 5px;
+            position: sticky;
+            bottom: 0;
+            scroll-behavior: smooth;
+        }
+
+        .bottom-nav::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .bottom-nav::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .bottom-nav::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 2px;
+        }
+
+        .nav-btn {
+            flex: 0 0 auto;
+            min-width: 100px;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-btn.active {
+            border-color: #0B2340;
+            background: #0B2340;
+            color: white;
+        }
+
+        /* LOGIN */
+        .login-container {
+            display: flex;
             justify-content: center;
-            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0B2340 0%, #1a3a52 100%);
         }
 
         .login-box {
-            background: var(--white);
-            border-radius: 15px;
+            background: white;
             padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
-        .login-header {
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #0B2340;
+        }
+
+        .login-box p {
             text-align: center;
             margin-bottom: 30px;
-        }
-
-        .login-header h1 {
-            font-size: 28px;
-            color: var(--navy);
-            margin-bottom: 10px;
+            color: #666;
         }
 
         .form-group {
@@ -85,193 +167,69 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: bold;
+            color: #0B2340;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid var(--border);
+            border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
+            transition: border-color 0.3s;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--blue);
+            border-color: #0B2340;
         }
 
-        .btn {
+        .login-box button {
             width: 100%;
             padding: 12px;
+            background: #0B2340;
+            color: white;
             border: none;
             border-radius: 8px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.3s;
         }
 
-        .btn-primary {
-            background: var(--navy);
-            color: var(--white);
+        .login-box button:hover {
+            background: #1a3a52;
         }
 
-        .btn-primary:hover {
-            background: #051a2f;
-        }
-
-        .btn-small {
-            padding: 8px 12px;
-            font-size: 13px;
-            width: auto;
-            margin: 5px 5px 5px 0;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: var(--white);
-        }
-
-        .btn-secondary {
-            background: var(--light-gray);
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        /* ===== APP SCREENS ===== */
-        .app-header {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-            color: var(--white);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .greeting h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .greeting p {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .app-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            padding-bottom: 80px;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--navy);
-        }
-
+        /* CARDS */
         .card {
-            background: var(--white);
-            border: 1px solid var(--border);
+            background: white;
             border-radius: 10px;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .card-title {
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--navy);
+        .card h3 {
+            color: #0B2340;
             margin-bottom: 10px;
         }
 
-        .card-subtitle {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-danger {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--white);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 1000;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-        }
-
-        .nav-item {
-            flex: 1;
-            text-align: center;
-            padding: 10px 5px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 12px;
-            color: #999;
-            transition: all 0.3s;
-            border-top: 3px solid transparent;
-        }
-
-        .nav-item.active {
-            color: var(--navy);
-            border-top-color: var(--blue);
-            font-weight: 600;
-        }
-
+        /* MODAL */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
+            z-index: 1000;
             justify-content: center;
+            align-items: center;
         }
 
         .modal.active {
@@ -279,338 +237,362 @@
         }
 
         .modal-content {
-            background: var(--white);
-            border-radius: 15px;
+            background: white;
             padding: 30px;
+            border-radius: 15px;
             max-width: 500px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            color: var(--navy);
-            font-size: 20px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--blue);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .alert-danger {
-            background: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid var(--danger);
-        }
-
-        .alert-warning {
-            background: #fef3c7;
-            color: #92400e;
-            border-left: 4px solid var(--warning);
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border-left: 4px solid var(--success);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-
-        th {
-            background: var(--light-gray);
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid var(--border);
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .fab {
-            position: fixed;
-            bottom: 100px;
+        .modal-content .close {
+            position: absolute;
+            top: 15px;
             right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--blue);
-            color: var(--white);
-            border: none;
+            font-size: 28px;
             cursor: pointer;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(14, 107, 168, 0.4);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #666;
         }
 
+        /* CHAT */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: white;
+            border-left: 4px solid #0B2340;
+        }
+
+        .message.sent {
+            background: #e3f2fd;
+            border-left-color: #4CAF50;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            background: #0B2340;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 10px 20px;
+            background: #0B2340;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #1a3a52;
+        }
+
+        .btn-secondary {
+            background: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
+            .content {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .modal-content {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- ===== TELA 1: LOGIN ===== -->
-<div id="loginScreen" class="screen active">
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-container active">
     <div class="login-box">
-        <div class="login-header">
-            <h1>🏥 NURSECARE</h1>
-            <p>Gestão em Saúde</p>
-        </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="loginEmail" placeholder="seu@email.com" value="matheus@nursecare.com">
-        </div>
-        <div class="form-group">
-            <label>Senha</label>
-            <input type="password" id="loginPassword" placeholder="Sua senha" value="123456">
-        </div>
-        <div class="form-group">
-            <label>Perfil</label>
-            <select id="loginProfile">
-                <option value="gestor">👨‍⚕️ Enfermeiro (Gestor)</option>
-                <option value="colaborador">👨‍💼 Colaborador (Técnico)</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" onclick="login()">Entrar</button>
+        <h2>🏥 NURSECARE</h2>
+        <p>Gestão em Saúde</p>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="seu@email.com" value="matheus@nursecare.com" required>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="loginPassword" placeholder="Sua senha" value="123456" required>
+            </div>
+            <div class="form-group">
+                <label>Perfil</label>
+                <select id="loginProfile" required>
+                    <option value="gestor">👨‍⚕️ Enfermeiro (Gestor)</option>
+                    <option value="colaborador">👨‍💼 Colaborador (Técnico)</option>
+                </select>
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
     </div>
 </div>
 
-<!-- ===== TELA 2: GESTOR ===== -->
-<div id="gestorScreen" class="screen">
-    <div class="app-header">
-        <div class="greeting">
-            <h2>👋 Olá, Enfermeiro Matheus</h2>
-            <p id="currentDate"></p>
+<!-- GESTOR (ENFERMEIRO) SCREEN -->
+<div id="gestorScreen" class="container">
+    <div class="header">
+        <div class="header-left">
+            <h1>👋 Olá, Enfermeiro Matheus</h1>
+            <p id="gestorDate">quarta-feira, 22 de outubro de 2025</p>
         </div>
-        <button class="btn btn-small btn-secondary" onclick="logout()">Sair</button>
+        <button onclick="logout()">Sair</button>
     </div>
 
-    <div class="app-content">
+    <div class="content">
         <!-- DASHBOARD -->
-        <div id="gestorDashboard" class="section active">
-            <div class="section-title">📊 Dashboard</div>
-            <div class="alert alert-success">
-                <span>ℹ️</span>
-                <div>
-                    <strong>Resumo do Dia:</strong> 3 evoluções registradas · 1 paciente em observação · 2 alertas críticos
-                </div>
+        <div id="gestorDashboard" class="module active">
+            <h2>📊 Dashboard</h2>
+            <div class="card">
+                <h3>📋 Resumo do Dia</h3>
+                <p>3 evoluções registradas • 1 paciente em observação • 2 alertas críticos</p>
             </div>
             <div class="card">
-                <div class="card-title">👥 Pacientes Ativos</div>
-                <div style="font-size: 32px; font-weight: bold; color: var(--blue);" id="totalPatients">0</div>
-                <button class="btn btn-small btn-primary" onclick="showModal('addPatientModal')" style="margin-top: 10px;">+ Novo Paciente</button>
+                <h3>👥 Pacientes Ativos</h3>
+                <p>0</p>
+                <button onclick="showModal('newPatientModal')">+ Novo Paciente</button>
             </div>
             <div class="card">
-                <div class="card-title">❤️ Alertas Críticos</div>
-                <div style="font-size: 32px; font-weight: bold; color: var(--danger);" id="criticalAlerts">0</div>
+                <h3>❤️ Alertas Críticos</h3>
+                <p>0</p>
             </div>
             <div class="card">
-                <div class="card-title">✅ Tarefas Pendentes</div>
-                <div style="font-size: 32px; font-weight: bold; color: var(--warning);" id="pendingTasks">0</div>
-                <button class="btn btn-small btn-primary" onclick="showModal('addTaskModal')" style="margin-top: 10px;">+ Nova Tarefa</button>
+                <h3>✅ Tarefas Pendentes</h3>
+                <p>0</p>
+                <button onclick="showModal('newTaskModal')">+ Nova Tarefa</button>
             </div>
         </div>
 
         <!-- PACIENTES -->
-        <div id="gestorPatients" class="section">
-            <div class="section-title">👥 Pacientes</div>
-            <button class="btn btn-primary" onclick="showModal('addPatientModal')" style="margin-bottom: 20px;">+ Novo Paciente</button>
-            <div id="patientsList"></div>
+        <div id="gestorPacientes" class="module">
+            <h2>👥 Pacientes</h2>
+            <button onclick="showModal('newPatientModal')">+ Novo Paciente</button>
+            <div id="pacientesList"></div>
         </div>
 
-        <!-- AVALIAÇÃO CLÍNICA -->
-        <div id="gestorEvaluation" class="section">
-            <div class="section-title">📋 Avaliação Clínica (SOAPIE)</div>
-            <button class="btn btn-primary" onclick="showModal('addEvaluationModal')" style="margin-bottom: 20px;">+ Nova Avaliação</button>
-            <div id="evaluationsList"></div>
+        <!-- AVALIAÇÃO CLÍNICA (SOAPIE) -->
+        <div id="gestorAvaliacao" class="module">
+            <h2>📋 Avaliação Clínica (SOAPIE)</h2>
+            <button onclick="showModal('newAvaliacaoModal')">+ Nova Avaliação</button>
+            <div id="avaliacaoList"></div>
         </div>
 
         <!-- FARMÁCIA -->
-        <div id="gestorPharmacy" class="section">
-            <div class="section-title">💊 Farmácia</div>
-            <button class="btn btn-primary" onclick="showModal('addMedicineModal')" style="margin-bottom: 20px;">+ Novo Medicamento</button>
-            <div id="medicinesList"></div>
+        <div id="gestorFarmacia" class="module">
+            <h2>💊 Farmácia</h2>
+            <button onclick="showModal('newMedicamentoModal')">+ Novo Medicamento</button>
+            <div id="farmaciaList"></div>
         </div>
 
         <!-- ALMOXARIFADO -->
-        <div id="gestorWarehouse" class="section">
-            <div class="section-title">📦 Almoxarifado</div>
-            <button class="btn btn-primary" onclick="showModal('addMaterialModal')" style="margin-bottom: 20px;">+ Novo Material</button>
-            <div id="materialsList"></div>
+        <div id="gestorAlmoxarifado" class="module">
+            <h2>📦 Almoxarifado</h2>
+            <button onclick="showModal('newMaterialModal')">+ Novo Material</button>
+            <div id="almoxarifadoList"></div>
         </div>
 
         <!-- COLABORADORES -->
-        <div id="gestorCollaborators" class="section">
-            <div class="section-title">👥 Colaboradores</div>
-            <button class="btn btn-primary" onclick="showModal('addCollaboratorModal')" style="margin-bottom: 20px;">+ Novo Colaborador</button>
-            <div id="collaboratorsList"></div>
+        <div id="gestorColaboradores" class="module">
+            <h2>👥 Colaboradores</h2>
+            <button onclick="showModal('newColaboradorModal')">+ Novo Colaborador</button>
+            <div id="colaboradoresList"></div>
         </div>
 
-        <!-- CHAT -->
-        <div id="gestorChat" class="section">
-            <div class="section-title">💬 Fale com o Enfermeiro</div>
+        <!-- CHAT GESTOR -->
+        <div id="gestorChat" class="module">
+            <h2>💬 Chat</h2>
             <div class="card">
-                <div class="card-title">📞 Contato Direto</div>
-                <p><strong>Matheus da Silva</strong></p>
-                <p>📞 (11) 98520-9793</p>
-                <p>📧 enf.matheus37284363@gmail.com</p>
+                <h3>Canais de Comunicação</h3>
+                <button onclick="openChat('enfermagem')">🏥 Chat Enfermagem</button>
+                <button onclick="openChat('farmacia')">💊 Chat Farmácia</button>
+                <button onclick="openChat('coordenacao')">📋 Chat Coordenação</button>
+                <button onclick="openChat('emergencia')">🚨 Chat Emergência</button>
+            </div>
+            <div id="chatBox" style="display:none;">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Digite sua mensagem...">
+                    <button onclick="sendMessage()">Enviar</button>
+                </div>
             </div>
         </div>
 
         <!-- RELATÓRIOS -->
-        <div id="gestorReports" class="section">
-            <div class="section-title">📊 Relatórios</div>
-            <div class="form-group">
-                <label>Tipo de Relatório</label>
-                <select id="reportType">
-                    <option value="daily">Diário</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensal</option>
-                </select>
+        <div id="gestorRelatorios" class="module">
+            <h2>📊 Relatórios</h2>
+            <button onclick="generateReport('diario')">📅 Relatório Diário</button>
+            <button onclick="generateReport('semanal')">📆 Relatório Semanal</button>
+            <button onclick="generateReport('mensal')">📊 Relatório Mensal</button>
+        </div>
+
+        <!-- AUDITORIA -->
+        <div id="gestorAuditoria" class="module">
+            <h2>🔍 Auditoria</h2>
+            <div id="auditoriaList"></div>
+        </div>
+
+        <!-- POP -->
+        <div id="gestorPOP" class="module">
+            <h2>🚨 POP de Emergências</h2>
+            <div class="card">
+                <h3>Cola de SSVV Normais</h3>
+                <table style="width:100%; border-collapse: collapse;">
+                    <tr><td><strong>PA</strong></td><td>120/80 mmHg</td></tr>
+                    <tr><td><strong>FC</strong></td><td>60-100 bpm</td></tr>
+                    <tr><td><strong>FR</strong></td><td>12-20 irpm</td></tr>
+                    <tr><td><strong>Temperatura</strong></td><td>36.5-37.5°C</td></tr>
+                    <tr><td><strong>SpO₂</strong></td><td>95-100%</td></tr>
+                </table>
             </div>
-            <button class="btn btn-primary" onclick="generateReport()">Gerar Relatório</button>
         </div>
     </div>
 
+    <!-- BOTTOM NAVIGATION - SCROLLÁVEL -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchGestor('gestorDashboard')">📊 Dashboard</button>
-        <button class="nav-item" onclick="switchGestor('gestorPatients')">👥 Pacientes</button>
-        <button class="nav-item" onclick="switchGestor('gestorEvaluation')">📋 Avaliação</button>
-        <button class="nav-item" onclick="switchGestor('gestorPharmacy')">💊 Farmácia</button>
-        <button class="nav-item" onclick="switchGestor('gestorWarehouse')">📦 Almoxarifado</button>
-        <button class="nav-item" onclick="switchGestor('gestorCollaborators')">👥 Colabs</button>
+        <button class="nav-btn active" onclick="switchModule('gestorDashboard', this)">📊 Dashboard</button>
+        <button class="nav-btn" onclick="switchModule('gestorPacientes', this)">👥 Pacientes</button>
+        <button class="nav-btn" onclick="switchModule('gestorAvaliacao', this)">📋 Avaliação</button>
+        <button class="nav-btn" onclick="switchModule('gestorFarmacia', this)">💊 Farmácia</button>
+        <button class="nav-btn" onclick="switchModule('gestorAlmoxarifado', this)">📦 Almoxarifado</button>
+        <button class="nav-btn" onclick="switchModule('gestorColaboradores', this)">👥 Colabs</button>
+        <button class="nav-btn" onclick="switchModule('gestorChat', this)">💬 Chat</button>
+        <button class="nav-btn" onclick="switchModule('gestorRelatorios', this)">📊 Relatórios</button>
+        <button class="nav-btn" onclick="switchModule('gestorAuditoria', this)">🔍 Auditoria</button>
+        <button class="nav-btn" onclick="switchModule('gestorPOP', this)">🚨 POP</button>
     </div>
 </div>
 
-<!-- ===== TELA 3: COLABORADOR ===== -->
-<div id="colaboradorScreen" class="screen">
-    <div class="app-header">
-        <div class="greeting">
-            <h2>👋 Olá, Técnico João</h2>
-            <p id="currentDateColaborador"></p>
+<!-- COLABORADOR (TÉCNICO) SCREEN -->
+<div id="colaboradorScreen" class="container">
+    <div class="header">
+        <div class="header-left">
+            <h1>👋 Olá, Técnico João</h1>
+            <p id="colaboradorDate">quarta-feira, 22 de outubro de 2025</p>
         </div>
-        <button class="btn btn-small btn-secondary" onclick="logout()">Sair</button>
+        <button onclick="logout()">Sair</button>
     </div>
 
-    <div class="app-content">
+    <div class="content">
         <!-- PACIENTES -->
-        <div id="colaboradorPatients" class="section active">
-            <div class="section-title">👥 Meus Pacientes</div>
-            <div id="colaboradorPatientsList"></div>
+        <div id="colaboradorPacientes" class="module active">
+            <h2>👥 Meus Pacientes</h2>
+            <div id="meusPacientesList"></div>
         </div>
 
         <!-- SINAIS VITAIS -->
-        <div id="colaboradorVitals" class="section">
-            <div class="section-title">❤️ Registrar Sinais Vitais</div>
-            <button class="btn btn-primary" onclick="showModal('addVitalsModal')" style="margin-bottom: 20px;">+ Registrar Sinais</button>
-            <div id="vitalsList"></div>
+        <div id="colaboradorSinais" class="module">
+            <h2>❤️ Registrar Sinais Vitais</h2>
+            <button onclick="showModal('registrarSinaisModal')">+ Registrar Sinais</button>
+            <div id="sinaisList"></div>
         </div>
 
         <!-- AVALIAÇÃO TÉCNICA -->
-        <div id="colaboradorTechnical" class="section">
-            <div class="section-title">📝 Avaliação Técnica</div>
-            <button class="btn btn-primary" onclick="showModal('addTechnicalModal')" style="margin-bottom: 20px;">+ Nova Avaliação</button>
-            <div id="technicalList"></div>
+        <div id="colaboradorAvaliacao" class="module">
+            <h2>📝 Avaliação Técnica</h2>
+            <button onclick="showModal('avaliacaoTecnicaModal')">+ Nova Avaliação</button>
+            <div id="avaliacaoTecnicaList"></div>
         </div>
 
         <!-- SOLICITAÇÕES -->
-        <div id="colaboradorRequests" class="section">
-            <div class="section-title">📋 Solicitações</div>
-            <button class="btn btn-primary" onclick="showModal('requestMedicineModal')" style="margin-bottom: 10px;">💊 Solicitar Medicação</button>
-            <button class="btn btn-primary" onclick="showModal('requestMaterialModal')" style="margin-bottom: 20px;">📦 Solicitar Material</button>
-            <div id="requestsList"></div>
+        <div id="colaboradorSolicitacoes" class="module">
+            <h2>📋 Solicitações</h2>
+            <button onclick="showModal('solicitacaoModal')">+ Nova Solicitação</button>
+            <div id="solicitacoesList"></div>
         </div>
 
         <!-- TAREFAS -->
-        <div id="colaboradorTasks" class="section">
-            <div class="section-title">✅ Minhas Tarefas</div>
-            <div id="tasksList"></div>
+        <div id="colaboradorTarefas" class="module">
+            <h2>✅ Minhas Tarefas</h2>
+            <div id="minhasTarefasList"></div>
         </div>
 
-        <!-- POP EMERGÊNCIAS -->
-        <div id="colaboradorPOP" class="section">
-            <div class="section-title">🚨 POP de Emergências</div>
+        <!-- CHAT COLABORADOR -->
+        <div id="colaboradorChat" class="module">
+            <h2>💬 Chat</h2>
             <div class="card">
-                <div class="card-title">Cola de SSVV Normais</div>
-                <table>
-                    <tr><th>Parâmetro</th><th>Normal</th></tr>
-                    <tr><td>PA</td><td>120/80 mmHg</td></tr>
-                    <tr><td>FC</td><td>60-100 bpm</td></tr>
-                    <tr><td>FR</td><td>12-20 irpm</td></tr>
-                    <tr><td>Temperatura</td><td>36,5-37,5°C</td></tr>
-                    <tr><td>SpO₂</td><td>95-100%</td></tr>
+                <h3>Canais de Comunicação</h3>
+                <button onclick="openChat('enfermagem')">🏥 Chat Enfermagem</button>
+                <button onclick="openChat('farmacia')">💊 Chat Farmácia</button>
+                <button onclick="openChat('coordenacao')">📋 Chat Coordenação</button>
+                <button onclick="openChat('emergencia')">🚨 Chat Emergência</button>
+            </div>
+            <div id="chatBoxColaborador" style="display:none;">
+                <div class="chat-messages" id="chatMessagesColaborador"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInputColaborador" placeholder="Digite sua mensagem...">
+                    <button onclick="sendMessageColaborador()">Enviar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- POP -->
+        <div id="colaboradorPOP" class="module">
+            <h2>🚨 POP de Emergências</h2>
+            <div class="card">
+                <h3>Cola de SSVV Normais</h3>
+                <table style="width:100%; border-collapse: collapse;">
+                    <tr><td><strong>PA</strong></td><td>120/80 mmHg</td></tr>
+                    <tr><td><strong>FC</strong></td><td>60-100 bpm</td></tr>
+                    <tr><td><strong>FR</strong></td><td>12-20 irpm</td></tr>
+                    <tr><td><strong>Temperatura</strong></td><td>36.5-37.5°C</td></tr>
+                    <tr><td><strong>SpO₂</strong></td><td>95-100%</td></tr>
                 </table>
             </div>
             <div class="card">
-                <div class="card-title">Primeiros Socorros</div>
-                <ul style="margin-left: 20px;">
+                <h3>Primeiros Socorros</h3>
+                <ul>
                     <li><strong>Queda:</strong> Imobilizar, chamar médico</li>
                     <li><strong>Convulsão:</strong> Proteger cabeça, posição lateral</li>
                     <li><strong>Desmaio:</strong> Deitar, elevar pernas</li>
                 </ul>
             </div>
             <div class="card">
-                <div class="card-title">📞 Números de Emergência</div>
+                <h3>📞 Números de Emergência</h3>
                 <p><strong>SAMU:</strong> 192</p>
                 <p><strong>Bombeiros:</strong> 193</p>
                 <p><strong>Enfermeiro:</strong> (11) 98520-9793</p>
@@ -618,1057 +600,253 @@
         </div>
     </div>
 
+    <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchColaborador('colaboradorPatients')">👥 Pacientes</button>
-        <button class="nav-item" onclick="switchColaborador('colaboradorVitals')">❤️ Sinais</button>
-        <button class="nav-item" onclick="switchColaborador('colaboradorTechnical')">📝 Avaliação</button>
-        <button class="nav-item" onclick="switchColaborador('colaboradorRequests')">📋 Solicitações</button>
-        <button class="nav-item" onclick="switchColaborador('colaboradorTasks')">✅ Tarefas</button>
-        <button class="nav-item" onclick="switchColaborador('colaboradorPOP')">🚨 POP</button>
+        <button class="nav-btn active" onclick="switchModuleColaborador('colaboradorPacientes', this)">👥 Pacientes</button>
+        <button class="nav-btn" onclick="switchModuleColaborador('colaboradorSinais', this)">❤️ Sinais</button>
+        <button class="nav-btn" onclick="switchModuleColaborador('colaboradorAvaliacao', this)">📝 Avaliação</button>
+        <button class="nav-btn" onclick="switchModuleColaborador('colaboradorSolicitacoes', this)">📋 Solicitações</button>
+        <button class="nav-btn" onclick="switchModuleColaborador('colaboradorTarefas', this)">✅ Tarefas</button>
+        <button class="nav-btn" onclick="switchModuleColaborador('colaboradorChat', this)">💬 Chat</button>
+        <button class="nav-btn" onclick="switchModuleColaborador('colaboradorPOP', this)">🚨 POP</button>
     </div>
 </div>
 
-<!-- ===== MODALS ===== -->
-
-<!-- ADD PATIENT MODAL (GESTOR ONLY) -->
-<div id="addPatientModal" class="modal">
+<!-- MODALS -->
+<!-- New Patient Modal -->
+<div id="newPatientModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>Novo Paciente</h2>
-            <button class="modal-close" onclick="closeModal('addPatientModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Nome Completo *</label>
-            <input type="text" id="patientName" placeholder="Nome do paciente">
-        </div>
-        <div class="form-group">
-            <label>Leito/Quarto *</label>
-            <input type="text" id="patientBed" placeholder="Ex: 305">
-        </div>
-        <div class="form-group">
-            <label>Status</label>
-            <select id="patientStatus">
-                <option value="ativo">Ativo</option>
-                <option value="critico">Crítico</option>
-                <option value="observacao">Observação</option>
-                <option value="alta">Alta</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" onclick="addPatient()">Salvar</button>
-    </div>
-</div>
-
-<!-- ADD EVALUATION MODAL (GESTOR ONLY - SOAPIE) -->
-<div id="addEvaluationModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>📋 Avaliação Clínica (SOAPIE)</h2>
-            <button class="modal-close" onclick="closeModal('addEvaluationModal')">✕</button>
-        </div>
-        
-        <div class="form-group">
-            <label>Paciente *</label>
-            <select id="evalPatient"></select>
-        </div>
-
-        <div class="form-group">
-            <label>Data e Hora *</label>
-            <input type="datetime-local" id="evalDateTime">
-        </div>
-
-        <div class="form-group">
-            <label><strong>S - Subjetivo:</strong> Queixas/Relatos *</label>
-            <textarea id="evalSubjective" placeholder="Queixas do paciente..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label><strong>O - Objetivo:</strong> Sinais Vitais *</label>
-            <div class="form-row">
-                <input type="text" id="evalPA" placeholder="PA (ex: 120/80)" required>
-                <input type="number" id="evalFC" placeholder="FC (bpm)" required>
+        <span class="close" onclick="closeModal('newPatientModal')">&times;</span>
+        <h2>➕ Novo Paciente</h2>
+        <form onsubmit="addPatient(event)">
+            <div class="form-group">
+                <label>Nome *</label>
+                <input type="text" required>
             </div>
-            <div class="form-row">
-                <input type="number" id="evalFR" placeholder="FR (irpm)" required>
-                <input type="number" id="evalTemp" placeholder="Temp (°C)" step="0.1" required>
+            <div class="form-group">
+                <label>Leito *</label>
+                <input type="text" required>
             </div>
-            <input type="number" id="evalSpO2" placeholder="SpO₂ (%)" style="width: 100%; margin-bottom: 10px;" required>
-            <textarea id="evalObjectiveNotes" placeholder="Estado geral, pele, dispositivos..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label><strong>A - Análise:</strong> Interpretação Clínica *</label>
-            <textarea id="evalAnalysis" placeholder="Interpretação do quadro..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label><strong>P - Plano:</strong> Condutas e Intervenções *</label>
-            <textarea id="evalPlan" placeholder="Cuidados, medicamentos, orientações..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label><strong>E - Evolução:</strong> Resposta aos Cuidados *</label>
-            <textarea id="evalEvolution" placeholder="Melhoras, pioras, manutenção..."></textarea>
-        </div>
-
-        <button class="btn btn-secondary" onclick="generateAutoEvolution()" style="margin-bottom: 10px;">🤖 Gerar Evolução Automática</button>
-        <button class="btn btn-primary" onclick="addEvaluation()">Salvar Avaliação</button>
+            <div class="form-group">
+                <label>Diagnóstico</label>
+                <input type="text">
+            </div>
+            <button type="submit">Adicionar Paciente</button>
+        </form>
     </div>
 </div>
 
-<!-- ADD VITALS MODAL (COLABORADOR) -->
-<div id="addVitalsModal" class="modal">
+<!-- New Avaliacao Modal -->
+<div id="newAvaliacaoModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>❤️ Registrar Sinais Vitais</h2>
-            <button class="modal-close" onclick="closeModal('addVitalsModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Paciente *</label>
-            <select id="vitalsPatient"></select>
-        </div>
-        <div class="form-row">
+        <span class="close" onclick="closeModal('newAvaliacaoModal')">&times;</span>
+        <h2>📋 Avaliação Clínica (SOAPIE)</h2>
+        <form onsubmit="addAvaliacao(event)">
+            <div class="form-group">
+                <label>Paciente *</label>
+                <select required><option>Selecione um paciente</option></select>
+            </div>
+            <div class="form-group">
+                <label>Data e Hora *</label>
+                <input type="datetime-local" required>
+            </div>
+            <div class="form-group">
+                <label>S - Subjetivo: Queixas/Relatos *</label>
+                <textarea required placeholder="Queixas do paciente..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>O - Objetivo: Sinais Vitais *</label>
+                <input type="text" placeholder="PA (ex: 120/80)" required>
+                <input type="text" placeholder="FC (bpm)" required>
+                <input type="text" placeholder="FR (irpm)" required>
+                <input type="text" placeholder="Temp (°C)" required>
+                <input type="text" placeholder="SpO₂ (%)" required>
+                <textarea placeholder="Estado geral, pele, dispositivos..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>A - Análise: Interpretação Clínica *</label>
+                <textarea required placeholder="Interpretação do quadro..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>P - Plano: Condutas e Intervenções *</label>
+                <textarea required placeholder="Plano de cuidados..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>E - Evolução: Resposta aos Cuidados *</label>
+                <textarea required placeholder="Evolução do paciente..."></textarea>
+            </div>
+            <button type="submit">Salvar Avaliação</button>
+        </form>
+    </div>
+</div>
+
+<!-- Registrar Sinais Modal -->
+<div id="registrarSinaisModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('registrarSinaisModal')">&times;</span>
+        <h2>❤️ Registrar Sinais Vitais</h2>
+        <form onsubmit="registrarSinais(event)">
+            <div class="form-group">
+                <label>Paciente *</label>
+                <select required><option>Selecione um paciente</option></select>
+            </div>
             <div class="form-group">
                 <label>PA (mmHg) *</label>
-                <input type="text" id="vitalPA" placeholder="Ex: 120/80">
+                <input type="text" placeholder="Ex: 120/80" required>
             </div>
             <div class="form-group">
                 <label>FC (bpm) *</label>
-                <input type="number" id="vitalFC" placeholder="Ex: 72">
+                <input type="text" placeholder="Ex: 72" required>
             </div>
-        </div>
-        <div class="form-row">
             <div class="form-group">
                 <label>FR (irpm) *</label>
-                <input type="number" id="vitalFR" placeholder="Ex: 16">
+                <input type="text" placeholder="Ex: 16" required>
             </div>
             <div class="form-group">
                 <label>Temperatura (°C) *</label>
-                <input type="number" id="vitalTemp" placeholder="Ex: 36.5" step="0.1">
+                <input type="text" placeholder="Ex: 36.5" required>
             </div>
-        </div>
-        <div class="form-group">
-            <label>SpO₂ (%) *</label>
-            <input type="number" id="vitalSpO2" placeholder="Ex: 98" min="0" max="100">
-        </div>
-        <button class="btn btn-primary" onclick="addVitals()">Registrar</button>
-    </div>
-</div>
-
-<!-- ADD TECHNICAL EVALUATION MODAL (COLABORADOR) -->
-<div id="addTechnicalModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>📝 Avaliação Técnica</h2>
-            <button class="modal-close" onclick="closeModal('addTechnicalModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Paciente *</label>
-            <select id="technicalPatient"></select>
-        </div>
-        <div class="form-group">
-            <label>Data e Hora *</label>
-            <input type="datetime-local" id="technicalDateTime">
-        </div>
-        <div class="form-group">
-            <label>Anotações de Evolução *</label>
-            <textarea id="technicalNotes" placeholder="Descreva o atendimento..."></textarea>
-        </div>
-        <button class="btn btn-primary" onclick="addTechnicalEval()">Salvar</button>
-    </div>
-</div>
-
-<!-- ADD MEDICINE MODAL (GESTOR ONLY) -->
-<div id="addMedicineModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>💊 Novo Medicamento</h2>
-            <button class="modal-close" onclick="closeModal('addMedicineModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Nome *</label>
-            <input type="text" id="medicineName" placeholder="Ex: Dipirona 500mg">
-        </div>
-        <div class="form-group">
-            <label>Quantidade *</label>
-            <input type="number" id="medicineQty" placeholder="Ex: 100">
-        </div>
-        <div class="form-group">
-            <label>Validade *</label>
-            <input type="date" id="medicineExpiry">
-        </div>
-        <div class="form-group">
-            <label>Quantidade Mínima *</label>
-            <input type="number" id="medicineMinQty" placeholder="Ex: 20">
-        </div>
-        <button class="btn btn-primary" onclick="addMedicine()">Salvar</button>
-    </div>
-</div>
-
-<!-- ADD MATERIAL MODAL (GESTOR ONLY) -->
-<div id="addMaterialModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>📦 Novo Material</h2>
-            <button class="modal-close" onclick="closeModal('addMaterialModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Nome *</label>
-            <input type="text" id="materialName" placeholder="Ex: Gaze estéril">
-        </div>
-        <div class="form-group">
-            <label>Quantidade *</label>
-            <input type="number" id="materialQty" placeholder="Ex: 500">
-        </div>
-        <div class="form-group">
-            <label>Setor</label>
-            <select id="materialSector">
-                <option value="enfermagem">Enfermagem</option>
-                <option value="farmacia">Farmácia</option>
-                <option value="coordenacao">Coordenação</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" onclick="addMaterial()">Salvar</button>
-    </div>
-</div>
-
-<!-- ADD COLLABORATOR MODAL (GESTOR ONLY) -->
-<div id="addCollaboratorModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>👥 Novo Colaborador</h2>
-            <button class="modal-close" onclick="closeModal('addCollaboratorModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Nome *</label>
-            <input type="text" id="collabName" placeholder="Nome completo">
-        </div>
-        <div class="form-group">
-            <label>Email *</label>
-            <input type="email" id="collabEmail" placeholder="email@example.com">
-        </div>
-        <div class="form-group">
-            <label>Função</label>
-            <select id="collabRole">
-                <option value="tecnico">Técnico de Enfermagem</option>
-                <option value="auxiliar">Auxiliar de Enfermagem</option>
-                <option value="cuidador">Cuidador</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" onclick="addCollaborator()">Salvar</button>
-    </div>
-</div>
-
-<!-- ADD TASK MODAL (GESTOR ONLY) -->
-<div id="addTaskModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>✅ Nova Tarefa</h2>
-            <button class="modal-close" onclick="closeModal('addTaskModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Descrição *</label>
-            <textarea id="taskDesc" placeholder="Descreva a tarefa..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>Prioridade</label>
-            <select id="taskPriority">
-                <option value="baixa">Baixa</option>
-                <option value="media">Média</option>
-                <option value="alta">Alta</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" onclick="addTask()">Criar Tarefa</button>
-    </div>
-</div>
-
-<!-- REQUEST MEDICINE MODAL (COLABORADOR) -->
-<div id="requestMedicineModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>💊 Solicitar Medicação</h2>
-            <button class="modal-close" onclick="closeModal('requestMedicineModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Paciente *</label>
-            <select id="requestMedPatient"></select>
-        </div>
-        <div class="form-group">
-            <label>Medicamento *</label>
-            <select id="requestMedSelect"></select>
-        </div>
-        <div class="form-group">
-            <label>Quantidade *</label>
-            <input type="number" id="requestMedQty" placeholder="Ex: 2">
-        </div>
-        <button class="btn btn-primary" onclick="requestMedicine()">Solicitar</button>
-    </div>
-</div>
-
-<!-- REQUEST MATERIAL MODAL (COLABORADOR) -->
-<div id="requestMaterialModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>📦 Solicitar Material</h2>
-            <button class="modal-close" onclick="closeModal('requestMaterialModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Paciente *</label>
-            <select id="requestMatPatient"></select>
-        </div>
-        <div class="form-group">
-            <label>Material *</label>
-            <select id="requestMatSelect"></select>
-        </div>
-        <div class="form-group">
-            <label>Quantidade *</label>
-            <input type="number" id="requestMatQty" placeholder="Ex: 5">
-        </div>
-        <button class="btn btn-primary" onclick="requestMaterial()">Solicitar</button>
+            <div class="form-group">
+                <label>SpO₂ (%) *</label>
+                <input type="text" placeholder="Ex: 98" required>
+            </div>
+            <button type="submit">Registrar</button>
+        </form>
     </div>
 </div>
 
 <script>
-// ===== DATA =====
-let app = {
-    currentUser: null,
-    patients: [],
-    evaluations: [],
-    vitals: [],
-    technicalEvals: [],
-    medicines: [],
-    materials: [],
-    collaborators: [],
-    tasks: [],
-    requests: []
-};
-
-// ===== LOGIN =====
-function login() {
-    const email = document.getElementById('loginEmail').value;
-    const profile = document.getElementById('loginProfile').value;
-
-    if (!email) {
-        alert('Por favor, preencha o email');
-        return;
-    }
-
-    app.currentUser = {
-        email: email,
-        name: profile === 'gestor' ? 'Matheus da Silva' : 'João Silva',
-        profile: profile,
-        coren: '677328'
+    let currentUser = null;
+    let currentChat = null;
+    let chats = {
+        enfermagem: [],
+        farmacia: [],
+        coordenacao: [],
+        emergencia: []
     };
 
-    document.getElementById('loginScreen').classList.remove('active');
-    
-    if (profile === 'gestor') {
-        document.getElementById('gestorScreen').classList.add('active');
-    } else {
-        document.getElementById('colaboradorScreen').classList.add('active');
+    function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const profile = document.getElementById('loginProfile').value;
+        
+        currentUser = { email, profile };
+        
+        document.getElementById('loginScreen').classList.remove('active');
+        
+        if (profile === 'gestor') {
+            document.getElementById('gestorScreen').classList.add('active');
+        } else {
+            document.getElementById('colaboradorScreen').classList.add('active');
+        }
     }
 
-    updateDateTime();
-    loadAllData();
-}
-
-function logout() {
-    if (confirm('Deseja realmente sair?')) {
-        app.currentUser = null;
-        document.getElementById('loginScreen').classList.add('active');
+    function logout() {
+        currentUser = null;
         document.getElementById('gestorScreen').classList.remove('active');
         document.getElementById('colaboradorScreen').classList.remove('active');
-    }
-}
-
-// ===== NAVIGATION =====
-function switchGestor(sectionId) {
-    document.querySelectorAll('#gestorScreen .section').forEach(s => s.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-    
-    document.querySelectorAll('#gestorScreen .nav-item').forEach(n => n.classList.remove('active'));
-    event.target.classList.add('active');
-
-    if (sectionId === 'gestorPatients') loadPatients();
-    if (sectionId === 'gestorEvaluation') loadEvaluations();
-    if (sectionId === 'gestorPharmacy') loadMedicines();
-    if (sectionId === 'gestorWarehouse') loadMaterials();
-    if (sectionId === 'gestorCollaborators') loadCollaborators();
-}
-
-function switchColaborador(sectionId) {
-    document.querySelectorAll('#colaboradorScreen .section').forEach(s => s.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-    
-    document.querySelectorAll('#colaboradorScreen .nav-item').forEach(n => n.classList.remove('active'));
-    event.target.classList.add('active');
-
-    if (sectionId === 'colaboradorPatients') loadColaboradorPatients();
-    if (sectionId === 'colaboradorVitals') loadVitals();
-    if (sectionId === 'colaboradorTechnical') loadTechnicalEvals();
-    if (sectionId === 'colaboradorRequests') loadRequests();
-    if (sectionId === 'colaboradorTasks') loadTasks();
-}
-
-// ===== MODALS =====
-function showModal(modalId) {
-    document.getElementById(modalId).classList.add('active');
-    if (modalId === 'addEvaluationModal') populatePatientSelects();
-    if (modalId === 'addVitalsModal') populatePatientSelects();
-    if (modalId === 'addTechnicalModal') populatePatientSelects();
-    if (modalId === 'requestMedicineModal') {
-        populatePatientSelects();
-        populateMedicineSelect();
-    }
-    if (modalId === 'requestMaterialModal') {
-        populatePatientSelects();
-        populateMaterialSelect();
-    }
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
-}
-
-// ===== PATIENTS (GESTOR ONLY) =====
-function addPatient() {
-    const name = document.getElementById('patientName').value;
-    const bed = document.getElementById('patientBed').value;
-    const status = document.getElementById('patientStatus').value;
-
-    if (!name || !bed) {
-        alert('Preencha os campos obrigatórios (*)');
-        return;
+        document.getElementById('loginScreen').classList.add('active');
     }
 
-    const patient = {
-        id: Date.now(),
-        name: name,
-        bed: bed,
-        status: status,
-        createdAt: new Date().toLocaleString('pt-BR')
-    };
-
-    app.patients.push(patient);
-    saveToLocalStorage();
-    loadPatients();
-    closeModal('addPatientModal');
-    alert('✅ Paciente adicionado!');
-    
-    document.getElementById('patientName').value = '';
-    document.getElementById('patientBed').value = '';
-    document.getElementById('totalPatients').textContent = app.patients.length;
-}
-
-function loadPatients() {
-    const list = document.getElementById('patientsList');
-    list.innerHTML = '';
-
-    if (app.patients.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum paciente cadastrado</p>';
-        return;
-    }
-
-    app.patients.forEach(patient => {
-        const statusClass = patient.status === 'critico' ? 'badge-danger' : 
-                           patient.status === 'observacao' ? 'badge-warning' : 'badge-success';
+    function switchModule(moduleId, btn) {
+        const modules = document.querySelectorAll('#gestorScreen .module');
+        modules.forEach(m => m.classList.remove('active'));
+        document.getElementById(moduleId).classList.add('active');
         
-        list.innerHTML += `
-            <div class="card">
-                <div style="display: flex; justify-content: space-between;">
-                    <div>
-                        <div class="card-title">${patient.name}</div>
-                        <div class="card-subtitle">Leito: ${patient.bed}</div>
-                    </div>
-                    <span class="badge ${statusClass}">${patient.status.toUpperCase()}</span>
-                </div>
-                <button class="btn btn-small btn-danger" onclick="deletePatient(${patient.id})" style="margin-top: 10px;">Deletar</button>
-            </div>
-        `;
-    });
-}
-
-function loadColaboradorPatients() {
-    const list = document.getElementById('colaboradorPatientsList');
-    list.innerHTML = '';
-
-    if (app.patients.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum paciente atribuído</p>';
-        return;
+        document.querySelectorAll('#gestorScreen .nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
 
-    app.patients.forEach(patient => {
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-title">${patient.name}</div>
-                <div class="card-subtitle">Leito: ${patient.bed}</div>
-                <div style="margin-top: 10px;">
-                    <button class="btn btn-small btn-primary" onclick="showModal('addVitalsModal')">Sinais Vitais</button>
-                    <button class="btn btn-small btn-primary" onclick="showModal('addTechnicalModal')">Avaliação</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function deletePatient(id) {
-    if (confirm('Deseja deletar este paciente?')) {
-        app.patients = app.patients.filter(p => p.id !== id);
-        saveToLocalStorage();
-        loadPatients();
-    }
-}
-
-// ===== EVALUATIONS (GESTOR ONLY - SOAPIE) =====
-function addEvaluation() {
-    const patientId = parseInt(document.getElementById('evalPatient').value);
-    const patient = app.patients.find(p => p.id === patientId);
-
-    if (!patientId) {
-        alert('Selecione um paciente');
-        return;
-    }
-
-    const evaluation = {
-        id: Date.now(),
-        patientId: patientId,
-        patientName: patient.name,
-        dateTime: document.getElementById('evalDateTime').value,
-        subjetivo: document.getElementById('evalSubjective').value,
-        pa: document.getElementById('evalPA').value,
-        fc: document.getElementById('evalFC').value,
-        fr: document.getElementById('evalFR').value,
-        temp: document.getElementById('evalTemp').value,
-        spo2: document.getElementById('evalSpO2').value,
-        objectiveNotes: document.getElementById('evalObjectiveNotes').value,
-        analise: document.getElementById('evalAnalysis').value,
-        plano: document.getElementById('evalPlan').value,
-        evolucao: document.getElementById('evalEvolution').value,
-        author: app.currentUser.name,
-        coren: app.currentUser.coren,
-        timestamp: new Date().toLocaleString('pt-BR')
-    };
-
-    app.evaluations.push(evaluation);
-    saveToLocalStorage();
-    loadEvaluations();
-    closeModal('addEvaluationModal');
-    alert('✅ Avaliação salva com sucesso!');
-}
-
-function loadEvaluations() {
-    const list = document.getElementById('evaluationsList');
-    list.innerHTML = '';
-
-    if (app.evaluations.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhuma avaliação registrada</p>';
-        return;
-    }
-
-    app.evaluations.slice().reverse().forEach(eval => {
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-title">${eval.patientName}</div>
-                <div class="card-subtitle">${eval.dateTime}</div>
-                <small><strong>Autor:</strong> ${eval.author} - COREN ${eval.coren}</small>
-            </div>
-        `;
-    });
-}
-
-function generateAutoEvolution() {
-    const subj = document.getElementById('evalSubjective').value;
-    const pa = document.getElementById('evalPA').value;
-    const fc = document.getElementById('evalFC').value;
-    const temp = document.getElementById('evalTemp').value;
-    
-    const autoEvolution = `Paciente lúcido, orientado e colaborativo. Refere ${subj.toLowerCase() || 'bem-estar'}. Sinais vitais: PA ${pa}, FC ${fc}, T ${temp}°C. Apresenta evolução favorável, mantendo-se clinicamente estável sem intercorrências.`;
-    
-    document.getElementById('evalEvolution').value = autoEvolution;
-    alert('✅ Evolução gerada automaticamente!');
-}
-
-// ===== VITALS (COLABORADOR) =====
-function addVitals() {
-    const patientId = parseInt(document.getElementById('vitalsPatient').value);
-    const pa = document.getElementById('vitalPA').value;
-    const fc = parseInt(document.getElementById('vitalFC').value);
-    const fr = parseInt(document.getElementById('vitalFR').value);
-    const temp = parseFloat(document.getElementById('vitalTemp').value);
-    const spo2 = parseInt(document.getElementById('vitalSpO2').value);
-
-    if (!patientId || !pa || !fc || !fr || !temp || !spo2) {
-        alert('Preencha todos os campos obrigatórios (*)');
-        return;
-    }
-
-    const patient = app.patients.find(p => p.id === patientId);
-    const vital = {
-        id: Date.now(),
-        patientId: patientId,
-        patientName: patient.name,
-        pa: pa,
-        fc: fc,
-        fr: fr,
-        temp: temp,
-        spo2: spo2,
-        author: app.currentUser.name,
-        timestamp: new Date().toLocaleString('pt-BR'),
-        isAbnormal: fc < 60 || fc > 100 || temp < 36 || temp > 37.5 || spo2 < 95
-    };
-
-    app.vitals.push(vital);
-    saveToLocalStorage();
-    loadVitals();
-    closeModal('addVitalsModal');
-    alert('✅ Sinais vitais registrados!');
-}
-
-function loadVitals() {
-    const list = document.getElementById('vitalsList');
-    list.innerHTML = '';
-
-    if (app.vitals.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum registro</p>';
-        return;
-    }
-
-    app.vitals.slice().reverse().forEach(vital => {
-        const alertClass = vital.isAbnormal ? 'alert-danger' : 'alert-success';
-        list.innerHTML += `
-            <div class="alert ${alertClass}">
-                <span>${vital.isAbnormal ? '⚠️' : '✅'}</span>
-                <div>
-                    <strong>${vital.patientName}</strong><br>
-                    PA: ${vital.pa} | FC: ${vital.fc} | FR: ${vital.fr} | T: ${vital.temp}°C | SpO₂: ${vital.spo2}%<br>
-                    <small>Por: ${vital.author} - ${vital.timestamp}</small>
-                </div>
-            </div>
-        `;
-    });
-
-    document.getElementById('criticalAlerts').textContent = app.vitals.filter(v => v.isAbnormal).length;
-}
-
-// ===== TECHNICAL EVALUATIONS (COLABORADOR) =====
-function addTechnicalEval() {
-    const patientId = parseInt(document.getElementById('technicalPatient').value);
-    const notes = document.getElementById('technicalNotes').value;
-
-    if (!patientId || !notes) {
-        alert('Preencha todos os campos obrigatórios (*)');
-        return;
-    }
-
-    const patient = app.patients.find(p => p.id === patientId);
-    const eval = {
-        id: Date.now(),
-        patientId: patientId,
-        patientName: patient.name,
-        dateTime: document.getElementById('technicalDateTime').value,
-        notes: notes,
-        author: app.currentUser.name,
-        timestamp: new Date().toLocaleString('pt-BR')
-    };
-
-    app.technicalEvals.push(eval);
-    saveToLocalStorage();
-    loadTechnicalEvals();
-    closeModal('addTechnicalModal');
-    alert('✅ Avaliação técnica registrada!');
-}
-
-function loadTechnicalEvals() {
-    const list = document.getElementById('technicalList');
-    list.innerHTML = '';
-
-    if (app.technicalEvals.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhuma avaliação</p>';
-        return;
-    }
-
-    app.technicalEvals.slice().reverse().forEach(eval => {
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-title">${eval.patientName}</div>
-                <div class="card-subtitle">${eval.dateTime}</div>
-                <p>${eval.notes.substring(0, 100)}...</p>
-                <small>Por: ${eval.author}</small>
-            </div>
-        `;
-    });
-}
-
-// ===== MEDICINES (GESTOR ONLY) =====
-function addMedicine() {
-    const name = document.getElementById('medicineName').value;
-    const qty = parseInt(document.getElementById('medicineQty').value);
-    const expiry = document.getElementById('medicineExpiry').value;
-    const minQty = parseInt(document.getElementById('medicineMinQty').value);
-
-    if (!name || !qty || !expiry || !minQty) {
-        alert('Preencha todos os campos obrigatórios (*)');
-        return;
-    }
-
-    const medicine = {
-        id: Date.now(),
-        name: name,
-        quantity: qty,
-        expiry: expiry,
-        minQuantity: minQty,
-        createdAt: new Date().toLocaleString('pt-BR')
-    };
-
-    app.medicines.push(medicine);
-    saveToLocalStorage();
-    loadMedicines();
-    closeModal('addMedicineModal');
-    alert('✅ Medicamento adicionado!');
-}
-
-function loadMedicines() {
-    const list = document.getElementById('medicinesList');
-    list.innerHTML = '';
-
-    if (app.medicines.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum medicamento</p>';
-        return;
-    }
-
-    app.medicines.forEach(med => {
-        const isLow = med.quantity <= med.minQuantity;
-        const isExpired = new Date(med.expiry) < new Date();
-        const statusClass = isExpired ? 'badge-danger' : isLow ? 'badge-warning' : 'badge-success';
+    function switchModuleColaborador(moduleId, btn) {
+        const modules = document.querySelectorAll('#colaboradorScreen .module');
+        modules.forEach(m => m.classList.remove('active'));
+        document.getElementById(moduleId).classList.add('active');
         
-        list.innerHTML += `
-            <div class="card">
-                <div style="display: flex; justify-content: space-between;">
-                    <div>
-                        <div class="card-title">${med.name}</div>
-                        <div class="card-subtitle">Estoque: ${med.quantity} | Validade: ${med.expiry}</div>
-                    </div>
-                    <span class="badge ${statusClass}">${isExpired ? 'VENCIDO' : isLow ? 'BAIXO' : 'OK'}</span>
-                </div>
-            </div>
-        `;
-    });
-}
-
-// ===== MATERIALS (GESTOR ONLY) =====
-function addMaterial() {
-    const name = document.getElementById('materialName').value;
-    const qty = parseInt(document.getElementById('materialQty').value);
-    const sector = document.getElementById('materialSector').value;
-
-    if (!name || !qty || !sector) {
-        alert('Preencha todos os campos obrigatórios (*)');
-        return;
+        document.querySelectorAll('#colaboradorScreen .nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
 
-    const material = {
-        id: Date.now(),
-        name: name,
-        quantity: qty,
-        sector: sector,
-        createdAt: new Date().toLocaleString('pt-BR')
-    };
-
-    app.materials.push(material);
-    saveToLocalStorage();
-    loadMaterials();
-    closeModal('addMaterialModal');
-    alert('✅ Material adicionado!');
-}
-
-function loadMaterials() {
-    const list = document.getElementById('materialsList');
-    list.innerHTML = '';
-
-    if (app.materials.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum material</p>';
-        return;
+    function showModal(modalId) {
+        document.getElementById(modalId).classList.add('active');
     }
 
-    app.materials.forEach(mat => {
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-title">${mat.name}</div>
-                <div class="card-subtitle">Setor: ${mat.sector} | Qtd: ${mat.quantity}</div>
-            </div>
-        `;
-    });
-}
-
-// ===== COLLABORATORS (GESTOR ONLY) =====
-function addCollaborator() {
-    const name = document.getElementById('collabName').value;
-    const email = document.getElementById('collabEmail').value;
-    const role = document.getElementById('collabRole').value;
-
-    if (!name || !email || !role) {
-        alert('Preencha todos os campos obrigatórios (*)');
-        return;
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
     }
 
-    const collaborator = {
-        id: Date.now(),
-        name: name,
-        email: email,
-        role: role,
-        status: 'ativo',
-        createdAt: new Date().toLocaleString('pt-BR')
-    };
-
-    app.collaborators.push(collaborator);
-    saveToLocalStorage();
-    loadCollaborators();
-    closeModal('addCollaboratorModal');
-    alert('✅ Colaborador adicionado!');
-}
-
-function loadCollaborators() {
-    const list = document.getElementById('collaboratorsList');
-    list.innerHTML = '';
-
-    if (app.collaborators.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum colaborador</p>';
-        return;
-    }
-
-    app.collaborators.forEach(collab => {
-        list.innerHTML += `
-            <div class="card">
-                <div style="display: flex; justify-content: space-between;">
-                    <div>
-                        <div class="card-title">${collab.name}</div>
-                        <div class="card-subtitle">${collab.role} | ${collab.email}</div>
-                    </div>
-                    <span class="badge badge-success">${collab.status}</span>
-                </div>
-            </div>
-        `;
-    });
-}
-
-// ===== TASKS (GESTOR ONLY) =====
-function addTask() {
-    const desc = document.getElementById('taskDesc').value;
-    const priority = document.getElementById('taskPriority').value;
-
-    if (!desc) {
-        alert('Preencha a descrição');
-        return;
-    }
-
-    const task = {
-        id: Date.now(),
-        description: desc,
-        priority: priority,
-        status: 'pendente',
-        author: app.currentUser.name,
-        createdAt: new Date().toLocaleString('pt-BR')
-    };
-
-    app.tasks.push(task);
-    saveToLocalStorage();
-    loadTasks();
-    closeModal('addTaskModal');
-    alert('✅ Tarefa criada!');
-}
-
-function loadTasks() {
-    const list = document.getElementById('tasksList');
-    list.innerHTML = '';
-
-    if (app.tasks.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhuma tarefa</p>';
-        return;
-    }
-
-    app.tasks.forEach(task => {
-        const priorityClass = task.priority === 'alta' ? 'badge-danger' : 
-                             task.priority === 'media' ? 'badge-warning' : 'badge-success';
+    function openChat(channel) {
+        currentChat = channel;
+        const chatBox = currentUser.profile === 'gestor' ? 
+            document.getElementById('chatBox') : 
+            document.getElementById('chatBoxColaborador');
+        chatBox.style.display = 'flex';
+        chatBox.style.flexDirection = 'column';
         
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-title">${task.description}</div>
-                <div style="margin-top: 10px;">
-                    <span class="badge ${priorityClass}">${task.priority.toUpperCase()}</span>
-                    <button class="btn btn-small btn-success" onclick="completeTask(${task.id})">✓ Concluir</button>
-                </div>
-            </div>
-        `;
-    });
-
-    document.getElementById('pendingTasks').textContent = app.tasks.filter(t => t.status === 'pendente').length;
-}
-
-function completeTask(id) {
-    const task = app.tasks.find(t => t.id === id);
-    task.status = 'concluida';
-    saveToLocalStorage();
-    loadTasks();
-    alert('✅ Tarefa concluída!');
-}
-
-// ===== REQUESTS (COLABORADOR) =====
-function requestMedicine() {
-    const patientId = parseInt(document.getElementById('requestMedPatient').value);
-    const medicineId = parseInt(document.getElementById('requestMedSelect').value);
-    const qty = parseInt(document.getElementById('requestMedQty').value);
-
-    if (!patientId || !medicineId || !qty) {
-        alert('Preencha todos os campos');
-        return;
-    }
-
-    const patient = app.patients.find(p => p.id === patientId);
-    const medicine = app.medicines.find(m => m.id === medicineId);
-
-    const request = {
-        id: Date.now(),
-        type: 'medicine',
-        patientName: patient.name,
-        itemName: medicine.name,
-        quantity: qty,
-        status: 'pendente',
-        author: app.currentUser.name,
-        timestamp: new Date().toLocaleString('pt-BR')
-    };
-
-    app.requests.push(request);
-    saveToLocalStorage();
-    loadRequests();
-    closeModal('requestMedicineModal');
-    alert('✅ Solicitação enviada!');
-}
-
-function requestMaterial() {
-    const patientId = parseInt(document.getElementById('requestMatPatient').value);
-    const materialId = parseInt(document.getElementById('requestMatSelect').value);
-    const qty = parseInt(document.getElementById('requestMatQty').value);
-
-    if (!patientId || !materialId || !qty) {
-        alert('Preencha todos os campos');
-        return;
-    }
-
-    const patient = app.patients.find(p => p.id === patientId);
-    const material = app.materials.find(m => m.id === materialId);
-
-    const request = {
-        id: Date.now(),
-        type: 'material',
-        patientName: patient.name,
-        itemName: material.name,
-        quantity: qty,
-        status: 'pendente',
-        author: app.currentUser.name,
-        timestamp: new Date().toLocaleString('pt-BR')
-    };
-
-    app.requests.push(request);
-    saveToLocalStorage();
-    loadRequests();
-    closeModal('requestMaterialModal');
-    alert('✅ Solicitação enviada!');
-}
-
-function loadRequests() {
-    const list = document.getElementById('requestsList');
-    list.innerHTML = '';
-
-    if (app.requests.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhuma solicitação</p>';
-        return;
-    }
-
-    app.requests.slice().reverse().forEach(req => {
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-title">${req.itemName}</div>
-                <div class="card-subtitle">Paciente: ${req.patientName} | Qtd: ${req.quantity}</div>
-                <small>Status: ${req.status} | ${req.timestamp}</small>
-            </div>
-        `;
-    });
-}
-
-// ===== HELPERS =====
-function populatePatientSelects() {
-    const selects = ['evalPatient', 'vitalsPatient', 'technicalPatient', 'requestMedPatient', 'requestMatPatient'];
-    selects.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        if (select) {
-            select.innerHTML = '';
-            app.patients.forEach(patient => {
-                select.innerHTML += `<option value="${patient.id}">${patient.name}</option>`;
+        const messagesDiv = currentUser.profile === 'gestor' ? 
+            document.getElementById('chatMessages') : 
+            document.getElementById('chatMessagesColaborador');
+        messagesDiv.innerHTML = '';
+        
+        if (chats[channel].length === 0) {
+            messagesDiv.innerHTML = '<p style="text-align:center; color:#999;">Nenhuma mensagem neste canal</p>';
+        } else {
+            chats[channel].forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message ' + (msg.sender === 'você' ? 'sent' : '');
+                msgDiv.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
+                messagesDiv.appendChild(msgDiv);
             });
         }
-    });
-}
-
-function populateMedicineSelect() {
-    const select = document.getElementById('requestMedSelect');
-    select.innerHTML = '';
-    app.medicines.forEach(med => {
-        select.innerHTML += `<option value="${med.id}">${med.name}</option>`;
-    });
-}
-
-function populateMaterialSelect() {
-    const select = document.getElementById('requestMatSelect');
-    select.innerHTML = '';
-    app.materials.forEach(mat => {
-        select.innerHTML += `<option value="${mat.id}">${mat.name}</option>`;
-    });
-}
-
-function updateDateTime() {
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('pt-BR', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
-    const elem1 = document.getElementById('currentDate');
-    const elem2 = document.getElementById('currentDateColaborador');
-    if (elem1) elem1.textContent = dateStr;
-    if (elem2) elem2.textContent = dateStr;
-}
-
-function generateReport() {
-    const type = document.getElementById('reportType').value;
-    const report = `📊 RELATÓRIO ${type.toUpperCase()}\n\nData: ${new Date().toLocaleString('pt-BR')}\nGestor: ${app.currentUser.name}\n\nPACIENTES: ${app.patients.length}\nAVALIAÇÕES: ${app.evaluations.length}\nSINAIS VITAIS: ${app.vitals.length}`;
-    alert(report);
-}
-
-function saveToLocalStorage() {
-    localStorage.setItem('nursecare_app', JSON.stringify(app));
-}
-
-function loadFromLocalStorage() {
-    const data = localStorage.getItem('nursecare_app');
-    if (data) {
-        const loaded = JSON.parse(data);
-        app = { ...app, ...loaded };
     }
-}
 
-function loadAllData() {
-    loadFromLocalStorage();
-    loadPatients();
-    loadCollaborators();
-    loadMedicines();
-    loadMaterials();
-}
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (text && currentChat) {
+            chats[currentChat].push({ sender: 'você', text });
+            input.value = '';
+            openChat(currentChat);
+        }
+    }
 
-// Initialize
-window.addEventListener('load', () => {
-    loadFromLocalStorage();
-    updateDateTime();
-});
+    function sendMessageColaborador() {
+        const input = document.getElementById('chatInputColaborador');
+        const text = input.value.trim();
+        if (text && currentChat) {
+            chats[currentChat].push({ sender: 'você', text });
+            input.value = '';
+            openChat(currentChat);
+        }
+    }
+
+    function addPatient(event) {
+        event.preventDefault();
+        alert('Paciente adicionado com sucesso!');
+        closeModal('newPatientModal');
+    }
+
+    function addAvaliacao(event) {
+        event.preventDefault();
+        alert('Avaliação registrada com sucesso!');
+        closeModal('newAvaliacaoModal');
+    }
+
+    function registrarSinais(event) {
+        event.preventDefault();
+        alert('Sinais vitais registrados com sucesso!');
+        closeModal('registrarSinaisModal');
+    }
+
+    function generateReport(type) {
+        alert(`Relatório ${type} gerado com sucesso!`);
+    }
+
+    // Fechar modal ao clicar fora
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('active');
+        }
+    }
 </script>
 
 </body>
