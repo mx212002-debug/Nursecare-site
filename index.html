@@ -13,7 +13,6 @@
 
         :root {
             --navy: #0B2340;
-            --navy-light: #1a3a52;
             --blue: #0E6BA8;
             --white: #FFFFFF;
             --light-gray: #F4F6F8;
@@ -31,26 +30,28 @@
             color: var(--text);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .screen {
+            display: none;
+            min-height: 100vh;
         }
 
-        /* LOGIN SCREEN */
-        .login-screen {
+        .screen.active {
             display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== TELA 1: LOGIN ===== */
+        #loginScreen {
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
             background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-            padding: 20px;
         }
 
-        .login-box {
+        .login-container {
             background: var(--white);
             border-radius: 15px;
             padding: 40px;
-            width: 100%;
+            width: 90%;
             max-width: 400px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
@@ -89,14 +90,12 @@
             border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 14px;
-            transition: all 0.3s;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(14, 107, 168, 0.1);
         }
 
         .btn {
@@ -108,7 +107,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 10px;
         }
 
         .btn-primary {
@@ -117,19 +115,13 @@
         }
 
         .btn-primary:hover {
-            background: var(--navy-light);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(11, 35, 64, 0.3);
+            background: #051a2f;
         }
 
         .btn-secondary {
             background: var(--light-gray);
             color: var(--text);
             border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
         }
 
         .btn-danger {
@@ -142,11 +134,6 @@
             color: var(--white);
         }
 
-        .btn-warning {
-            background: var(--warning);
-            color: var(--white);
-        }
-
         .btn-small {
             padding: 8px 12px;
             font-size: 13px;
@@ -154,18 +141,13 @@
             margin: 5px 5px 5px 0;
         }
 
-        /* APP SCREEN */
-        .app-screen {
-            display: none;
-            min-height: 100vh;
-            padding-bottom: 80px;
+        /* ===== TELA 2 & 3: APP ===== */
+        #gestorScreen,
+        #colaboradorScreen {
+            flex-direction: column;
         }
 
-        .app-screen.active {
-            display: block;
-        }
-
-        .header {
+        .app-header {
             background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
             color: var(--white);
             padding: 20px;
@@ -181,6 +163,7 @@
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .greeting h2 {
@@ -193,11 +176,6 @@
             opacity: 0.9;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
         .header-actions button {
             padding: 8px 16px;
             background: rgba(255,255,255,0.2);
@@ -207,11 +185,13 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: all 0.3s;
+            margin-left: 10px;
         }
 
-        .header-actions button:hover {
-            background: rgba(255,255,255,0.3);
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
         }
 
         .main-content {
@@ -221,11 +201,6 @@
         }
 
         .section {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: none;
         }
 
@@ -234,51 +209,38 @@
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             margin-bottom: 20px;
             color: var(--navy);
         }
 
-        /* CARDS */
         .card {
-            background: var(--light-gray);
+            background: var(--white);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
-            position: relative;
-            transition: all 0.3s;
-            touch-action: pan-y;
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .card-title {
             font-weight: 600;
             font-size: 16px;
             color: var(--navy);
+            margin-bottom: 10px;
         }
 
         .card-subtitle {
             font-size: 13px;
             color: #666;
-            margin-top: 5px;
         }
 
-        .card-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .badge {
@@ -304,12 +266,6 @@
             color: #991b1b;
         }
 
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        /* BOTTOM NAV */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -343,11 +299,6 @@
             font-weight: 600;
         }
 
-        .nav-item:hover {
-            color: var(--blue);
-        }
-
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -373,7 +324,6 @@
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .modal-header {
@@ -396,19 +346,6 @@
             color: #999;
         }
 
-        /* GRID */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        }
-
-        /* TEXTAREA */
         textarea {
             width: 100%;
             padding: 12px;
@@ -423,133 +360,8 @@
         textarea:focus {
             outline: none;
             border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(14, 107, 168, 0.1);
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .login-box {
-                padding: 30px 20px;
-            }
-
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 20px;
-            }
-        }
-
-        /* SWIPE ACTIONS */
-        .swipe-container {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .swipe-content {
-            transition: transform 0.3s ease;
-        }
-
-        .swipe-actions {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            display: flex;
-            gap: 5px;
-            background: transparent;
-        }
-
-        .swipe-action-btn {
-            padding: 15px 12px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            min-width: 60px;
-        }
-
-        .swipe-edit {
-            background: var(--info);
-            color: var(--white);
-        }
-
-        .swipe-delete {
-            background: var(--danger);
-            color: var(--white);
-        }
-
-        .swipe-favorite {
-            background: var(--warning);
-            color: var(--white);
-        }
-
-        /* ALERTS */
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border-left: 4px solid var(--success);
-        }
-
-        .alert-warning {
-            background: #fef3c7;
-            color: #92400e;
-            border-left: 4px solid var(--warning);
-        }
-
-        .alert-danger {
-            background: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid var(--danger);
-        }
-
-        .alert-info {
-            background: #dbeafe;
-            color: #1e40af;
-            border-left: 4px solid var(--info);
-        }
-
-        /* LOADING */
-        .loading {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .spinner {
-            border: 3px solid var(--light-gray);
-            border-top: 3px solid var(--blue);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* FORMS */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -561,31 +373,33 @@
             grid-template-columns: 1fr;
         }
 
-        .checkbox-group {
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 15px 0;
+            gap: 12px;
+            align-items: flex-start;
         }
 
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
         }
 
-        .checkbox-item input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid var(--warning);
         }
 
-        .checkbox-item label {
-            cursor: pointer;
-            margin: 0;
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success);
         }
 
-        /* TABLE */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -605,11 +419,6 @@
             border-bottom: 1px solid var(--border);
         }
 
-        tr:hover {
-            background: var(--light-gray);
-        }
-
-        /* FLOATING BUTTON */
         .fab {
             position: fixed;
             bottom: 100px;
@@ -624,34 +433,34 @@
             font-size: 24px;
             box-shadow: 0 4px 12px rgba(14, 107, 168, 0.4);
             z-index: 999;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(14, 107, 168, 0.6);
-        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
 
-        .fab:active {
-            transform: scale(0.95);
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="login-screen active">
-    <div class="login-box">
+<!-- ===== TELA 1: LOGIN ===== -->
+<div id="loginScreen" class="screen active">
+    <div class="login-container">
         <div class="login-header">
             <h1>🏥 NURSECARE</h1>
             <p>Gestão em Saúde</p>
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="email" id="loginEmail" placeholder="seu@email.com" value="enfermeiro@nursecare.com">
+            <input type="email" id="loginEmail" placeholder="seu@email.com" value="matheus@nursecare.com">
         </div>
         <div class="form-group">
             <label>Senha</label>
@@ -668,205 +477,253 @@
     </div>
 </div>
 
-<!-- APP SCREEN -->
-<div id="appScreen" class="app-screen">
-    <!-- HEADER -->
-    <div class="header">
+<!-- ===== TELA 2: GESTOR ===== -->
+<div id="gestorScreen" class="screen">
+    <div class="app-header">
         <div class="header-content">
             <div class="greeting">
-                <h2>👋 Olá, <span id="userName">Enfermeiro</span></h2>
+                <h2>👋 Olá, Enfermeiro Matheus</h2>
                 <p id="currentDate"></p>
             </div>
             <div class="header-actions">
-                <button onclick="toggleNotifications()">🔔 Notificações</button>
                 <button onclick="logout()">Sair</button>
             </div>
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-        <!-- DASHBOARD -->
-        <div id="dashboardSection" class="section active">
-            <div class="section-title">📊 Dashboard</div>
-            
-            <div class="alert alert-info">
-                <span>ℹ️</span>
-                <div>
-                    <strong>Resumo do Dia:</strong> 
-                    <span id="dailySummary">Carregando dados...</span>
+    <div class="app-content">
+        <div class="main-content">
+            <!-- DASHBOARD -->
+            <div id="gestorDashboard" class="section active">
+                <div class="section-title">📊 Dashboard</div>
+                
+                <div class="alert alert-success">
+                    <span>ℹ️</span>
+                    <div>
+                        <strong>Resumo do Dia:</strong> 3 evoluções registradas · 1 paciente em observação · 2 alertas críticos
+                    </div>
                 </div>
-            </div>
 
-            <div class="grid">
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-title">👥 Pacientes Ativos</div>
+                        <div style="font-size: 32px; font-weight: bold; color: var(--blue);" id="totalPatients">0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">❤️ Alertas Críticos</div>
+                        <div style="font-size: 32px; font-weight: bold; color: var(--danger);" id="criticalAlerts">0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">✅ Tarefas Pendentes</div>
+                        <div style="font-size: 32px; font-weight: bold; color: var(--warning);" id="pendingTasks">0</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">💊 Medicamentos Baixos</div>
+                        <div style="font-size: 32px; font-weight: bold; color: var(--warning);" id="lowMeds">0</div>
+                    </div>
+                </div>
+
                 <div class="card">
-                    <div class="card-title">👥 Pacientes Ativos</div>
-                    <div style="font-size: 32px; font-weight: bold; color: var(--blue); margin: 10px 0;" id="activePatients">0</div>
+                    <div class="card-title">🚀 Atalhos Rápidos</div>
                     <button class="btn btn-small btn-primary" onclick="showModal('addPatientModal')">+ Novo Paciente</button>
+                    <button class="btn btn-small btn-primary" onclick="showModal('addCollaboratorModal')">+ Novo Colaborador</button>
+                    <button class="btn btn-small btn-primary" onclick="showSection('gestorReports')">📊 Gerar Relatório</button>
                 </div>
+            </div>
 
+            <!-- PACIENTES -->
+            <div id="gestorPatients" class="section">
+                <div class="section-title">👥 Pacientes</div>
+                <button class="btn btn-primary" onclick="showModal('addPatientModal')" style="margin-bottom: 20px;">+ Novo Paciente</button>
+                <div id="patientsList"></div>
+            </div>
+
+            <!-- AVALIAÇÃO CLÍNICA -->
+            <div id="gestorEvaluation" class="section">
+                <div class="section-title">📋 Avaliação Clínica</div>
+                <button class="btn btn-primary" onclick="showModal('addEvaluationModal')" style="margin-bottom: 20px;">+ Nova Avaliação</button>
+                <div id="evaluationsList"></div>
+            </div>
+
+            <!-- FARMÁCIA -->
+            <div id="gestorPharmacy" class="section">
+                <div class="section-title">💊 Farmácia</div>
+                <button class="btn btn-primary" onclick="showModal('addMedicineModal')" style="margin-bottom: 20px;">+ Novo Medicamento</button>
+                <div id="medicinesList"></div>
+            </div>
+
+            <!-- ALMOXARIFADO -->
+            <div id="gestorWarehouse" class="section">
+                <div class="section-title">📦 Almoxarifado</div>
+                <button class="btn btn-primary" onclick="showModal('addMaterialModal')" style="margin-bottom: 20px;">+ Novo Material</button>
+                <div id="materialsList"></div>
+            </div>
+
+            <!-- COLABORADORES -->
+            <div id="gestorCollaborators" class="section">
+                <div class="section-title">👥 Colaboradores</div>
+                <button class="btn btn-primary" onclick="showModal('addCollaboratorModal')" style="margin-bottom: 20px;">+ Novo Colaborador</button>
+                <div id="collaboratorsList"></div>
+            </div>
+
+            <!-- CHAT -->
+            <div id="gestorChat" class="section">
+                <div class="section-title">💬 Fale com o Enfermeiro</div>
                 <div class="card">
-                    <div class="card-title">❤️ Sinais Críticos</div>
-                    <div style="font-size: 32px; font-weight: bold; color: var(--danger); margin: 10px 0;" id="criticalVitals">0</div>
-                    <button class="btn btn-small btn-danger" onclick="showSection('alertsSection')">Ver Alertas</button>
+                    <div class="card-title">📞 Contato Direto</div>
+                    <p><strong>Matheus da Silva</strong></p>
+                    <p>📞 (11) 98520-9793</p>
+                    <p>📧 enf.matheus37284363@gmail.com</p>
                 </div>
-
-                <div class="card">
-                    <div class="card-title">✅ Tarefas Pendentes</div>
-                    <div style="font-size: 32px; font-weight: bold; color: var(--warning); margin: 10px 0;" id="pendingTasks">0</div>
-                    <button class="btn btn-small btn-warning" onclick="showSection('tasksSection')">Ver Tarefas</button>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">💊 Medicamentos Baixos</div>
-                    <div style="font-size: 32px; font-weight: bold; color: var(--warning); margin: 10px 0;" id="lowMeds">0</div>
-                    <button class="btn btn-small btn-warning" onclick="showSection('pharmacySection')">Farmácia</button>
+                <div style="background: var(--light-gray); border-radius: 8px; padding: 15px; margin: 15px 0; height: 300px; overflow-y: auto;" id="chatMessages"></div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="chatInput" placeholder="Digite sua mensagem..." style="flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 8px;">
+                    <button class="btn btn-primary" onclick="sendMessage()" style="width: auto;">Enviar</button>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">🤖 Assistente IA</div>
-                <p style="margin: 10px 0; color: #666;">Clique para gerar resumo inteligente do dia</p>
-                <button class="btn btn-secondary" onclick="generateAISummary()">Gerar Resumo IA</button>
+            <!-- RELATÓRIOS -->
+            <div id="gestorReports" class="section">
+                <div class="section-title">📊 Relatórios</div>
+                <div class="form-group">
+                    <label>Tipo de Relatório</label>
+                    <select id="reportType">
+                        <option value="daily">Diário</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="monthly">Mensal</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="generateReport()">Gerar Relatório</button>
+                <button class="btn btn-secondary" onclick="exportReportPDF()" style="margin-top: 10px;">📥 Exportar PDF</button>
             </div>
-        </div>
-
-        <!-- PACIENTES -->
-        <div id="patientsSection" class="section">
-            <div class="section-title">👥 Pacientes</div>
-            <button class="btn btn-primary" onclick="showModal('addPatientModal')" style="margin-bottom: 20px;">+ Novo Paciente</button>
-            <div id="patientsList"></div>
-        </div>
-
-        <!-- SINAIS VITAIS -->
-        <div id="vitalsSection" class="section">
-            <div class="section-title">❤️ Sinais Vitais</div>
-            <button class="btn btn-primary" onclick="showModal('addVitalsModal')" style="margin-bottom: 20px;">+ Registrar Sinais</button>
-            <div id="vitalsList"></div>
-        </div>
-
-        <!-- AVALIAÇÃO CLÍNICA (SOAPIE) -->
-        <div id="evaluationSection" class="section">
-            <div class="section-title">📋 Avaliação Clínica (SOAPIE)</div>
-            <button class="btn btn-primary" onclick="showModal('addEvaluationModal')" style="margin-bottom: 20px;">+ Nova Avaliação</button>
-            <div id="evaluationsList"></div>
-        </div>
-
-        <!-- FARMÁCIA -->
-        <div id="pharmacySection" class="section">
-            <div class="section-title">💊 Farmácia</div>
-            <button class="btn btn-primary" onclick="showModal('addMedicineModal')" style="margin-bottom: 20px;">+ Novo Medicamento</button>
-            <div id="medicinesList"></div>
-        </div>
-
-        <!-- ALMOXARIFADO -->
-        <div id="warehouseSection" class="section">
-            <div class="section-title">📦 Almoxarifado</div>
-            <button class="btn btn-primary" onclick="showModal('addMaterialModal')" style="margin-bottom: 20px;">+ Novo Material</button>
-            <div id="materialsList"></div>
-        </div>
-
-        <!-- TAREFAS -->
-        <div id="tasksSection" class="section">
-            <div class="section-title">✅ Tarefas</div>
-            <button class="btn btn-primary" onclick="showModal('addTaskModal')" style="margin-bottom: 20px;">+ Nova Tarefa</button>
-            <div id="tasksList"></div>
-        </div>
-
-        <!-- COLABORADORES -->
-        <div id="collaboratorsSection" class="section">
-            <div class="section-title">👥 Colaboradores</div>
-            <button class="btn btn-primary" onclick="showModal('addCollaboratorModal')" style="margin-bottom: 20px;">+ Novo Colaborador</button>
-            <div id="collaboratorsList"></div>
-        </div>
-
-        <!-- ALERTAS -->
-        <div id="alertsSection" class="section">
-            <div class="section-title">🚨 Alertas Clínicos</div>
-            <div id="alertsList"></div>
-        </div>
-
-        <!-- CHAT -->
-        <div id="chatSection" class="section">
-            <div class="section-title">💬 Fale com o Enfermeiro</div>
-            <div style="background: var(--light-gray); border-radius: 8px; padding: 15px; margin-bottom: 15px; height: 300px; overflow-y: auto;" id="chatMessages"></div>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="chatInput" placeholder="Digite sua mensagem..." style="flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 8px;">
-                <button class="btn btn-primary" onclick="sendMessage()" style="width: auto;">Enviar</button>
-            </div>
-        </div>
-
-        <!-- POP EMERGÊNCIAS -->
-        <div id="popSection" class="section">
-            <div class="section-title">🚨 POP de Emergências</div>
-            <div class="card">
-                <div class="card-title">Cola de SSVV Normais</div>
-                <table>
-                    <tr><th>Parâmetro</th><th>Normal</th></tr>
-                    <tr><td>PA (Pressão Arterial)</td><td>120/80 mmHg</td></tr>
-                    <tr><td>FC (Frequência Cardíaca)</td><td>60-100 bpm</td></tr>
-                    <tr><td>FR (Frequência Respiratória)</td><td>12-20 irpm</td></tr>
-                    <tr><td>Temperatura</td><td>36,5-37,5°C</td></tr>
-                    <tr><td>SpO₂ (Oxigenação)</td><td>95-100%</td></tr>
-                </table>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Primeiros Socorros</div>
-                <ul style="margin-left: 20px;">
-                    <li><strong>Queda:</strong> Imobilizar, chamar médico, verificar SSVV</li>
-                    <li><strong>Convulsão:</strong> Proteger cabeça, colocar em posição lateral, chamar emergência</li>
-                    <li><strong>Desmaio:</strong> Deitar, elevar pernas, verificar respiração, chamar emergência</li>
-                    <li><strong>Sangramento:</strong> Comprimir local, elevar membro, chamar médico</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📞 Números de Emergência</div>
-                <p><strong>SAMU:</strong> 192</p>
-                <p><strong>Bombeiros:</strong> 193</p>
-                <p><strong>Polícia:</strong> 190</p>
-                <p><strong>Enfermeiro Responsável:</strong> 📞 (11) 98520-9793</p>
-            </div>
-        </div>
-
-        <!-- RELATÓRIOS -->
-        <div id="reportsSection" class="section">
-            <div class="section-title">📊 Relatórios</div>
-            <div class="form-group">
-                <label>Tipo de Relatório</label>
-                <select id="reportType">
-                    <option value="daily">Diário</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensal</option>
-                </select>
-            </div>
-            <button class="btn btn-primary" onclick="generateReport()">Gerar Relatório</button>
-            <button class="btn btn-secondary" onclick="exportReportPDF()" style="margin-top: 10px;">📥 Exportar PDF</button>
-        </div>
-
-        <!-- AUDITORIA -->
-        <div id="auditSection" class="section">
-            <div class="section-title">🔍 Auditoria e Logs</div>
-            <div id="auditList"></div>
         </div>
     </div>
 
-    <!-- FLOATING ACTION BUTTON -->
     <button class="fab" onclick="showModal('aiAssistantModal')">🤖</button>
 
-    <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="showSection('dashboardSection')">📊 Dashboard</button>
-        <button class="nav-item" onclick="showSection('patientsSection')">👥 Pacientes</button>
-        <button class="nav-item" onclick="showSection('evaluationSection')">📋 Avaliação</button>
-        <button class="nav-item" onclick="showSection('pharmacySection')">💊 Farmácia</button>
-        <button class="nav-item" onclick="showSection('tasksSection')">✅ Tarefas</button>
-        <button class="nav-item" onclick="showSection('chatSection')">💬 Chat</button>
+        <button class="nav-item active" onclick="switchGestorSection('gestorDashboard')">📊 Dashboard</button>
+        <button class="nav-item" onclick="switchGestorSection('gestorPatients')">👥 Pacientes</button>
+        <button class="nav-item" onclick="switchGestorSection('gestorEvaluation')">📋 Avaliação</button>
+        <button class="nav-item" onclick="switchGestorSection('gestorPharmacy')">💊 Farmácia</button>
+        <button class="nav-item" onclick="switchGestorSection('gestorWarehouse')">📦 Almoxarifado</button>
+        <button class="nav-item" onclick="switchGestorSection('gestorChat')">💬 Chat</button>
     </div>
 </div>
 
-<!-- MODALS -->
+<!-- ===== TELA 3: COLABORADOR ===== -->
+<div id="colaboradorScreen" class="screen">
+    <div class="app-header">
+        <div class="header-content">
+            <div class="greeting">
+                <h2>👋 Olá, Técnico João</h2>
+                <p id="currentDateColaborador"></p>
+            </div>
+            <div class="header-actions">
+                <button onclick="logout()">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-content">
+        <div class="main-content">
+            <!-- PACIENTES -->
+            <div id="colaboradorPatients" class="section active">
+                <div class="section-title">👥 Meus Pacientes</div>
+                <div id="colaboradorPatientsList"></div>
+            </div>
+
+            <!-- SINAIS VITAIS -->
+            <div id="colaboradorVitals" class="section">
+                <div class="section-title">❤️ Sinais Vitais</div>
+                <button class="btn btn-primary" onclick="showModal('addVitalsModal')" style="margin-bottom: 20px;">+ Registrar Sinais</button>
+                <div id="vitalsList"></div>
+            </div>
+
+            <!-- AVALIAÇÃO TÉCNICA -->
+            <div id="colaboradorTechnicalEval" class="section">
+                <div class="section-title">📝 Avaliação Técnica</div>
+                <button class="btn btn-primary" onclick="showModal('addTechnicalEvalModal')" style="margin-bottom: 20px;">+ Nova Avaliação</button>
+                <div id="technicalEvalList"></div>
+            </div>
+
+            <!-- SOLICITAÇÕES -->
+            <div id="colaboradorRequests" class="section">
+                <div class="section-title">📋 Solicitações</div>
+                <button class="btn btn-primary" onclick="showModal('requestMedicineModal')" style="margin-bottom: 10px;">💊 Solicitar Medicação</button>
+                <button class="btn btn-primary" onclick="showModal('requestMaterialModal')" style="margin-bottom: 20px;">📦 Solicitar Material</button>
+                <div id="requestsList"></div>
+            </div>
+
+            <!-- TAREFAS -->
+            <div id="colaboradorTasks" class="section">
+                <div class="section-title">✅ Minhas Tarefas</div>
+                <div id="tasksList"></div>
+            </div>
+
+            <!-- CHAT -->
+            <div id="colaboradorChat" class="section">
+                <div class="section-title">💬 Chat por Setor</div>
+                <div class="form-group">
+                    <label>Setor</label>
+                    <select id="chatSector">
+                        <option value="enfermagem">Enfermagem</option>
+                        <option value="farmacia">Farmácia</option>
+                        <option value="coordenacao">Coordenação</option>
+                    </select>
+                </div>
+                <div style="background: var(--light-gray); border-radius: 8px; padding: 15px; margin: 15px 0; height: 300px; overflow-y: auto;" id="colaboradorChatMessages"></div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="colaboradorChatInput" placeholder="Digite sua mensagem..." style="flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 8px;">
+                    <button class="btn btn-primary" onclick="sendColaboradorMessage()" style="width: auto;">Enviar</button>
+                </div>
+            </div>
+
+            <!-- POP EMERGÊNCIAS -->
+            <div id="colaboradorPOP" class="section">
+                <div class="section-title">🚨 POP de Emergências</div>
+                <div class="card">
+                    <div class="card-title">Cola de SSVV Normais</div>
+                    <table>
+                        <tr><th>Parâmetro</th><th>Normal</th></tr>
+                        <tr><td>PA</td><td>120/80 mmHg</td></tr>
+                        <tr><td>FC</td><td>60-100 bpm</td></tr>
+                        <tr><td>FR</td><td>12-20 irpm</td></tr>
+                        <tr><td>Temperatura</td><td>36,5-37,5°C</td></tr>
+                        <tr><td>SpO₂</td><td>95-100%</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <div class="card-title">Primeiros Socorros</div>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Queda:</strong> Imobilizar, chamar médico</li>
+                        <li><strong>Convulsão:</strong> Proteger cabeça, posição lateral</li>
+                        <li><strong>Desmaio:</strong> Deitar, elevar pernas</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title">📞 Números de Emergência</div>
+                    <p><strong>SAMU:</strong> 192</p>
+                    <p><strong>Bombeiros:</strong> 193</p>
+                    <p><strong>Enfermeiro:</strong> (11) 98520-9793</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab" onclick="showModal('aiAssistantModal')">🤖</button>
+
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchColaboradorSection('colaboradorPatients')">👥 Pacientes</button>
+        <button class="nav-item" onclick="switchColaboradorSection('colaboradorVitals')">❤️ Sinais</button>
+        <button class="nav-item" onclick="switchColaboradorSection('colaboradorTechnicalEval')">📝 Avaliação</button>
+        <button class="nav-item" onclick="switchColaboradorSection('colaboradorRequests')">📋 Solicitações</button>
+        <button class="nav-item" onclick="switchColaboradorSection('colaboradorChat')">💬 Chat</button>
+        <button class="nav-item" onclick="switchColaboradorSection('colaboradorPOP')">🚨 POP</button>
+    </div>
+</div>
+
+<!-- ===== MODALS ===== -->
 
 <!-- ADD PATIENT MODAL -->
 <div id="addPatientModal" class="modal">
@@ -876,11 +733,11 @@
             <button class="modal-close" onclick="closeModal('addPatientModal')">✕</button>
         </div>
         <div class="form-group">
-            <label>Nome Completo</label>
+            <label>Nome Completo *</label>
             <input type="text" id="patientName" placeholder="Nome do paciente">
         </div>
         <div class="form-group">
-            <label>Leito/Quarto</label>
+            <label>Leito/Quarto *</label>
             <input type="text" id="patientBed" placeholder="Ex: 305">
         </div>
         <div class="form-group">
@@ -889,82 +746,54 @@
                 <option value="ativo">Ativo</option>
                 <option value="critico">Crítico</option>
                 <option value="observacao">Observação</option>
+                <option value="alta">Alta</option>
+                <option value="obito">Óbito</option>
             </select>
         </div>
         <button class="btn btn-primary" onclick="addPatient()">Salvar</button>
     </div>
 </div>
 
-<!-- ADD VITALS MODAL -->
-<div id="addVitalsModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Registrar Sinais Vitais</h2>
-            <button class="modal-close" onclick="closeModal('addVitalsModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Paciente</label>
-            <select id="vitalsPatient" onchange="loadPatientData()"></select>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>PA (mmHg)</label>
-                <input type="text" id="vitalPA" placeholder="Ex: 120/80">
-            </div>
-            <div class="form-group">
-                <label>FC (bpm)</label>
-                <input type="number" id="vitalFC" placeholder="Ex: 72">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>FR (irpm)</label>
-                <input type="number" id="vitalFR" placeholder="Ex: 16">
-            </div>
-            <div class="form-group">
-                <label>Temperatura (°C)</label>
-                <input type="number" id="vitalTemp" placeholder="Ex: 36.5" step="0.1">
-            </div>
-        </div>
-        <div class="form-group">
-            <label>SpO₂ (%)</label>
-            <input type="number" id="vitalSpO2" placeholder="Ex: 98" min="0" max="100">
-        </div>
-        <button class="btn btn-primary" onclick="addVitals()">Registrar</button>
-    </div>
-</div>
-
-<!-- ADD EVALUATION MODAL -->
+<!-- ADD EVALUATION MODAL (GESTOR) -->
 <div id="addEvaluationModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Avaliação Clínica (SOAPIE)</h2>
+            <h2>📋 Avaliação Clínica (SOAPIE)</h2>
             <button class="modal-close" onclick="closeModal('addEvaluationModal')">✕</button>
         </div>
         
         <div class="form-group">
-            <label>Paciente</label>
+            <label>Paciente *</label>
             <select id="evalPatient"></select>
         </div>
 
         <div class="form-group">
-            <label>Data e Hora</label>
+            <label>Data e Hora *</label>
             <input type="datetime-local" id="evalDateTime">
         </div>
 
         <div class="form-group">
             <label><strong>S - Subjetivo:</strong> Queixas/Relatos</label>
-            <textarea id="evalSubjective" placeholder="Descreva as queixas do paciente..."></textarea>
+            <textarea id="evalSubjective" placeholder="Queixas do paciente..."></textarea>
         </div>
 
         <div class="form-group">
-            <label><strong>O - Objetivo:</strong> Sinais Vitais e Observações</label>
-            <textarea id="evalObjective" placeholder="PA, FC, FR, Temp, SpO₂, estado geral..."></textarea>
+            <label><strong>O - Objetivo:</strong> Sinais Vitais</label>
+            <div class="form-row">
+                <input type="text" id="evalPA" placeholder="PA (ex: 120/80)">
+                <input type="number" id="evalFC" placeholder="FC (bpm)">
+            </div>
+            <div class="form-row">
+                <input type="number" id="evalFR" placeholder="FR (irpm)">
+                <input type="number" id="evalTemp" placeholder="Temp (°C)" step="0.1">
+            </div>
+            <input type="number" id="evalSpO2" placeholder="SpO₂ (%)" style="width: 100%; margin-bottom: 10px;">
+            <textarea id="evalObjectiveNotes" placeholder="Estado geral, pele, dispositivos..."></textarea>
         </div>
 
         <div class="form-group">
             <label><strong>A - Análise:</strong> Interpretação Clínica</label>
-            <textarea id="evalAnalysis" placeholder="Interpretação do quadro geral..."></textarea>
+            <textarea id="evalAnalysis" placeholder="Interpretação do quadro..."></textarea>
         </div>
 
         <div class="form-group">
@@ -982,27 +811,89 @@
     </div>
 </div>
 
+<!-- ADD VITALS MODAL (COLABORADOR) -->
+<div id="addVitalsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>❤️ Registrar Sinais Vitais</h2>
+            <button class="modal-close" onclick="closeModal('addVitalsModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Paciente *</label>
+            <select id="vitalsPatient"></select>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>PA (mmHg) *</label>
+                <input type="text" id="vitalPA" placeholder="Ex: 120/80">
+            </div>
+            <div class="form-group">
+                <label>FC (bpm) *</label>
+                <input type="number" id="vitalFC" placeholder="Ex: 72">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>FR (irpm) *</label>
+                <input type="number" id="vitalFR" placeholder="Ex: 16">
+            </div>
+            <div class="form-group">
+                <label>Temperatura (°C) *</label>
+                <input type="number" id="vitalTemp" placeholder="Ex: 36.5" step="0.1">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>SpO₂ (%) *</label>
+            <input type="number" id="vitalSpO2" placeholder="Ex: 98" min="0" max="100">
+        </div>
+        <button class="btn btn-primary" onclick="addVitals()">Registrar</button>
+    </div>
+</div>
+
+<!-- ADD TECHNICAL EVALUATION MODAL (COLABORADOR) -->
+<div id="addTechnicalEvalModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📝 Avaliação Técnica</h2>
+            <button class="modal-close" onclick="closeModal('addTechnicalEvalModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Paciente *</label>
+            <select id="technicalEvalPatient"></select>
+        </div>
+        <div class="form-group">
+            <label>Data e Hora *</label>
+            <input type="datetime-local" id="technicalEvalDateTime">
+        </div>
+        <div class="form-group">
+            <label>Anotações de Evolução *</label>
+            <textarea id="technicalEvalNotes" placeholder="Descreva o atendimento..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="addTechnicalEvaluation()">Salvar</button>
+    </div>
+</div>
+
 <!-- ADD MEDICINE MODAL -->
 <div id="addMedicineModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Novo Medicamento</h2>
+            <h2>💊 Novo Medicamento</h2>
             <button class="modal-close" onclick="closeModal('addMedicineModal')">✕</button>
         </div>
         <div class="form-group">
-            <label>Nome do Medicamento</label>
+            <label>Nome *</label>
             <input type="text" id="medicineName" placeholder="Ex: Dipirona 500mg">
         </div>
         <div class="form-group">
-            <label>Quantidade em Estoque</label>
+            <label>Quantidade *</label>
             <input type="number" id="medicineQty" placeholder="Ex: 100">
         </div>
         <div class="form-group">
-            <label>Data de Validade</label>
+            <label>Validade *</label>
             <input type="date" id="medicineExpiry">
         </div>
         <div class="form-group">
-            <label>Quantidade Mínima para Alerta</label>
+            <label>Quantidade Mínima *</label>
             <input type="number" id="medicineMinQty" placeholder="Ex: 20">
         </div>
         <button class="btn btn-primary" onclick="addMedicine()">Salvar</button>
@@ -1013,15 +904,15 @@
 <div id="addMaterialModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Novo Material</h2>
+            <h2>📦 Novo Material</h2>
             <button class="modal-close" onclick="closeModal('addMaterialModal')">✕</button>
         </div>
         <div class="form-group">
-            <label>Nome do Material</label>
+            <label>Nome *</label>
             <input type="text" id="materialName" placeholder="Ex: Gaze estéril">
         </div>
         <div class="form-group">
-            <label>Quantidade</label>
+            <label>Quantidade *</label>
             <input type="number" id="materialQty" placeholder="Ex: 500">
         </div>
         <div class="form-group">
@@ -1036,46 +927,19 @@
     </div>
 </div>
 
-<!-- ADD TASK MODAL -->
-<div id="addTaskModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Nova Tarefa</h2>
-            <button class="modal-close" onclick="closeModal('addTaskModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Descrição</label>
-            <textarea id="taskDesc" placeholder="Descreva a tarefa..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>Prioridade</label>
-            <select id="taskPriority">
-                <option value="baixa">Baixa</option>
-                <option value="media">Média</option>
-                <option value="alta">Alta</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Atribuir a</label>
-            <select id="taskAssignee"></select>
-        </div>
-        <button class="btn btn-primary" onclick="addTask()">Criar Tarefa</button>
-    </div>
-</div>
-
 <!-- ADD COLLABORATOR MODAL -->
 <div id="addCollaboratorModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Novo Colaborador</h2>
+            <h2>👥 Novo Colaborador</h2>
             <button class="modal-close" onclick="closeModal('addCollaboratorModal')">✕</button>
         </div>
         <div class="form-group">
-            <label>Nome</label>
+            <label>Nome *</label>
             <input type="text" id="collabName" placeholder="Nome completo">
         </div>
         <div class="form-group">
-            <label>Email</label>
+            <label>Email *</label>
             <input type="email" id="collabEmail" placeholder="email@example.com">
         </div>
         <div class="form-group">
@@ -1090,6 +954,52 @@
     </div>
 </div>
 
+<!-- REQUEST MEDICINE MODAL -->
+<div id="requestMedicineModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>💊 Solicitar Medicação</h2>
+            <button class="modal-close" onclick="closeModal('requestMedicineModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Paciente *</label>
+            <select id="requestMedicinePatient"></select>
+        </div>
+        <div class="form-group">
+            <label>Medicamento *</label>
+            <select id="requestMedicineSelect"></select>
+        </div>
+        <div class="form-group">
+            <label>Quantidade *</label>
+            <input type="number" id="requestMedicineQty" placeholder="Ex: 2">
+        </div>
+        <button class="btn btn-primary" onclick="requestMedicine()">Solicitar</button>
+    </div>
+</div>
+
+<!-- REQUEST MATERIAL MODAL -->
+<div id="requestMaterialModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📦 Solicitar Material</h2>
+            <button class="modal-close" onclick="closeModal('requestMaterialModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Paciente *</label>
+            <select id="requestMaterialPatient"></select>
+        </div>
+        <div class="form-group">
+            <label>Material *</label>
+            <select id="requestMaterialSelect"></select>
+        </div>
+        <div class="form-group">
+            <label>Quantidade *</label>
+            <input type="number" id="requestMaterialQty" placeholder="Ex: 5">
+        </div>
+        <button class="btn btn-primary" onclick="requestMaterial()">Solicitar</button>
+    </div>
+</div>
+
 <!-- AI ASSISTANT MODAL -->
 <div id="aiAssistantModal" class="modal">
     <div class="modal-content">
@@ -1099,35 +1009,24 @@
         </div>
         <div id="aiContent" style="background: var(--light-gray); padding: 15px; border-radius: 8px; margin: 15px 0; min-height: 200px; max-height: 400px; overflow-y: auto;"></div>
         <button class="btn btn-primary" onclick="generateAISummary()">Gerar Resumo do Dia</button>
-        <button class="btn btn-secondary" onclick="generateAIRisks()">Analisar Riscos</button>
     </div>
 </div>
 
 <script>
-// ===== DATA STORAGE =====
+// ===== DATA =====
 let app = {
     currentUser: null,
     patients: [],
-    vitals: [],
     evaluations: [],
+    vitals: [],
+    technicalEvals: [],
     medicines: [],
     materials: [],
-    tasks: [],
     collaborators: [],
-    alerts: [],
+    requests: [],
+    tasks: [],
     messages: [],
     auditLog: []
-};
-
-// ===== FIREBASE CONFIG =====
-const firebaseConfig = {
-    apiKey: "AIzaSyDEwFkZvAUzKQvBMlpvVBhkFUqfDYzVHYE",
-    authDomain: "nursecare-web.firebaseapp.com",
-    databaseURL: "https://nursecare-web-default-rtdb.firebaseio.com",
-    projectId: "nursecare-web",
-    storageBucket: "nursecare-web.appspot.com",
-    messagingSenderId: "1066854916491",
-    appId: "1:1066854916491:web:4e8c4a8b8c5e5e5e5e5e5e"
 };
 
 // ===== AUTHENTICATION =====
@@ -1142,53 +1041,75 @@ function login() {
 
     app.currentUser = {
         email: email,
-        name: profile === 'gestor' ? 'Matheus da Silva' : 'João Técnico',
+        name: profile === 'gestor' ? 'Matheus da Silva' : 'João Silva',
         profile: profile,
         coren: '677328'
     };
 
     document.getElementById('loginScreen').classList.remove('active');
-    document.getElementById('appScreen').classList.add('active');
-    document.getElementById('userName').textContent = app.currentUser.name;
     
+    if (profile === 'gestor') {
+        document.getElementById('gestorScreen').classList.add('active');
+    } else {
+        document.getElementById('colaboradorScreen').classList.add('active');
+    }
+
     updateDateTime();
     loadAllData();
-    logAction(`Login - Perfil: ${profile}`);
 }
 
 function logout() {
     if (confirm('Deseja realmente sair?')) {
         app.currentUser = null;
         document.getElementById('loginScreen').classList.add('active');
-        document.getElementById('appScreen').classList.remove('active');
+        document.getElementById('gestorScreen').classList.remove('active');
+        document.getElementById('colaboradorScreen').classList.remove('active');
     }
 }
 
 // ===== NAVIGATION =====
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+function switchGestorSection(sectionId) {
+    document.querySelectorAll('#gestorScreen .section').forEach(s => s.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
     
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#gestorScreen .nav-item').forEach(n => n.classList.remove('active'));
     event.target.classList.add('active');
 
-    if (sectionId === 'patientsSection') loadPatients();
-    if (sectionId === 'vitalsSection') loadVitals();
-    if (sectionId === 'evaluationSection') loadEvaluations();
-    if (sectionId === 'pharmacySection') loadMedicines();
-    if (sectionId === 'warehouseSection') loadMaterials();
-    if (sectionId === 'tasksSection') loadTasks();
-    if (sectionId === 'collaboratorsSection') loadCollaborators();
-    if (sectionId === 'alertsSection') loadAlerts();
-    if (sectionId === 'auditSection') loadAuditLog();
+    if (sectionId === 'gestorPatients') loadPatients();
+    if (sectionId === 'gestorEvaluation') loadEvaluations();
+    if (sectionId === 'gestorPharmacy') loadMedicines();
+    if (sectionId === 'gestorWarehouse') loadMaterials();
+    if (sectionId === 'gestorCollaborators') loadCollaborators();
+}
+
+function switchColaboradorSection(sectionId) {
+    document.querySelectorAll('#colaboradorScreen .section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    
+    document.querySelectorAll('#colaboradorScreen .nav-item').forEach(n => n.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (sectionId === 'colaboradorPatients') loadColaboradorPatients();
+    if (sectionId === 'colaboradorVitals') loadVitals();
+    if (sectionId === 'colaboradorTechnicalEval') loadTechnicalEvals();
+    if (sectionId === 'colaboradorRequests') loadRequests();
+    if (sectionId === 'colaboradorTasks') loadTasks();
 }
 
 // ===== MODALS =====
 function showModal(modalId) {
     document.getElementById(modalId).classList.add('active');
-    if (modalId === 'addVitalsModal') populatePatientSelects();
     if (modalId === 'addEvaluationModal') populatePatientSelects();
-    if (modalId === 'addTaskModal') populateCollaboratorSelects();
+    if (modalId === 'addVitalsModal') populatePatientSelects();
+    if (modalId === 'addTechnicalEvalModal') populatePatientSelects();
+    if (modalId === 'requestMedicineModal') {
+        populatePatientSelects();
+        populateMedicineSelect();
+    }
+    if (modalId === 'requestMaterialModal') {
+        populatePatientSelects();
+        populateMaterialSelect();
+    }
 }
 
 function closeModal(modalId) {
@@ -1202,7 +1123,7 @@ function addPatient() {
     const status = document.getElementById('patientStatus').value;
 
     if (!name || !bed) {
-        alert('Preencha todos os campos');
+        alert('Preencha os campos obrigatórios (*)');
         return;
     }
 
@@ -1218,10 +1139,10 @@ function addPatient() {
     saveToLocalStorage();
     loadPatients();
     closeModal('addPatientModal');
-    logAction(`Paciente adicionado: ${name}`);
     
     document.getElementById('patientName').value = '';
     document.getElementById('patientBed').value = '';
+    document.getElementById('totalPatients').textContent = app.patients.length;
 }
 
 function loadPatients() {
@@ -1239,22 +1160,42 @@ function loadPatients() {
         
         list.innerHTML += `
             <div class="card">
-                <div class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <div class="card-title">${patient.name}</div>
                         <div class="card-subtitle">Leito: ${patient.bed}</div>
                     </div>
                     <span class="badge ${statusClass}">${patient.status.toUpperCase()}</span>
                 </div>
-                <div class="card-actions">
-                    <button class="btn btn-small btn-primary" onclick="editPatient(${patient.id})">Editar</button>
+                <div style="margin-top: 10px;">
                     <button class="btn btn-small btn-danger" onclick="deletePatient(${patient.id})">Deletar</button>
                 </div>
             </div>
         `;
     });
+}
 
-    document.getElementById('activePatients').textContent = app.patients.length;
+function loadColaboradorPatients() {
+    const list = document.getElementById('colaboradorPatientsList');
+    list.innerHTML = '';
+
+    if (app.patients.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhum paciente atribuído</p>';
+        return;
+    }
+
+    app.patients.forEach(patient => {
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-title">${patient.name}</div>
+                <div class="card-subtitle">Leito: ${patient.bed}</div>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-small btn-primary" onclick="showModal('addVitalsModal')">Registrar Sinais</button>
+                    <button class="btn btn-small btn-primary" onclick="showModal('addTechnicalEvalModal')">Avaliação</button>
+                </div>
+            </div>
+        `;
+    });
 }
 
 function deletePatient(id) {
@@ -1262,12 +1203,84 @@ function deletePatient(id) {
         app.patients = app.patients.filter(p => p.id !== id);
         saveToLocalStorage();
         loadPatients();
-        logAction('Paciente deletado');
     }
 }
 
-function editPatient(id) {
-    alert('Funcionalidade de edição em desenvolvimento');
+// ===== EVALUATIONS =====
+function addEvaluation() {
+    const patientId = parseInt(document.getElementById('evalPatient').value);
+    const patient = app.patients.find(p => p.id === patientId);
+
+    if (!patientId) {
+        alert('Selecione um paciente');
+        return;
+    }
+
+    const evaluation = {
+        id: Date.now(),
+        patientId: patientId,
+        patientName: patient.name,
+        dateTime: document.getElementById('evalDateTime').value,
+        subjetivo: document.getElementById('evalSubjective').value,
+        pa: document.getElementById('evalPA').value,
+        fc: document.getElementById('evalFC').value,
+        fr: document.getElementById('evalFR').value,
+        temp: document.getElementById('evalTemp').value,
+        spo2: document.getElementById('evalSpO2').value,
+        objectiveNotes: document.getElementById('evalObjectiveNotes').value,
+        analise: document.getElementById('evalAnalysis').value,
+        plano: document.getElementById('evalPlan').value,
+        evolucao: document.getElementById('evalEvolution').value,
+        author: app.currentUser.name,
+        coren: app.currentUser.coren,
+        timestamp: new Date().toLocaleString('pt-BR')
+    };
+
+    app.evaluations.push(evaluation);
+    saveToLocalStorage();
+    loadEvaluations();
+    closeModal('addEvaluationModal');
+    alert('✅ Avaliação salva com sucesso!');
+}
+
+function loadEvaluations() {
+    const list = document.getElementById('evaluationsList');
+    list.innerHTML = '';
+
+    if (app.evaluations.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhuma avaliação registrada</p>';
+        return;
+    }
+
+    app.evaluations.slice().reverse().forEach(eval => {
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-title">${eval.patientName}</div>
+                <div class="card-subtitle">${eval.dateTime}</div>
+                <p><small><strong>Autor:</strong> ${eval.author} - COREN ${eval.coren}</small></p>
+                <button class="btn btn-small btn-secondary" onclick="exportEvaluation(${eval.id})">📥 Exportar</button>
+            </div>
+        `;
+    });
+}
+
+function generateAutoEvolution() {
+    const subj = document.getElementById('evalSubjective').value;
+    const pa = document.getElementById('evalPA').value;
+    const fc = document.getElementById('evalFC').value;
+    const temp = document.getElementById('evalTemp').value;
+    
+    const autoEvolution = `Paciente lúcido, orientado e colaborativo. Refere ${subj.toLowerCase() || 'bem-estar'}. Sinais vitais: PA ${pa}, FC ${fc}, T ${temp}°C. Apresenta evolução favorável, mantendo-se clinicamente estável sem intercorrências.`;
+    
+    document.getElementById('evalEvolution').value = autoEvolution;
+    alert('✅ Evolução gerada automaticamente!');
+}
+
+function exportEvaluation(id) {
+    const eval = app.evaluations.find(e => e.id === id);
+    const content = `AVALIAÇÃO CLÍNICA (SOAPIE)\n\nData: ${eval.dateTime}\nPaciente: ${eval.patientName}\n\nS - SUBJETIVO:\n${eval.subjetivo}\n\nO - OBJETIVO:\nPA: ${eval.pa} | FC: ${eval.fc} | FR: ${eval.fr} | T: ${eval.temp}°C | SpO₂: ${eval.spo2}%\n${eval.objectiveNotes}\n\nA - ANÁLISE:\n${eval.analise}\n\nP - PLANO:\n${eval.plano}\n\nE - EVOLUÇÃO:\n${eval.evolucao}\n\nAutor: ${eval.author}\nCOREN: ${eval.coren}\nData de Registro: ${eval.timestamp}`;
+    
+    downloadFile(content, `avaliacao_${eval.patientName}.txt`);
 }
 
 // ===== VITALS =====
@@ -1280,7 +1293,7 @@ function addVitals() {
     const spo2 = parseInt(document.getElementById('vitalSpO2').value);
 
     if (!patientId || !pa || !fc || !fr || !temp || !spo2) {
-        alert('Preencha todos os campos');
+        alert('Preencha todos os campos obrigatórios (*)');
         return;
     }
 
@@ -1299,20 +1312,10 @@ function addVitals() {
     };
 
     app.vitals.push(vital);
-    
-    if (vital.isAbnormal) {
-        app.alerts.push({
-            id: Date.now(),
-            type: 'vital',
-            message: `⚠️ Sinais vitais alterados para ${patient.name}`,
-            timestamp: new Date().toLocaleString('pt-BR')
-        });
-    }
-
     saveToLocalStorage();
     loadVitals();
     closeModal('addVitalsModal');
-    logAction(`Sinais vitais registrados para ${patient.name}`);
+    alert('✅ Sinais vitais registrados!');
     
     document.getElementById('vitalPA').value = '';
     document.getElementById('vitalFC').value = '';
@@ -1344,90 +1347,59 @@ function loadVitals() {
         `;
     });
 
-    document.getElementById('criticalVitals').textContent = app.vitals.filter(v => v.isAbnormal).length;
+    document.getElementById('criticalAlerts').textContent = app.vitals.filter(v => v.isAbnormal).length;
 }
 
-// ===== EVALUATIONS =====
-function addEvaluation() {
-    const patientId = parseInt(document.getElementById('evalPatient').value);
-    const patient = app.patients.find(p => p.id === patientId);
+// ===== TECHNICAL EVALUATIONS =====
+function addTechnicalEvaluation() {
+    const patientId = parseInt(document.getElementById('technicalEvalPatient').value);
+    const notes = document.getElementById('technicalEvalNotes').value;
 
-    const evaluation = {
+    if (!patientId || !notes) {
+        alert('Preencha todos os campos obrigatórios (*)');
+        return;
+    }
+
+    const patient = app.patients.find(p => p.id === patientId);
+    const eval = {
         id: Date.now(),
         patientId: patientId,
         patientName: patient.name,
-        dateTime: document.getElementById('evalDateTime').value,
-        subjetivo: document.getElementById('evalSubjective').value,
-        objetivo: document.getElementById('evalObjective').value,
-        analise: document.getElementById('evalAnalysis').value,
-        plano: document.getElementById('evalPlan').value,
-        evolucao: document.getElementById('evalEvolution').value,
+        dateTime: document.getElementById('technicalEvalDateTime').value,
+        notes: notes,
         author: app.currentUser.name,
-        coren: app.currentUser.coren,
         timestamp: new Date().toLocaleString('pt-BR')
     };
 
-    app.evaluations.push(evaluation);
+    app.technicalEvals.push(eval);
     saveToLocalStorage();
-    loadEvaluations();
-    closeModal('addEvaluationModal');
-    logAction(`Avaliação clínica registrada para ${patient.name}`);
-    
-    document.getElementById('evalSubjective').value = '';
-    document.getElementById('evalObjective').value = '';
-    document.getElementById('evalAnalysis').value = '';
-    document.getElementById('evalPlan').value = '';
-    document.getElementById('evalEvolution').value = '';
+    loadTechnicalEvals();
+    closeModal('addTechnicalEvalModal');
+    alert('✅ Avaliação técnica registrada!');
 }
 
-function loadEvaluations() {
-    const list = document.getElementById('evaluationsList');
+function loadTechnicalEvals() {
+    const list = document.getElementById('technicalEvalList');
     list.innerHTML = '';
 
-    if (app.evaluations.length === 0) {
+    if (app.technicalEvals.length === 0) {
         list.innerHTML = '<p style="color: #999;">Nenhuma avaliação registrada</p>';
         return;
     }
 
-    app.evaluations.slice().reverse().forEach(eval => {
+    app.technicalEvals.slice().reverse().forEach(eval => {
         list.innerHTML += `
             <div class="card">
                 <div class="card-title">${eval.patientName}</div>
                 <div class="card-subtitle">${eval.dateTime}</div>
-                <p><strong>S (Subjetivo):</strong> ${eval.subjetivo.substring(0, 50)}...</p>
-                <p><strong>O (Objetivo):</strong> ${eval.objetivo.substring(0, 50)}...</p>
-                <div class="card-actions">
-                    <button class="btn btn-small btn-info" onclick="viewEvaluation(${eval.id})">Ver Completo</button>
-                    <button class="btn btn-small btn-secondary" onclick="exportEvaluation(${eval.id})">📥 Exportar</button>
-                </div>
+                <p>${eval.notes.substring(0, 100)}...</p>
+                <small>Por: ${eval.author}</small>
             </div>
         `;
     });
 }
 
-function generateAutoEvolution() {
-    const subj = document.getElementById('evalSubjective').value;
-    const obj = document.getElementById('evalObjective').value;
-    
-    const autoEvolution = `Paciente apresenta evolução ${subj.includes('melhor') ? 'favorável' : 'estável'}, mantendo-se clinicamente ${obj.includes('normal') ? 'estável' : 'sob observação'} sem intercorrências durante o atendimento.`;
-    
-    document.getElementById('evalEvolution').value = autoEvolution;
-    alert('✅ Evolução gerada automaticamente!');
-}
-
-function viewEvaluation(id) {
-    const eval = app.evaluations.find(e => e.id === id);
-    alert(`📋 AVALIAÇÃO COMPLETA\n\nPaciente: ${eval.patientName}\nData: ${eval.dateTime}\n\nS: ${eval.subjetivo}\n\nO: ${eval.objetivo}\n\nA: ${eval.analise}\n\nP: ${eval.plano}\n\nE: ${eval.evolucao}\n\nAutor: ${eval.author} - COREN ${eval.coren}`);
-}
-
-function exportEvaluation(id) {
-    const eval = app.evaluations.find(e => e.id === id);
-    const content = `AVALIAÇÃO CLÍNICA (SOAPIE)\n\nData: ${eval.dateTime}\nPaciente: ${eval.patientName}\n\nS - SUBJETIVO:\n${eval.subjetivo}\n\nO - OBJETIVO:\n${eval.objetivo}\n\nA - ANÁLISE:\n${eval.analise}\n\nP - PLANO:\n${eval.plano}\n\nE - EVOLUÇÃO:\n${eval.evolucao}\n\nAutor: ${eval.author}\nCOREN: ${eval.coren}\nData de Registro: ${eval.timestamp}`;
-    
-    downloadFile(content, `avaliacao_${eval.patientName}_${eval.dateTime}.txt`);
-}
-
-// ===== PHARMACY =====
+// ===== MEDICINES =====
 function addMedicine() {
     const name = document.getElementById('medicineName').value;
     const qty = parseInt(document.getElementById('medicineQty').value);
@@ -1435,7 +1407,7 @@ function addMedicine() {
     const minQty = parseInt(document.getElementById('medicineMinQty').value);
 
     if (!name || !qty || !expiry || !minQty) {
-        alert('Preencha todos os campos');
+        alert('Preencha todos os campos obrigatórios (*)');
         return;
     }
 
@@ -1445,7 +1417,6 @@ function addMedicine() {
         quantity: qty,
         expiry: expiry,
         minQuantity: minQty,
-        withdrawals: [],
         createdAt: new Date().toLocaleString('pt-BR')
     };
 
@@ -1453,12 +1424,7 @@ function addMedicine() {
     saveToLocalStorage();
     loadMedicines();
     closeModal('addMedicineModal');
-    logAction(`Medicamento adicionado: ${name}`);
-    
-    document.getElementById('medicineName').value = '';
-    document.getElementById('medicineQty').value = '';
-    document.getElementById('medicineExpiry').value = '';
-    document.getElementById('medicineMinQty').value = '';
+    alert('✅ Medicamento adicionado!');
 }
 
 function loadMedicines() {
@@ -1477,16 +1443,12 @@ function loadMedicines() {
         
         list.innerHTML += `
             <div class="card">
-                <div class="card-header">
+                <div style="display: flex; justify-content: space-between;">
                     <div>
                         <div class="card-title">${med.name}</div>
                         <div class="card-subtitle">Estoque: ${med.quantity} | Validade: ${med.expiry}</div>
                     </div>
                     <span class="badge ${statusClass}">${isExpired ? 'VENCIDO' : isLow ? 'BAIXO' : 'OK'}</span>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-small btn-warning" onclick="withdrawMedicine(${med.id})">Retirar</button>
-                    <button class="btn btn-small btn-danger" onclick="deleteMedicine(${med.id})">Deletar</button>
                 </div>
             </div>
         `;
@@ -1495,39 +1457,14 @@ function loadMedicines() {
     document.getElementById('lowMeds').textContent = app.medicines.filter(m => m.quantity <= m.minQuantity).length;
 }
 
-function withdrawMedicine(id) {
-    const qty = prompt('Quantidade a retirar:');
-    if (qty) {
-        const med = app.medicines.find(m => m.id === id);
-        med.quantity -= parseInt(qty);
-        med.withdrawals.push({
-            date: new Date().toLocaleString('pt-BR'),
-            quantity: parseInt(qty),
-            by: app.currentUser.name
-        });
-        saveToLocalStorage();
-        loadMedicines();
-        logAction(`Medicamento retirado: ${med.name} - Qtd: ${qty}`);
-    }
-}
-
-function deleteMedicine(id) {
-    if (confirm('Deseja deletar este medicamento?')) {
-        app.medicines = app.medicines.filter(m => m.id !== id);
-        saveToLocalStorage();
-        loadMedicines();
-        logAction('Medicamento deletado');
-    }
-}
-
-// ===== WAREHOUSE =====
+// ===== MATERIALS =====
 function addMaterial() {
     const name = document.getElementById('materialName').value;
     const qty = parseInt(document.getElementById('materialQty').value);
     const sector = document.getElementById('materialSector').value;
 
     if (!name || !qty || !sector) {
-        alert('Preencha todos os campos');
+        alert('Preencha todos os campos obrigatórios (*)');
         return;
     }
 
@@ -1536,7 +1473,6 @@ function addMaterial() {
         name: name,
         quantity: qty,
         sector: sector,
-        movements: [],
         createdAt: new Date().toLocaleString('pt-BR')
     };
 
@@ -1544,10 +1480,7 @@ function addMaterial() {
     saveToLocalStorage();
     loadMaterials();
     closeModal('addMaterialModal');
-    logAction(`Material adicionado: ${name}`);
-    
-    document.getElementById('materialName').value = '';
-    document.getElementById('materialQty').value = '';
+    alert('✅ Material adicionado!');
 }
 
 function loadMaterials() {
@@ -1562,120 +1495,11 @@ function loadMaterials() {
     app.materials.forEach(mat => {
         list.innerHTML += `
             <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title">${mat.name}</div>
-                        <div class="card-subtitle">Setor: ${mat.sector} | Qtd: ${mat.quantity}</div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-small btn-primary" onclick="requestMaterial(${mat.id})">Solicitar Reposição</button>
-                    <button class="btn btn-small btn-danger" onclick="deleteMaterial(${mat.id})">Deletar</button>
-                </div>
+                <div class="card-title">${mat.name}</div>
+                <div class="card-subtitle">Setor: ${mat.sector} | Qtd: ${mat.quantity}</div>
             </div>
         `;
     });
-}
-
-function requestMaterial(id) {
-    const mat = app.materials.find(m => m.id === id);
-    alert(`✅ Solicitação de reposição criada para ${mat.name}`);
-    logAction(`Reposição solicitada: ${mat.name}`);
-}
-
-function deleteMaterial(id) {
-    if (confirm('Deseja deletar este material?')) {
-        app.materials = app.materials.filter(m => m.id !== id);
-        saveToLocalStorage();
-        loadMaterials();
-        logAction('Material deletado');
-    }
-}
-
-// ===== TASKS =====
-function addTask() {
-    const desc = document.getElementById('taskDesc').value;
-    const priority = document.getElementById('taskPriority').value;
-    const assigneeId = parseInt(document.getElementById('taskAssignee').value);
-
-    if (!desc || !assigneeId) {
-        alert('Preencha todos os campos');
-        return;
-    }
-
-    const assignee = app.collaborators.find(c => c.id === assigneeId);
-    const task = {
-        id: Date.now(),
-        description: desc,
-        priority: priority,
-        assigneeId: assigneeId,
-        assigneeName: assignee.name,
-        status: 'pendente',
-        createdAt: new Date().toLocaleString('pt-BR'),
-        createdBy: app.currentUser.name
-    };
-
-    app.tasks.push(task);
-    saveToLocalStorage();
-    loadTasks();
-    closeModal('addTaskModal');
-    logAction(`Tarefa criada: ${desc}`);
-    
-    document.getElementById('taskDesc').value = '';
-}
-
-function loadTasks() {
-    const list = document.getElementById('tasksList');
-    list.innerHTML = '';
-
-    if (app.tasks.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhuma tarefa</p>';
-        return;
-    }
-
-    app.tasks.forEach(task => {
-        const priorityClass = task.priority === 'alta' ? 'badge-danger' : 
-                             task.priority === 'media' ? 'badge-warning' : 'badge-success';
-        const statusClass = task.status === 'concluida' ? 'badge-success' : 'badge-warning';
-        
-        list.innerHTML += `
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <div class="card-title">${task.description}</div>
-                        <div class="card-subtitle">Atribuído a: ${task.assigneeName}</div>
-                    </div>
-                    <div>
-                        <span class="badge ${priorityClass}">${task.priority.toUpperCase()}</span>
-                        <span class="badge ${statusClass}">${task.status.toUpperCase()}</span>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-small btn-success" onclick="completeTask(${task.id})">✓ Concluir</button>
-                    <button class="btn btn-small btn-danger" onclick="deleteTask(${task.id})">Deletar</button>
-                </div>
-            </div>
-        `;
-    });
-
-    document.getElementById('pendingTasks').textContent = app.tasks.filter(t => t.status === 'pendente').length;
-}
-
-function completeTask(id) {
-    const task = app.tasks.find(t => t.id === id);
-    task.status = 'concluida';
-    saveToLocalStorage();
-    loadTasks();
-    logAction(`Tarefa concluída: ${task.description}`);
-}
-
-function deleteTask(id) {
-    if (confirm('Deseja deletar esta tarefa?')) {
-        app.tasks = app.tasks.filter(t => t.id !== id);
-        saveToLocalStorage();
-        loadTasks();
-        logAction('Tarefa deletada');
-    }
 }
 
 // ===== COLLABORATORS =====
@@ -1685,7 +1509,7 @@ function addCollaborator() {
     const role = document.getElementById('collabRole').value;
 
     if (!name || !email || !role) {
-        alert('Preencha todos os campos');
+        alert('Preencha todos os campos obrigatórios (*)');
         return;
     }
 
@@ -1702,10 +1526,7 @@ function addCollaborator() {
     saveToLocalStorage();
     loadCollaborators();
     closeModal('addCollaboratorModal');
-    logAction(`Colaborador adicionado: ${name}`);
-    
-    document.getElementById('collabName').value = '';
-    document.getElementById('collabEmail').value = '';
+    alert('✅ Colaborador adicionado!');
 }
 
 function loadCollaborators() {
@@ -1720,56 +1541,121 @@ function loadCollaborators() {
     app.collaborators.forEach(collab => {
         list.innerHTML += `
             <div class="card">
-                <div class="card-header">
+                <div style="display: flex; justify-content: space-between;">
                     <div>
                         <div class="card-title">${collab.name}</div>
                         <div class="card-subtitle">${collab.role} | ${collab.email}</div>
                     </div>
                     <span class="badge badge-success">${collab.status.toUpperCase()}</span>
                 </div>
-                <div class="card-actions">
-                    <button class="btn btn-small btn-primary" onclick="editCollaborator(${collab.id})">Editar</button>
-                    <button class="btn btn-small btn-danger" onclick="deleteCollaborator(${collab.id})">Deletar</button>
-                </div>
             </div>
         `;
     });
 }
 
-function deleteCollaborator(id) {
-    if (confirm('Deseja deletar este colaborador?')) {
-        app.collaborators = app.collaborators.filter(c => c.id !== id);
-        saveToLocalStorage();
-        loadCollaborators();
-        logAction('Colaborador deletado');
-    }
-}
+// ===== REQUESTS =====
+function requestMedicine() {
+    const patientId = parseInt(document.getElementById('requestMedicinePatient').value);
+    const medicineId = parseInt(document.getElementById('requestMedicineSelect').value);
+    const qty = parseInt(document.getElementById('requestMedicineQty').value);
 
-function editCollaborator(id) {
-    alert('Funcionalidade de edição em desenvolvimento');
-}
-
-// ===== ALERTS =====
-function loadAlerts() {
-    const list = document.getElementById('alertsList');
-    list.innerHTML = '';
-
-    if (app.alerts.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum alerta</p>';
+    if (!patientId || !medicineId || !qty) {
+        alert('Preencha todos os campos');
         return;
     }
 
-    app.alerts.slice().reverse().forEach(alert => {
+    const patient = app.patients.find(p => p.id === patientId);
+    const medicine = app.medicines.find(m => m.id === medicineId);
+
+    const request = {
+        id: Date.now(),
+        type: 'medicine',
+        patientName: patient.name,
+        itemName: medicine.name,
+        quantity: qty,
+        status: 'pendente',
+        author: app.currentUser.name,
+        timestamp: new Date().toLocaleString('pt-BR')
+    };
+
+    app.requests.push(request);
+    saveToLocalStorage();
+    loadRequests();
+    closeModal('requestMedicineModal');
+    alert('✅ Solicitação enviada!');
+}
+
+function requestMaterial() {
+    const patientId = parseInt(document.getElementById('requestMaterialPatient').value);
+    const materialId = parseInt(document.getElementById('requestMaterialSelect').value);
+    const qty = parseInt(document.getElementById('requestMaterialQty').value);
+
+    if (!patientId || !materialId || !qty) {
+        alert('Preencha todos os campos');
+        return;
+    }
+
+    const patient = app.patients.find(p => p.id === patientId);
+    const material = app.materials.find(m => m.id === materialId);
+
+    const request = {
+        id: Date.now(),
+        type: 'material',
+        patientName: patient.name,
+        itemName: material.name,
+        quantity: qty,
+        status: 'pendente',
+        author: app.currentUser.name,
+        timestamp: new Date().toLocaleString('pt-BR')
+    };
+
+    app.requests.push(request);
+    saveToLocalStorage();
+    loadRequests();
+    closeModal('requestMaterialModal');
+    alert('✅ Solicitação enviada!');
+}
+
+function loadRequests() {
+    const list = document.getElementById('requestsList');
+    list.innerHTML = '';
+
+    if (app.requests.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhuma solicitação</p>';
+        return;
+    }
+
+    app.requests.slice().reverse().forEach(req => {
         list.innerHTML += `
-            <div class="alert alert-danger">
-                <span>🚨</span>
-                <div>
-                    <strong>${alert.message}</strong><br>
-                    <small>${alert.timestamp}</small>
-                </div>
+            <div class="card">
+                <div class="card-title">${req.itemName}</div>
+                <div class="card-subtitle">Paciente: ${req.patientName} | Qtd: ${req.quantity}</div>
+                <small>Status: ${req.status} | ${req.timestamp}</small>
             </div>
         `;
     });
+}
+
+// ===== TASKS =====
+function loadTasks() {
+    const list = document.getElementById('tasksList');
+    list.innerHTML = '';
+
+    if (app.tasks.length === 0) {
+        list.innerHTML = '<p style="color: #999;">Nenhuma tarefa</p>';
+        return;
+    }
+
+    app.tasks.forEach(task => {
+        list.innerHTML += `
+            <div class="card">
+                <div class="card-title">${task.description}</div>
+                <small>${task.timestamp}</small>
+            </div>
+        `;
+    });
+
+    document.getElementById('pendingTasks').textContent = app.tasks.length;
 }
 
 // ===== CHAT =====
@@ -1780,7 +1666,6 @@ function sendMessage() {
     if (!message) return;
 
     const msg = {
-        id: Date.now(),
         author: app.currentUser.name,
         text: message,
         timestamp: new Date().toLocaleString('pt-BR')
@@ -1789,7 +1674,25 @@ function sendMessage() {
     app.messages.push(msg);
     input.value = '';
     loadChat();
-    logAction(`Mensagem enviada: ${message.substring(0, 30)}`);
+    saveToLocalStorage();
+}
+
+function sendColaboradorMessage() {
+    const input = document.getElementById('colaboradorChatInput');
+    const message = input.value;
+
+    if (!message) return;
+
+    const msg = {
+        author: app.currentUser.name,
+        text: message,
+        timestamp: new Date().toLocaleString('pt-BR')
+    };
+
+    app.messages.push(msg);
+    input.value = '';
+    loadColaboradorChat();
+    saveToLocalStorage();
 }
 
 function loadChat() {
@@ -1808,98 +1711,81 @@ function loadChat() {
     chat.scrollTop = chat.scrollHeight;
 }
 
-// ===== AUDIT LOG =====
-function logAction(action) {
-    app.auditLog.push({
-        id: Date.now(),
-        user: app.currentUser.name,
-        action: action,
-        timestamp: new Date().toLocaleString('pt-BR')
+function loadColaboradorChat() {
+    const chat = document.getElementById('colaboradorChatMessages');
+    chat.innerHTML = '';
+
+    app.messages.forEach(msg => {
+        chat.innerHTML += `
+            <div style="margin-bottom: 10px; padding: 10px; background: var(--light-gray); border-radius: 8px;">
+                <strong>${msg.author}</strong> <small>${msg.timestamp}</small><br>
+                ${msg.text}
+            </div>
+        `;
     });
-    saveToLocalStorage();
+
+    chat.scrollTop = chat.scrollHeight;
 }
 
-function loadAuditLog() {
-    const list = document.getElementById('auditList');
-    list.innerHTML = '';
-
-    if (app.auditLog.length === 0) {
-        list.innerHTML = '<p style="color: #999;">Nenhum log</p>';
-        return;
-    }
-
-    list.innerHTML = '<table><tr><th>Usuário</th><th>Ação</th><th>Data/Hora</th></tr>';
-    app.auditLog.slice().reverse().forEach(log => {
-        list.innerHTML += `<tr><td>${log.user}</td><td>${log.action}</td><td>${log.timestamp}</td></tr>`;
-    });
-    list.innerHTML += '</table>';
-}
-
-// ===== HELPERS =====
-function populatePatientSelects() {
-    const selects = ['vitalsPatient', 'evalPatient'];
-    selects.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        select.innerHTML = '';
-        app.patients.forEach(patient => {
-            select.innerHTML += `<option value="${patient.id}">${patient.name}</option>`;
-        });
-    });
-}
-
-function populateCollaboratorSelects() {
-    const select = document.getElementById('taskAssignee');
-    select.innerHTML = '';
-    app.collaborators.forEach(collab => {
-        select.innerHTML += `<option value="${collab.id}">${collab.name}</option>`;
-    });
-}
-
-function updateDateTime() {
-    const now = new Date();
-    document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
-}
-
-function generateAISummary() {
-    const summary = `📊 RESUMO DO DIA\n\n✅ Pacientes Ativos: ${app.patients.length}\n⚠️ Sinais Críticos: ${app.vitals.filter(v => v.isAbnormal).length}\n📋 Avaliações: ${app.evaluations.length}\n✅ Tarefas Concluídas: ${app.tasks.filter(t => t.status === 'concluida').length}\n⏳ Tarefas Pendentes: ${app.tasks.filter(t => t.status === 'pendente').length}\n💊 Medicamentos com Estoque Baixo: ${app.medicines.filter(m => m.quantity <= m.minQuantity).length}`;
-    
-    document.getElementById('aiContent').textContent = summary;
-    document.getElementById('dailySummary').textContent = `${app.patients.length} pacientes · ${app.evaluations.length} avaliações · ${app.alerts.length} alertas`;
-}
-
-function generateAIRisks() {
-    let risks = '🚨 ANÁLISE DE RISCOS\n\n';
-    
-    app.vitals.filter(v => v.isAbnormal).forEach(v => {
-        risks += `⚠️ ${v.patientName}: Sinais alterados\n`;
-    });
-    
-    app.medicines.filter(m => m.quantity <= m.minQuantity).forEach(m => {
-        risks += `💊 ${m.name}: Estoque baixo (${m.quantity})\n`;
-    });
-    
-    if (risks === '🚨 ANÁLISE DE RISCOS\n\n') {
-        risks += '✅ Nenhum risco identificado no momento';
-    }
-    
-    document.getElementById('aiContent').textContent = risks;
-}
-
+// ===== REPORTS =====
 function generateReport() {
     const type = document.getElementById('reportType').value;
-    const report = `📊 RELATÓRIO ${type.toUpperCase()}\n\nData: ${new Date().toLocaleString('pt-BR')}\nGestor: ${app.currentUser.name}\n\nPACIENTES: ${app.patients.length}\nAVALIAÇÕES: ${app.evaluations.length}\nTAREFAS CONCLUÍDAS: ${app.tasks.filter(t => t.status === 'concluida').length}\nALERTAS: ${app.alerts.length}`;
+    const report = `📊 RELATÓRIO ${type.toUpperCase()}\n\nData: ${new Date().toLocaleString('pt-BR')}\nGestor: ${app.currentUser.name}\n\nPACIENTES: ${app.patients.length}\nAVALIAÇÕES: ${app.evaluations.length}\nSINAIS VITAIS: ${app.vitals.length}\nSOLICITAÇÕES: ${app.requests.length}`;
     
     alert(report);
 }
 
 function exportReportPDF() {
-    const content = `RELATÓRIO - ${new Date().toLocaleString('pt-BR')}\n\nPacientes: ${app.patients.length}\nAvaliações: ${app.evaluations.length}\nTarefas: ${app.tasks.length}\nAlertas: ${app.alerts.length}`;
+    const content = `RELATÓRIO - ${new Date().toLocaleString('pt-BR')}\n\nPacientes: ${app.patients.length}\nAvaliações: ${app.evaluations.length}\nSinais Vitais: ${app.vitals.length}\nSolicitações: ${app.requests.length}`;
     downloadFile(content, 'relatorio.txt');
+}
+
+// ===== HELPERS =====
+function populatePatientSelects() {
+    const selects = ['evalPatient', 'vitalsPatient', 'technicalEvalPatient', 'requestMedicinePatient', 'requestMaterialPatient'];
+    selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+            select.innerHTML = '';
+            app.patients.forEach(patient => {
+                select.innerHTML += `<option value="${patient.id}">${patient.name}</option>`;
+            });
+        }
+    });
+}
+
+function populateMedicineSelect() {
+    const select = document.getElementById('requestMedicineSelect');
+    select.innerHTML = '';
+    app.medicines.forEach(med => {
+        select.innerHTML += `<option value="${med.id}">${med.name}</option>`;
+    });
+}
+
+function populateMaterialSelect() {
+    const select = document.getElementById('requestMaterialSelect');
+    select.innerHTML = '';
+    app.materials.forEach(mat => {
+        select.innerHTML += `<option value="${mat.id}">${mat.name}</option>`;
+    });
+}
+
+function updateDateTime() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pt-BR', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    document.getElementById('currentDate').textContent = dateStr;
+    document.getElementById('currentDateColaborador').textContent = dateStr;
+}
+
+function generateAISummary() {
+    const summary = `📊 RESUMO DO DIA\n\n✅ Pacientes Ativos: ${app.patients.length}\n⚠️ Sinais Críticos: ${app.vitals.filter(v => v.isAbnormal).length}\n📋 Avaliações: ${app.evaluations.length}\n📦 Solicitações: ${app.requests.length}`;
+    
+    document.getElementById('aiContent').textContent = summary;
 }
 
 function downloadFile(content, filename) {
@@ -1912,10 +1798,6 @@ function downloadFile(content, filename) {
     document.body.removeChild(element);
 }
 
-function toggleNotifications() {
-    alert(`🔔 Você tem ${app.alerts.length} notificações`);
-}
-
 function saveToLocalStorage() {
     localStorage.setItem('nursecare_app', JSON.stringify(app));
 }
@@ -1924,44 +1806,26 @@ function loadFromLocalStorage() {
     const data = localStorage.getItem('nursecare_app');
     if (data) {
         const loaded = JSON.parse(data);
-        app.patients = loaded.patients || [];
-        app.vitals = loaded.vitals || [];
-        app.evaluations = loaded.evaluations || [];
-        app.medicines = loaded.medicines || [];
-        app.materials = loaded.materials || [];
-        app.tasks = loaded.tasks || [];
-        app.collaborators = loaded.collaborators || [];
-        app.alerts = loaded.alerts || [];
-        app.messages = loaded.messages || [];
-        app.auditLog = loaded.auditLog || [];
+        app = { ...app, ...loaded };
     }
 }
 
 function loadAllData() {
     loadFromLocalStorage();
     loadPatients();
-    loadVitals();
-    loadEvaluations();
+    loadCollaborators();
     loadMedicines();
     loadMaterials();
     loadTasks();
-    loadCollaborators();
-    loadAlerts();
     loadChat();
-    generateAISummary();
+    loadColaboradorChat();
 }
 
 // Initialize
 window.addEventListener('load', () => {
     loadFromLocalStorage();
-    // Add some demo data
-    if (app.collaborators.length === 0) {
-        app.collaborators = [
-            { id: 1, name: 'João Técnico', email: 'joao@nursecare.com', role: 'tecnico', status: 'ativo', createdAt: new Date().toLocaleString('pt-BR') },
-            { id: 2, name: 'Maria Auxiliar', email: 'maria@nursecare.com', role: 'auxiliar', status: 'ativo', createdAt: new Date().toLocaleString('pt-BR') }
-        ];
-        saveToLocalStorage();
-    }
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
 });
 </script>
 
